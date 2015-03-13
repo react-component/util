@@ -1,6 +1,6 @@
 {
   "name": "rc-util",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Common Utils For React Component",
   "keywords": [
     "react",
@@ -39,33 +39,11 @@
   },
   "devDependencies": {
     "precommit-hook": "^1.0.7",
-    "rc-server": "^1.5.4",
-    "rc-tools": "^1.1.3",
     "expect.js": "~0.3.1",
-    "modulex": "^1.7.4",
-    "react": "~0.12.1"
+    "react": "^0.13.0"
   },
   "precommit": [
     "lint",
     "less"
-  ],
-  "browserify-shim": {
-    "react": "global:React",
-    "jquery": "global:jQuery"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "browserify-jsx"
-      ],
-      [
-        "browserify-shim"
-      ]
-    ]
-  },
-  "dependencies": {
-    "browserify-jsx": "^0.1.0",
-    "browserify-shim": "^3.8.0",
-    "object-assign": "^2.0.0"
-  }
+  ]
 }
