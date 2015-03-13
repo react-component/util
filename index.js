@@ -6,7 +6,6 @@ module.exports = {
   PureRenderMixin: require('./lib/PureRenderMixin'),
   shallowEqual: require('./lib/shallowEqual'),
   createChainedFunction: require('./lib/createChainedFunction'),
-  cloneWithProps: require('./lib/cloneWithProps'),
   Dom: {
     addEventListener: require('./lib/Dom/addEventListener'),
     contains: require('./lib/Dom/contains')

@@ -56,10 +56,6 @@ return string represent a global unique id across current application
 
 ### createChainedFunction:function
 
-### cloneWithProps:function
-
-http://facebook.github.io/react/docs/clone-with-props.html
-
 ### Dom.addEventListener:function
 
 ### Dom.contains:function
