@@ -11,6 +11,7 @@ module.exports = {
     contains: require('./lib/Dom/contains')
   },
   Children: {
-    toArray: require('./lib/Children/toArray')
+    toArray: require('./lib/Children/toArray'),
+    mapSelf: require('./lib/Children/mapSelf')
   }
 };
