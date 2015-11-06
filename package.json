@@ -6,6 +6,10 @@
     "react",
     "util"
   ],
+  "files": [
+    "index.js",
+    "lib"
+  ],
   "homepage": "http://github.com/react-component/util",
   "author": "",
   "repository": {
@@ -16,12 +20,6 @@
     "url": "http://github.com/react-component/util/issues"
   },
   "licenses": "MIT",
-  "spm": {
-    "dependencies": {
-      "react": "*",
-      "object-assign": "^2.0.0"
-    }
-  },
   "config": {
     "port": 8000
   },
