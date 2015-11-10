@@ -4,7 +4,7 @@
  * @author yiminghe@gmail.com
  */
 
-var KeyCode = {
+const KeyCode = {
   /**
    * MAC_ENTER
    */
@@ -424,14 +424,14 @@ var KeyCode = {
   /**
    * WIN_IME
    */
-  WIN_IME: 229
+  WIN_IME: 229,
 };
 
 /*
  whether text and modified key is entered at the same time.
  */
-KeyCode.isTextModifyingKeyEvent = function (e) {
-  var keyCode = e.keyCode;
+KeyCode.isTextModifyingKeyEvent = function isTextModifyingKeyEvent(e) {
+  const keyCode = e.keyCode;
   if (e.altKey && !e.ctrlKey || e.metaKey ||
       // Function keys don't generate text
     keyCode >= KeyCode.F1 && keyCode <= KeyCode.F12) {
@@ -441,39 +441,39 @@ KeyCode.isTextModifyingKeyEvent = function (e) {
   // The following keys are quite harmless, even in combination with
   // CTRL, ALT or SHIFT.
   switch (keyCode) {
-    case KeyCode.ALT:
-    case KeyCode.CAPS_LOCK:
-    case KeyCode.CONTEXT_MENU:
-    case KeyCode.CTRL:
-    case KeyCode.DOWN:
-    case KeyCode.END:
-    case KeyCode.ESC:
-    case KeyCode.HOME:
-    case KeyCode.INSERT:
-    case KeyCode.LEFT:
-    case KeyCode.MAC_FF_META:
-    case KeyCode.META:
-    case KeyCode.NUMLOCK:
-    case KeyCode.NUM_CENTER:
-    case KeyCode.PAGE_DOWN:
-    case KeyCode.PAGE_UP:
-    case KeyCode.PAUSE:
-    case KeyCode.PRINT_SCREEN:
-    case KeyCode.RIGHT:
-    case KeyCode.SHIFT:
-    case KeyCode.UP:
-    case KeyCode.WIN_KEY:
-    case KeyCode.WIN_KEY_RIGHT:
-      return false;
-    default:
-      return true;
+  case KeyCode.ALT:
+  case KeyCode.CAPS_LOCK:
+  case KeyCode.CONTEXT_MENU:
+  case KeyCode.CTRL:
+  case KeyCode.DOWN:
+  case KeyCode.END:
+  case KeyCode.ESC:
+  case KeyCode.HOME:
+  case KeyCode.INSERT:
+  case KeyCode.LEFT:
+  case KeyCode.MAC_FF_META:
+  case KeyCode.META:
+  case KeyCode.NUMLOCK:
+  case KeyCode.NUM_CENTER:
+  case KeyCode.PAGE_DOWN:
+  case KeyCode.PAGE_UP:
+  case KeyCode.PAUSE:
+  case KeyCode.PRINT_SCREEN:
+  case KeyCode.RIGHT:
+  case KeyCode.SHIFT:
+  case KeyCode.UP:
+  case KeyCode.WIN_KEY:
+  case KeyCode.WIN_KEY_RIGHT:
+    return false;
+  default:
+    return true;
   }
 };
 
 /*
  whether character is entered.
  */
-KeyCode.isCharacterKey = function (keyCode) {
+KeyCode.isCharacterKey = function isCharacterKey(keyCode) {
   if (keyCode >= KeyCode.ZERO &&
     keyCode <= KeyCode.NINE) {
     return true;
@@ -495,26 +495,26 @@ KeyCode.isCharacterKey = function (keyCode) {
   }
 
   switch (keyCode) {
-    case KeyCode.SPACE:
-    case KeyCode.QUESTION_MARK:
-    case KeyCode.NUM_PLUS:
-    case KeyCode.NUM_MINUS:
-    case KeyCode.NUM_PERIOD:
-    case KeyCode.NUM_DIVISION:
-    case KeyCode.SEMICOLON:
-    case KeyCode.DASH:
-    case KeyCode.EQUALS:
-    case KeyCode.COMMA:
-    case KeyCode.PERIOD:
-    case KeyCode.SLASH:
-    case KeyCode.APOSTROPHE:
-    case KeyCode.SINGLE_QUOTE:
-    case KeyCode.OPEN_SQUARE_BRACKET:
-    case KeyCode.BACKSLASH:
-    case KeyCode.CLOSE_SQUARE_BRACKET:
-      return true;
-    default:
-      return false;
+  case KeyCode.SPACE:
+  case KeyCode.QUESTION_MARK:
+  case KeyCode.NUM_PLUS:
+  case KeyCode.NUM_MINUS:
+  case KeyCode.NUM_PERIOD:
+  case KeyCode.NUM_DIVISION:
+  case KeyCode.SEMICOLON:
+  case KeyCode.DASH:
+  case KeyCode.EQUALS:
+  case KeyCode.COMMA:
+  case KeyCode.PERIOD:
+  case KeyCode.SLASH:
+  case KeyCode.APOSTROPHE:
+  case KeyCode.SINGLE_QUOTE:
+  case KeyCode.OPEN_SQUARE_BRACKET:
+  case KeyCode.BACKSLASH:
+  case KeyCode.CLOSE_SQUARE_BRACKET:
+    return true;
+  default:
+    return false;
   }
 };
 

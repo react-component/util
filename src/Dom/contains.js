@@ -1,4 +1,5 @@
-module.exports = function (root, node) {
+module.exports = function contains(root, n) {
+  let node = n;
   while (node) {
     if (node === root) {
       return true;

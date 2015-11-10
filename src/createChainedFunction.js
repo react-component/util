@@ -7,10 +7,9 @@
  * @returns {function|null}
  */
 function createChainedFunction() {
-  var args = arguments;
-
+  const args = arguments;
   return function chainedFunction() {
-    for (var i = 0; i < args.length; i++) {
+    for (let i = 0; i < args.length; i++) {
       if (args[i] && args[i].apply) {
         args[i].apply(this, arguments);
       }

@@ -1,6 +1,6 @@
 {
   "name": "rc-util",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "description": "Common Utils For React Component",
   "keywords": [
     "react",
@@ -10,6 +10,7 @@
     "index.js",
     "lib"
   ],
+  "main":"./lib/index",
   "homepage": "http://github.com/react-component/util",
   "author": "",
   "repository": {
@@ -21,27 +22,29 @@
   },
   "licenses": "MIT",
   "config": {
-    "port": 8000
+    "port": 8100
   },
   "scripts": {
-    "less": "rc-tools run less",
-    "history": "rc-tools run history",
-    "start": "node --harmony node_modules/.bin/rc-server",
-    "publish": "rc-tools run tag && spm publish",
+    "build": "rc-tools run build",
+    "gh-pages": "rc-tools run gh-pages",
+    "start": "rc-server",
+    "pub": "rc-tools run pub",
     "lint": "rc-tools run lint",
-    "test": "",
+    "karma": "rc-tools run karma",
     "saucelabs": "rc-tools run saucelabs",
     "browser-test": "rc-tools run browser-test",
     "browser-test-cover": "rc-tools run browser-test-cover"
   },
   "devDependencies": {
-    "precommit-hook": "^1.0.7",
+    "pre-commit": "^1.0.7",
     "expect.js": "~0.3.1",
-    "react": "^0.13.0"
+    "react": "^0.14.0",
+    "rc-server": "3.x",
+    "rc-tools": "4.x",
+    "react-dom": "^0.14.0"
   },
-  "precommit": [
-    "lint",
-    "less"
+  "pre-commit": [
+    "lint"
   ],
   "dependencies": {
     "add-dom-event-listener": "1.x",
