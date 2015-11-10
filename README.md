@@ -4,7 +4,6 @@
 Common Utils For React Component
 
 [![NPM version][npm-image]][npm-url]
-[![SPM version](http://spmjs.io/badge/rc-util)](http://spmjs.io/package/rc-util)
 [![gemnasium deps][gemnasium-image]][gemnasium-url]
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
@@ -29,8 +28,8 @@ Common Utils For React Component
 ## Usage
 
 ```js
-var rcUtil = require('rc-util');
-console.log(rcUtil.classSet({x:1,y:0}));
+import {classSet} from 'rc-util';
+console.log(classSet({x:1,y:0}));
 ```
 
 ## API
@@ -63,7 +62,6 @@ return string represent a global unique id across current application
 ### Children.toArray
 
 transform React Children into Array type
-
 
 
 
