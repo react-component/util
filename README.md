@@ -28,15 +28,11 @@ Common Utils For React Component
 ## Usage
 
 ```js
-import {classSet} from 'rc-util';
-console.log(classSet({x:1,y:0}));
+import {shallowEqual} from 'rc-util';
+console.log(shallowEqual({one: 1}, {one: 1}));
 ```
 
 ## API
-
-### classSet:function
-
-http://facebook.github.io/react/docs/class-name-manipulation.html
 
 ### shallowEqual:function
 
