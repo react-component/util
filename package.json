@@ -1,6 +1,6 @@
 {
   "name": "rc-util",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Common Utils For React Component",
   "keywords": [
     "react",
@@ -49,6 +49,7 @@
   "dependencies": {
     "add-dom-event-listener": "1.x",
     "classnames": "2.x",
-    "util-deprecate": "^1.0.2"
+    "shallowequal": "0.2.x",
+    "util-deprecate": "1.x"
   }
 }

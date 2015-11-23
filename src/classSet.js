@@ -1,4 +1,4 @@
-import deprecate from 'util-deprecate';
-import classNames from 'classnames';
+const deprecate = require('util-deprecate');
+const classNames = require('classnames');
 
-export default deprecate(classNames, '`rcUtil.classSet()` is deprecated, use `classNames()` by `require(\'classnames\')` instead');
+module.exports = deprecate(classNames, '`rcUtil.classSet()` is deprecated, use `classNames()` by `require(\'classnames\')` instead');

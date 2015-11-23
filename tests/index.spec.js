@@ -4,14 +4,14 @@ var expect = require('expect.js');
 var rcUtil = require('..');
 
 describe('rc-tuil', function() {
-  it('#classSet', function() {
+  it('classSet works', function() {
     var classSet = rcUtil.classSet;
 
     expect(classSet({})).to.be('');
     expect(classSet({foo: true, bar: true})).to.be('foo bar');
   });
 
-  it('#joinClasses', function() {
+  it('joinClasses works', function() {
     var joinClasses = rcUtil.joinClasses;
 
     expect(joinClasses()).to.be('');
@@ -19,7 +19,7 @@ describe('rc-tuil', function() {
     expect(joinClasses('foo', 'bar')).to.be('foo bar');
   });
 
-  it('#shallowEqual', function() {
+  it('shallowEqual works', function() {
     var shallowEqual = rcUtil.shallowEqual;
 
     var a = {one: 1, two: 2};
