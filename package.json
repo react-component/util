@@ -10,7 +10,7 @@
     "index.js",
     "lib"
   ],
-  "main":"./lib/index",
+  "main": "./lib/index",
   "homepage": "http://github.com/react-component/util",
   "author": "",
   "repository": {
@@ -48,6 +48,7 @@
   ],
   "dependencies": {
     "add-dom-event-listener": "1.x",
-    "classnames": "2.x"
+    "classnames": "2.x",
+    "util-deprecate": "^1.0.2"
   }
 }
