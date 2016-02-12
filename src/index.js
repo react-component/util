@@ -4,7 +4,7 @@ module.exports = {
   joinClasses: require('./joinClasses'),
   KeyCode: require('./KeyCode'),
   PureRenderMixin: require('./PureRenderMixin'),
-  shallowEqual: require('./shallowEqual'),
+  shallowEqual: require('shallowequal'),
   createChainedFunction: require('./createChainedFunction'),
   Dom: {
     addEventListener: require('./Dom/addEventListener'),

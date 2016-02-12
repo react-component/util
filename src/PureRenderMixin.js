@@ -1,4 +1,4 @@
-const shallowEqual = require('./shallowEqual');
+const shallowEqual = require('shallowequal');
 
 /**
  * If your React component's render function is "pure", e.g. it will render the
