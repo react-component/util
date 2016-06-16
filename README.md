@@ -25,12 +25,6 @@ Common Utils For React Component
 
 [![rc-util](https://nodei.co/npm/rc-util.png)](https://npmjs.org/package/rc-util)
 
-## Usage
-
-```js
-import {shallowEqual} from 'rc-util';
-console.log(shallowEqual({one: 1}, {one: 1}));
-```
 
 ## API
 
@@ -58,8 +52,6 @@ return string represent a global unique id across current application
 ### Children.toArray
 
 transform React Children into Array type
-
-
 
 ## License
 
