@@ -1,12 +1,15 @@
 const expect = require('expect.js');
 const rcUtil = require('..');
+const { PureRenderMixin } = rcUtil;
+const React = require('react');
+const ReactDOM = require('react-dom');
 
 describe('rc-util', () => {
   it('classSet works', () => {
     const classSet = rcUtil.classSet;
 
     expect(classSet({})).to.be('');
-    expect(classSet({foo: true, bar: true})).to.be('foo bar');
+    expect(classSet({ foo: true, bar: true })).to.be('foo bar');
   });
 
   it('joinClasses works', () => {
@@ -20,10 +23,10 @@ describe('rc-util', () => {
   it('shallowEqual works', () => {
     const shallowEqual = rcUtil.shallowEqual;
 
-    const a = {one: 1, two: 2};
+    const a = { one: 1, two: 2 };
     const b = a;
-    const c = {one: 1, two: 2};
-    const d = {one: 1};
+    const c = { one: 1, two: 2 };
+    const d = { one: 1 };
 
     expect(shallowEqual(a, b)).to.be.ok();
 
@@ -51,5 +54,28 @@ describe('rc-util', () => {
 
     rcUtil.createChainedFunction(f1, f2, f3, null)();
     expect(ret).to.eql([1, 2, 3]);
+  });
+
+  it('PureRenderMixin works', () => {
+    const div = document.createElement('div');
+    document.body.appendChild(div);
+    let count = 0;
+    const C = React.createClass({
+      mixins: [PureRenderMixin],
+      getInitialState() {
+        return {
+          a: 1,
+        };
+      },
+      render() {
+        count++;
+        return <span>{this.state.a}</span>;
+      },
+    });
+    const c = ReactDOM.render(<C />, div);
+    c.setState({
+      a: 1,
+    });
+    expect(count).to.be(1);
   });
 });

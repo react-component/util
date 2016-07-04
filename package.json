@@ -1,6 +1,6 @@
 {
   "name": "rc-util",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Common Utils For React Component",
   "keywords": [
     "react",
@@ -48,7 +48,6 @@
   ],
   "dependencies": {
     "add-dom-event-listener": "1.x",
-    "react-addons-pure-render-mixin": "15.x",
     "classnames": "2.x",
     "shallowequal": "0.2.x"
   }
