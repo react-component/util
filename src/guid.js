@@ -1,4 +1,4 @@
 let seed = 0;
 module.exports = function guid() {
-  return Date.now() + '_' + (seed++);
+  return `${Date.now()}_${seed++}`;
 };

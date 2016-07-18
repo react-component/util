@@ -1,6 +1,6 @@
 *.iml
 *.log
-.idea/
+.idea
 .ipr
 .iws
 *~
@@ -12,15 +12,14 @@
 Thumbs.db
 .project
 .*proj
-.svn/
+.svn
 *.swp
 *.swo
 *.pyc
 *.pyo
-.build
 node_modules
 .cache
-dist
 *.css
 build
 lib
+coverage

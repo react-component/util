@@ -1,4 +1,5 @@
-require('./warn')('`rcUtil PureRenderMixin` is deprecated, use `react-addons-pure-render-mixin` by `require(\'react-addons-pure-render-mixin\')` instead');
+require('./warn')('`rcUtil PureRenderMixin` is deprecated, ' +
+  'use `react-addons-pure-render-mixin` by `require(\'react-addons-pure-render-mixin\')` instead');
 
 /**
  * Copyright 2013-present, Facebook, Inc.
