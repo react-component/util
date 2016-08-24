@@ -32,6 +32,12 @@ Common Utils For React Component.
 
 Create a function which will call all the functions with it's arguments from left to right.
 
+### deprecated
+
+> (prop: string, instead: string, component: string): void
+
+Log an error message to warn developers that `prop` is deprecated.
+
 ### getContainerRenderMixin
 
 > (config: Object): Object
@@ -60,6 +66,12 @@ Get the width of scrollbar.
 
 To generate a global unique id across current application.
 
+### pickAttrs
+
+> (props: Object): Object
+
+Pick valid HTML attributes and events from props.
+
 ### warn
 
 > (msg: string): void
@@ -70,13 +82,13 @@ A shallow wrapper of `console.warn`.
 
 A collection of functions to operate React elements' children.
 
-#### Children.mapSelf
+#### Children/mapSelf
 
 > (children): children
 
 Return a shallow copy of children.
 
-#### Children.toArray
+#### Children/toArray
 
 > (children: ReactNode[]): ReactNode[]
 
@@ -86,17 +98,39 @@ Convert children into an array.
 
 A collection of functions to operate DOM elements.
 
-#### Dom.addEventlistener
+#### Dom/addEventlistener
 
 > (target: ReactNode, eventType: string, listener: Function): { remove: Function }
 
 A shallow wrapper of [add-dom-event-listener](https://github.com/yiminghe/add-dom-event-listener).
 
-#### Dom.contains
+#### Dom/casUseDom
+
+> (): boolean
+
+Check if DOM is available.
+
+#### Dom/contains
 
 > (root: HTMLElement, node: HTMLElement): boolean
 
 Check if node is equal to root or in the subtree of root.
+
+#### Dom/focus
+
+A collection of functions to operate focus status of DOM node.
+
+* `saveLastFocusNode(): void`
+* `clearLastFocusNode(): void`
+* `backLastFocusNode(): void`
+* `getFocusNodeList(node: HTMLElement): HTMLElement[]` get a list of focusable nodes from the subtree of node.
+* `limitTabRange(node: HTMLElement, e: Event): void`
+
+#### Dom/support
+
+> { animation: boolean | Object, transition: boolean | Object }
+
+A flag to tell whether current environment supports `animationend` or `transitionend`.
 
 ### KeyCode
 
