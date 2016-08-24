@@ -110,11 +110,32 @@ A shallow wrapper of [add-dom-event-listener](https://github.com/yiminghe/add-do
 
 Check if DOM is available.
 
+#### Dom/class
+
+A collection of functions to operate DOM nodes' class name.
+
+* `hasClass(node: HTMLElement, className: string): boolean`
+* `addClass(node: HTMLElement, className: string): void`
+* `removeClass(node: HTMLElement, className: string): void`
+
 #### Dom/contains
 
 > (root: HTMLElement, node: HTMLElement): boolean
 
 Check if node is equal to root or in the subtree of root.
+
+#### Dom/css
+
+A collection of functions to get or set css styles.
+
+* `get(node: HTMLElement, name?: string): any`
+* `set(node: HTMLElement, name?: string, value: any) | set(node, object)`
+* `getOuterWidth(el: HTMLElement): number`
+* `getOuterHeight(el: HTMLElement): number`
+* `getDocSize(): { width: number, height: number }`
+* `getClientSize(): { width: number, height: number }`
+* `getScroll(): { scrollLeft: number, scrollTop: number }`
+* `getOffset(node: HTMLElement): { left: number, top: number }`
 
 #### Dom/focus
 
