@@ -1,7 +1,6 @@
 # rc-util
----
 
-Common Utils For React Component
+Common Utils For React Component.
 
 [![NPM version][npm-image]][npm-url]
 [![gemnasium deps][gemnasium-image]][gemnasium-url]
@@ -21,37 +20,101 @@ Common Utils For React Component
 [download-image]: https://img.shields.io/npm/dm/rc-util.svg?style=flat-square
 [download-url]: https://npmjs.org/package/rc-util
 
-## install
+## Install
 
 [![rc-util](https://nodei.co/npm/rc-util.png)](https://npmjs.org/package/rc-util)
 
-
 ## API
 
-### shallowEqual:function
+### createChainedFunction
 
-### KeyCode:enum
+> (...functions): Function
 
-enum of KeyCode
+Create a function which will call all the functions with it's arguments from left to right.
 
-```
-KeyCode.ENTER
-KeyCode.DOWN
-```
+### getContainerRenderMixin
 
-### guid:function
+> (config: Object): Object
 
-return string represent a global unique id across current application
+To generate a mixin which will render specific component into specific container automatically.
 
-### createChainedFunction:function
+Fields in `config` and their meanings.
 
-### Dom.addEventListener:function
+| Field | Type | Description | Default |
+|-------|------|-------------|---------|
+| autoMount | boolean | Whether to render component into container automatically | true |
+| autoDestroy | boolean | Whether to remove container automatically while the component is unmounted | true |
+| isVisible | (instance): boolean | A function to get current visibility of the component | - |
+| getComponent | (instance, extra): ReactNode | A function to get the component which will be rendered into container | - |
+| getContaienr | (instance): HTMLElement | A function to get the container | |
 
-### Dom.contains:function
+### getScrollBarSize
 
-### Children.toArray
+> (fresh?: boolean): number
 
-transform React Children into Array type
+Get the width of scrollbar.
+
+### guid
+
+> (): string
+
+To generate a global unique id across current application.
+
+### warn
+
+> (msg: string): void
+
+A shallow wrapper of `console.warn`.
+
+### Children
+
+A collection of functions to operate React elements' children.
+
+#### Children.mapSelf
+
+> (children): children
+
+Return a shallow copy of children.
+
+#### Children.toArray
+
+> (children: ReactNode[]): ReactNode[]
+
+Convert children into an array.
+
+### Dom
+
+A collection of functions to operate DOM elements.
+
+#### Dom.addEventlistener
+
+> (target: ReactNode, eventType: string, listener: Function): { remove: Function }
+
+A shallow wrapper of [add-dom-event-listener](https://github.com/yiminghe/add-dom-event-listener).
+
+#### Dom.contains
+
+> (root: HTMLElement, node: HTMLElement): boolean
+
+Check if node is equal to root or in the subtree of root.
+
+### KeyCode
+
+> Enum
+
+Enum of KeyCode, please check the [definition](https://github.com/react-component/util/blob/master/src/KeyCode.js) of it.
+
+#### KeyCode.isTextModifyingKeyEvent
+
+> (e: Event): boolean
+
+Whether text and modified key is entered at the same time.
+
+#### KeyCode.isCharacterKey
+
+> (keyCode: KeyCode): boolean
+
+Whether character is entered.
 
 ## License
 
