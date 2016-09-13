@@ -32,7 +32,7 @@ function getStyleValue(node, type, value) {
   return removePixel[type] ? (parseFloat(value) || 0) : value;
 }
 
-function getStyle(node, name) {
+export function get(node, name) {
   const length = arguments.length;
   const style = getComputedStyle(node);
 
@@ -41,7 +41,7 @@ function getStyle(node, name) {
   return (length === 1) ? style : getStyleValue(node, name, style[name] || node.style[name]);
 }
 
-function setStyle(node, name, value) {
+export function set(node, name, value) {
   const length = arguments.length;
   name = floatMap[name] ? 'cssFloat' in node.style ? 'cssFloat' : 'styleFloat' : name;
   if (length === 3) {
@@ -53,30 +53,27 @@ function setStyle(node, name, value) {
   }
   for (const x in name) {
     if (name.hasOwnProperty(x)) {
-      setStyle(node, x, name[x]);
+      set(node, x, name[x]);
     }
   }
   return getComputedStyle(node);
 }
 
-exports.get = getStyle;
-exports.set = setStyle;
-
-exports.getOuterWidth = function getOuterWidth(el) {
+export function getOuterWidth(el) {
   if (el === document.body) {
     return document.documentElement.clientWidth;
   }
   return el.offsetWidth;
-};
+}
 
-exports.getOuterHeight = function getOuterHeight(el) {
+export function getOuterHeight(el) {
   if (el === document.body) {
     return window.innerHeight || document.documentElement.clientHeight;
   }
   return el.offsetHeight;
-};
+}
 
-exports.getDocSize = function getDocSize() {
+export function getDocSize() {
   const width = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);
   const height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
 
@@ -84,26 +81,25 @@ exports.getDocSize = function getDocSize() {
     width,
     height,
   };
-};
+}
 
-exports.getClientSize = function () {
+export function getClientSize() {
   const width = document.documentElement.clientWidth;
   const height = window.innerHeight || document.documentElement.clientHeight;
   return {
     width,
     height,
   };
-};
+}
 
-exports.getScroll = function () {
+export function getScroll() {
   return {
     scrollLeft: Math.max(document.documentElement.scrollLeft, document.body.scrollLeft),
     scrollTop: Math.max(document.documentElement.scrollTop, document.body.scrollTop),
   };
-};
+}
 
-
-exports.getOffset = function (node) {
+export function getOffset(node) {
   const box = node.getBoundingClientRect();
   const docElem = document.documentElement;
 
@@ -114,4 +110,4 @@ exports.getOffset = function (node) {
     top: box.top + (window.pageYOffset || docElem.scrollTop) -
       (docElem.clientTop || document.body.clientTop || 0),
   };
-};
+}

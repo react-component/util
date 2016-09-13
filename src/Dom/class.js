@@ -1,13 +1,12 @@
-function hasClass(node, className) {
+export function hasClass(node, className) {
   if (node.classList) {
     return node.classList.contains(className);
   }
   const originClass = node.className;
   return originClass.indexOf(className) > -1;
 }
-exports.hasClass = hasClass;
 
-exports.addClass = function addClass(node, className) {
+export function addClass(node, className) {
   if (node.classList) {
     node.classList.add(className);
   } else {
@@ -15,9 +14,9 @@ exports.addClass = function addClass(node, className) {
       node.className = `${node.className} ${className}`;
     }
   }
-};
+}
 
-exports.removeClass = function removeClass(node, className) {
+export function removeClass(node, className) {
   if (node.classList) {
     node.classList.remove(className);
   } else {
@@ -26,4 +25,4 @@ exports.removeClass = function removeClass(node, className) {
       node.className = originClass.replace(className, '');
     }
   }
-};
+}

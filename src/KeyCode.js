@@ -518,4 +518,4 @@ KeyCode.isCharacterKey = function isCharacterKey(keyCode) {
   }
 };
 
-module.exports = KeyCode;
+export default KeyCode;

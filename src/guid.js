@@ -1,4 +1,4 @@
 let seed = 0;
-module.exports = function guid() {
+export default function guid() {
   return `${Date.now()}_${seed++}`;
-};
+}

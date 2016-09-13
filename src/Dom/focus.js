@@ -30,7 +30,7 @@ function focusable(node) {
   }
 }
 
-function getFocusNodeList(node) {
+export function getFocusNodeList(node) {
   const res = [].slice.call(node.querySelectorAll('*'), 0).filter((child) => {
     return focusable(child);
   });
@@ -42,15 +42,15 @@ function getFocusNodeList(node) {
 
 let lastFocusElement = null;
 
-function saveLastFocusNode() {
+export function saveLastFocusNode() {
   lastFocusElement = document.activeElement;
 }
 
-function clearLastFocusNode() {
+export function clearLastFocusNode() {
   lastFocusElement = null;
 }
 
-function backLastFocusNode() {
+export function backLastFocusNode() {
   if (lastFocusElement) {
     try {
       // 元素可能已经被移动了
@@ -64,7 +64,7 @@ function backLastFocusNode() {
   }
 }
 
-function limitTabRange(node, e) {
+export function limitTabRange(node, e) {
   if (e.keyCode === 9) {
     const tabNodeList = getFocusNodeList(node);
     const lastTabNode = tabNodeList[e.shiftKey ? 0 : tabNodeList.length - 1];
@@ -77,9 +77,3 @@ function limitTabRange(node, e) {
     }
   }
 }
-
-exports.saveLastFocusNode = saveLastFocusNode;
-exports.clearLastFocusNode = clearLastFocusNode;
-exports.backLastFocusNode = backLastFocusNode;
-exports.getFocusNodeList = getFocusNodeList;
-exports.limitTabRange = limitTabRange;

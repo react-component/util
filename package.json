@@ -1,6 +1,6 @@
 {
   "name": "rc-util",
-  "version": "3.4.1",
+  "version": "4.0.0",
   "description": "Common Utils For React Component",
   "keywords": [
     "react",
@@ -40,7 +40,7 @@
     "react-dom": "15.x"
   },
   "pre-commit": [
-    "test", "lint"
+    "lint"
   ],
   "dependencies": {
     "add-dom-event-listener": "1.x"

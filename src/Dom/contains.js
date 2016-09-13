@@ -1,4 +1,4 @@
-module.exports = function contains(root, n) {
+export default function contains(root, n) {
   let node = n;
   while (node) {
     if (node === root) {
@@ -8,4 +8,4 @@ module.exports = function contains(root, n) {
   }
 
   return false;
-};
+}

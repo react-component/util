@@ -1,6 +1,6 @@
 let cached;
 
-function getScrollBarSize(fresh) {
+export default function getScrollBarSize(fresh) {
   if (fresh || cached === undefined) {
     const inner = document.createElement('div');
     inner.style.width = '100%';
@@ -36,5 +36,3 @@ function getScrollBarSize(fresh) {
   }
   return cached;
 }
-
-module.exports = getScrollBarSize;

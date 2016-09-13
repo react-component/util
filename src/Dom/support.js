@@ -1,4 +1,4 @@
-const canUseDOM = require('./canUseDom');
+import canUseDOM from './canUseDom';
 const animationEndEventNames = {
   WebkitAnimation: 'webkitAnimationEnd',
   OAnimation: 'oAnimationEnd',
@@ -22,12 +22,5 @@ function supportEnd(names) {
   return false;
 }
 
-const support = exports;
-
-if (canUseDOM()) {
-  support.animation = supportEnd(animationEndEventNames);
-  support.transition = supportEnd(transitionEventNames);
-} else {
-  support.animation = false;
-  support.transition = false;
-}
+export const animation = canUseDOM() && supportEnd(animationEndEventNames);
+export const transition = canUseDOM() && supportEnd(transitionEventNames);

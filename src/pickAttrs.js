@@ -23,7 +23,7 @@ const eventsName = `onCopy onCut onPaste onCompositionEnd onCompositionStart onC
 /* eslint-enable max-len */
 const attrsPrefix = ['data', 'aria'];
 
-module.exports = function (props) {
+export default function pickAttrs(props) {
   const attrs = {};
   for (const key in props) {
     if (attributes.indexOf(key) > -1 || eventsName.indexOf(key) > -1) {
@@ -39,4 +39,4 @@ module.exports = function (props) {
     }
   }
   return attrs;
-};
+}

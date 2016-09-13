@@ -6,7 +6,7 @@
  *
  * @returns {function|null}
  */
-function createChainedFunction() {
+export default function createChainedFunction() {
   const args = [].slice.call(arguments, 0);
   if (args.length === 1) {
     return args[0];
@@ -20,5 +20,3 @@ function createChainedFunction() {
     }
   };
 }
-
-module.exports = createChainedFunction;
