@@ -9,7 +9,6 @@
   "files": [
     "lib"
   ],
-  "main": "./lib/index",
   "homepage": "http://github.com/react-component/util",
   "author": "",
   "repository": {
@@ -41,11 +40,9 @@
     "react-dom": "15.x"
   },
   "pre-commit": [
-    "lint"
+    "test", "lint"
   ],
   "dependencies": {
-    "add-dom-event-listener": "1.x",
-    "classnames": "2.x",
-    "shallowequal": "0.2.x"
+    "add-dom-event-listener": "1.x"
   }
 }

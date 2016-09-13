@@ -32,11 +32,29 @@ Common Utils For React Component.
 
 Create a function which will call all the functions with it's arguments from left to right.
 
+```jsx
+import createChainedFunction from 'rc-util/lib/createChainedFunction';
+```
+
+### deprecated
+
+> (prop: string, instead: string, component: string): void
+
+Log an error message to warn developers that `prop` is deprecated.
+
+```jsx
+import deprecated from 'rc-util/lib/deprecated';
+```
+
 ### getContainerRenderMixin
 
 > (config: Object): Object
 
 To generate a mixin which will render specific component into specific container automatically.
+
+```jsx
+import getContainerRenderMixin from 'rc-util/lib/getContainerRenderMixin';
+```
 
 Fields in `config` and their meanings.
 
@@ -54,11 +72,29 @@ Fields in `config` and their meanings.
 
 Get the width of scrollbar.
 
+```jsx
+import getScrollBarSize from 'rc-util/lib/getScrollBarSize';
+```
+
 ### guid
 
 > (): string
 
 To generate a global unique id across current application.
+
+```jsx
+import guid from 'rc-util/lib/guid';
+```
+
+### pickAttrs
+
+> (props: Object): Object
+
+Pick valid HTML attributes and events from props.
+
+```jsx
+import pickAttrs from 'rc-util/lib/pickAttrs';
+```
 
 ### warn
 
@@ -66,43 +102,130 @@ To generate a global unique id across current application.
 
 A shallow wrapper of `console.warn`.
 
+```jsx
+import warn from 'rc-util/lib/warn';
+```
+
 ### Children
 
 A collection of functions to operate React elements' children.
 
-#### Children.mapSelf
+#### Children/mapSelf
 
 > (children): children
 
 Return a shallow copy of children.
 
-#### Children.toArray
+```jsx
+import mapSelf from 'rc-util/lib/Children/mapSelf';
+```
+
+#### Children/toArray
 
 > (children: ReactNode[]): ReactNode[]
 
 Convert children into an array.
 
+```jsx
+import toArray from 'rc-util/lib/Children/toArray';
+```
+
 ### Dom
 
 A collection of functions to operate DOM elements.
 
-#### Dom.addEventlistener
+#### Dom/addEventlistener
 
 > (target: ReactNode, eventType: string, listener: Function): { remove: Function }
 
 A shallow wrapper of [add-dom-event-listener](https://github.com/yiminghe/add-dom-event-listener).
 
-#### Dom.contains
+```jsx
+import addEventlistener from 'rc-util/lib/Dom/addEventlistener';
+```
+
+#### Dom/casUseDom
+
+> (): boolean
+
+Check if DOM is available.
+
+```jsx
+import casUseDom from 'rc-util/lib/Dom/casUseDom';
+```
+
+#### Dom/class
+
+A collection of functions to operate DOM nodes' class name.
+
+* `hasClass(node: HTMLElement, className: string): boolean`
+* `addClass(node: HTMLElement, className: string): void`
+* `removeClass(node: HTMLElement, className: string): void`
+
+```jsx
+import cssClass from 'rc-util/lib/Dom/class;
+```
+
+#### Dom/contains
 
 > (root: HTMLElement, node: HTMLElement): boolean
 
 Check if node is equal to root or in the subtree of root.
+
+```jsx
+import contains from 'rc-util/lib/Dom/contains';
+```
+
+#### Dom/css
+
+A collection of functions to get or set css styles.
+
+* `get(node: HTMLElement, name?: string): any`
+* `set(node: HTMLElement, name?: string, value: any) | set(node, object)`
+* `getOuterWidth(el: HTMLElement): number`
+* `getOuterHeight(el: HTMLElement): number`
+* `getDocSize(): { width: number, height: number }`
+* `getClientSize(): { width: number, height: number }`
+* `getScroll(): { scrollLeft: number, scrollTop: number }`
+* `getOffset(node: HTMLElement): { left: number, top: number }`
+
+```jsx
+import css from 'rc-util/lib/Dom/css';
+```
+
+#### Dom/focus
+
+A collection of functions to operate focus status of DOM node.
+
+* `saveLastFocusNode(): void`
+* `clearLastFocusNode(): void`
+* `backLastFocusNode(): void`
+* `getFocusNodeList(node: HTMLElement): HTMLElement[]` get a list of focusable nodes from the subtree of node.
+* `limitTabRange(node: HTMLElement, e: Event): void`
+
+```jsx
+import focus from 'rc-util/lib/Dom/focus';
+```
+
+#### Dom/support
+
+> { animation: boolean | Object, transition: boolean | Object }
+
+A flag to tell whether current environment supports `animationend` or `transitionend`.
+
+```jsx
+import support from 'rc-util/lib/Dom/support';
+```
 
 ### KeyCode
 
 > Enum
 
 Enum of KeyCode, please check the [definition](https://github.com/react-component/util/blob/master/src/KeyCode.js) of it.
+
+```jsx
+import KeyCode from 'rc-util/lib/KeyCode';
+```
 
 #### KeyCode.isTextModifyingKeyEvent
 
