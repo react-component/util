@@ -43,6 +43,7 @@
     "lint"
   ],
   "dependencies": {
-    "add-dom-event-listener": "1.x"
+    "add-dom-event-listener": "1.x",
+    "shallowequal": "^0.2.2"
   }
 }
