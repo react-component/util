@@ -22,8 +22,14 @@ export default function getContainerRenderMixin(config) {
       if (!instance._container) {
         instance._container = getContainer(instance);
       }
+      let component;
+      if (instance.getComponent) {
+        component = instance.getComponent(componentArg);
+      } else {
+        component = getComponent(instance, componentArg);
+      }
       ReactDOM.unstable_renderSubtreeIntoContainer(instance,
-        getComponent(instance, componentArg), instance._container,
+        component, instance._container,
         function callback() {
           instance._component = this;
           if (ready) {
