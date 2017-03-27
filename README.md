@@ -144,14 +144,14 @@ A shallow wrapper of [add-dom-event-listener](https://github.com/yiminghe/add-do
 import addEventlistener from 'rc-util/lib/Dom/addEventlistener';
 ```
 
-#### Dom/casUseDom
+#### Dom/canUseDom
 
 > (): boolean
 
 Check if DOM is available.
 
 ```jsx
-import casUseDom from 'rc-util/lib/Dom/casUseDom';
+import canUseDom from 'rc-util/lib/Dom/canUseDom';
 ```
 
 #### Dom/class
