@@ -1,6 +1,6 @@
 {
   "name": "rc-util",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "Common Utils For React Component",
   "keywords": [
     "react",
@@ -40,11 +40,11 @@
   },
   "devDependencies": {
     "coveralls": "^2.11.15",
-    "pre-commit": "^1.0.7",
     "expect.js": "~0.3.1",
-    "react": "15.x",
-    "jest":"20.x",
+    "jest": "20.x",
+    "pre-commit": "^1.0.7",
     "rc-tools": "6.x",
+    "react": "15.x",
     "react-dom": "15.x"
   },
   "pre-commit": [
@@ -52,6 +52,7 @@
   ],
   "dependencies": {
     "add-dom-event-listener": "1.x",
+    "babel-runtime": "6.x",
     "shallowequal": "^0.2.2"
   }
 }
