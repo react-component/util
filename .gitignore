@@ -23,3 +23,5 @@ node_modules
 build
 lib
 coverage
+yarn.lock
+/es/

@@ -1,4 +1,3 @@
-const expect = require('expect.js');
 const createChainedFunction = require('../src/createChainedFunction');
 const PureRenderMixin = require('../src/PureRenderMixin');
 const React = require('react');
@@ -21,7 +20,7 @@ describe('rc-util', () => {
     }
 
     createChainedFunction(f1, f2, f3, null)();
-    expect(ret).to.eql([1, 2, 3]);
+    expect(ret).toEqual([1, 2, 3]);
   });
 
   it('PureRenderMixin works', () => {
@@ -44,6 +43,6 @@ describe('rc-util', () => {
     c.setState({
       a: 1,
     });
-    expect(count).to.be(1);
+    expect(count).toBe(1);
   });
 });

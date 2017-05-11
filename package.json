@@ -1,16 +1,16 @@
 {
   "name": "rc-util",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "Common Utils For React Component",
   "keywords": [
     "react",
     "util"
   ],
   "files": [
-    "lib"
+    "lib",
+    "es"
   ],
   "homepage": "http://github.com/react-component/util",
-  "author": "",
   "repository": {
     "type": "git",
     "url": "git@github.com:react-component/util.git"
@@ -24,19 +24,27 @@
   },
   "scripts": {
     "build": "rc-tools run build",
-    "pub": "rc-tools run pub",
+    "pub": "rc-tools run pub --babel-runtime",
     "lint": "rc-tools run lint",
-    "karma": "rc-tools run karma",
-    "saucelabs": "rc-tools run saucelabs",
-    "test": "rc-tools run test",
-    "chrome-test": "rc-tools run chrome-test",
-    "coverage": "rc-tools run coverage"
+    "test": "jest",
+    "coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/*"
+    ],
+    "transform": {
+      "\\.tsx?$": "./node_modules/rc-tools/scripts/jestPreprocessor.js",
+      "\\.jsx?$": "./node_modules/rc-tools/scripts/jestPreprocessor.js"
+    }
   },
   "devDependencies": {
+    "coveralls": "^2.11.15",
     "pre-commit": "^1.0.7",
     "expect.js": "~0.3.1",
     "react": "15.x",
-    "rc-tools": "5.x",
+    "jest":"20.x",
+    "rc-tools": "6.x",
     "react-dom": "15.x"
   },
   "pre-commit": [
