@@ -3,7 +3,7 @@ export function hasClass(node, className) {
     return node.classList.contains(className);
   }
   const originClass = node.className;
-  return originClass.indexOf(className) > -1;
+  return ` ${originClass} `.indexOf(` ${className} `) > -1;
 }
 
 export function addClass(node, className) {
@@ -22,7 +22,7 @@ export function removeClass(node, className) {
   } else {
     if (hasClass(node, className)) {
       const originClass = node.className;
-      node.className = originClass.replace(className, '');
+      node.className = ` ${originClass} `.replace(` ${className} `, '');
     }
   }
 }
