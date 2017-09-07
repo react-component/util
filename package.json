@@ -1,6 +1,6 @@
 {
   "name": "rc-util",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "description": "Common Utils For React Component",
   "keywords": [
     "react",
@@ -53,6 +53,7 @@
   "dependencies": {
     "add-dom-event-listener": "1.x",
     "babel-runtime": "6.x",
-    "shallowequal": "^0.2.2"
+    "shallowequal": "^0.2.2",
+    "classnames": "~2.2.1"
   }
 }
