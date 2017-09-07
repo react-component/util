@@ -239,6 +239,14 @@ Whether text and modified key is entered at the same time.
 
 Whether character is entered.
 
+#### TouchFeedback
+
+| Field | Type | Description | Default |
+|-------|------|-------------|---------|
+| disabled | boolean |  | false |
+| activeClassName | string | className applied to child when active |  |
+| activeStyle | object | style applied to child when active | - |
+
 ## License
 
 rc-util is released under the MIT license.
