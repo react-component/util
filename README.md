@@ -60,8 +60,6 @@ Fields in `config` and their meanings.
 
 | Field | Type | Description | Default |
 |-------|------|-------------|---------|
-| autoMount | boolean | Whether to render component into container automatically | true |
-| autoDestroy | boolean | Whether to remove container automatically while the component is unmounted | true |
 | isVisible | (instance): boolean | A function to get current visibility of the component | - |
 | getComponent | (instance, extra): ReactNode | A function to get the component which will be rendered into container | - |
 | getContaienr | (instance): HTMLElement | A function to get the container | |
