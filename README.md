@@ -66,6 +66,22 @@ Fields in `config` and their meanings.
 | getComponent | (instance, extra): ReactNode | A function to get the component which will be rendered into container | - |
 | getContaienr | (instance): HTMLElement | A function to get the container | |
 
+### Portal
+
+Render children to the specific container;
+
+```jsx
+import Portal from 'rc-util/lib/Portal';
+```
+
+Props:
+
+| Prop | Type | Description | Default |
+|-------|------|-------------|---------|
+| children | ReactChildren | Content render to the container | - |
+| getContaienr | (): HTMLElement  | A function  to get the container | - |
+
+
 ### getScrollBarSize
 
 > (fresh?: boolean): number
