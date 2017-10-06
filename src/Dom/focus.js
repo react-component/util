@@ -26,7 +26,7 @@ function focusable(node) {
     } else if (nodeName === 'a') {
       return (node.getAttribute('href') || hasTabIndex);
     }
-    return hasTabIndex;
+    return node.isContentEditable || hasTabIndex;
   }
 }
 
