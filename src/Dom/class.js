@@ -22,7 +22,7 @@ export function removeClass(node, className) {
   } else {
     if (hasClass(node, className)) {
       const originClass = node.className;
-      node.className = ` ${originClass} `.replace(` ${className} `, '');
+      node.className = ` ${originClass} `.replace(` ${className} `, ' ');
     }
   }
 }
