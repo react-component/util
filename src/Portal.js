@@ -6,10 +6,18 @@ export default class Portal extends React.Component {
   static propTypes = {
     getContainer: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired,
+    didUpdate: PropTypes.func,
   }
 
   componentDidMount() {
     this.createContainer();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { didUpdate } = this.props;
+    if (didUpdate) {
+      didUpdate(prevProps);
+    }
   }
 
   componentWillUnmount() {
