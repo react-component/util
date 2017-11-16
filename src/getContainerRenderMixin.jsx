@@ -11,6 +11,7 @@ export default function getContainerRenderMixin(config) {
     autoMount = true,
     autoDestroy = true,
     isVisible,
+    isForceRender,
     getComponent,
     getContainer = defaultGetContainer,
   } = config;
@@ -18,7 +19,10 @@ export default function getContainerRenderMixin(config) {
   let mixin;
 
   function renderComponent(instance, componentArg, ready) {
-    if (!isVisible || instance._component || isVisible(instance)) {
+    if (
+      !isVisible || instance._component || isVisible(instance) ||
+        (isForceRender && isForceRender(instance))
+    ) {
       if (!instance._container) {
         instance._container = getContainer(instance);
       }
