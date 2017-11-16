@@ -63,6 +63,7 @@ Fields in `config` and their meanings.
 | autoMount | boolean | Whether to render component into container automatically | true |
 | autoDestroy | boolean | Whether to remove container automatically while the component is unmounted | true |
 | isVisible | (instance): boolean | A function to get current visibility of the component | - |
+| isForceRender | (instance): boolean | A function to determine whether to render popup even it's not visible | - |
 | getComponent | (instance, extra): ReactNode | A function to get the component which will be rendered into container | - |
 | getContaienr | (instance): HTMLElement | A function to get the container | |
 
