@@ -1,6 +1,6 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { createPortal } from 'react-dom';
 
 export default class Portal extends React.Component {
   static propTypes = {
@@ -37,7 +37,7 @@ export default class Portal extends React.Component {
 
   render() {
     if (this._container) {
-      return createPortal(this.props.children, this._container);
+      return ReactDOM.createPortal(this.props.children, this._container);
     }
     return null;
   }
