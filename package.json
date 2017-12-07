@@ -45,8 +45,8 @@
     "jest": "20.x",
     "pre-commit": "^1.0.7",
     "rc-tools": "6.x",
-    "react": "15.x",
-    "react-dom": "15.x"
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
   },
   "pre-commit": [
     "lint"
