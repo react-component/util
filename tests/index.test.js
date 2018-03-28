@@ -2,6 +2,7 @@ const createChainedFunction = require('../src/createChainedFunction');
 const PureRenderMixin = require('../src/PureRenderMixin');
 const React = require('react');
 const ReactDOM = require('react-dom');
+const createReactClass = require('create-react-class');
 
 describe('rc-util', () => {
   it('createChainedFunction works', () => {
@@ -27,7 +28,7 @@ describe('rc-util', () => {
     const div = document.createElement('div');
     document.body.appendChild(div);
     let count = 0;
-    const C = React.createClass({
+    const C = createReactClass({
       mixins: [PureRenderMixin],
       getInitialState() {
         return {
