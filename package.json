@@ -10,6 +10,8 @@
     "lib",
     "es"
   ],
+  "main": "./lib",
+  "module": "./es",
   "homepage": "http://github.com/react-component/util",
   "repository": {
     "type": "git",
