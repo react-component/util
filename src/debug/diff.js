@@ -1,4 +1,21 @@
-export default function diff(obj1, obj2, depth = 10, path = [], diffList = []) {
+/* eslint no-proto: 0 */
+
+function createArray() {
+  const arr = [];
+  arr.__proto__ = new Array;
+  arr.__proto__.format = function toString() {
+    return this.map(obj => ({
+      ...obj,
+      path: obj.path.join(' > '),
+    }));
+  };
+  arr.__proto__.toString = function toString() {
+    return JSON.stringify(this.format(), null, 2);
+  };
+  return arr;
+}
+
+export default function diff(obj1, obj2, depth = 10, path = [], diffList = createArray()) {
   if (depth <= 0) return diffList;
 
   const keys = new Set([...Object.keys(obj1), ...Object.keys(obj2)]);

@@ -38,5 +38,15 @@ describe('debug', () => {
         { path: ['c', 'd'], value1: 4, value2: 5 },
       ]);
     });
+
+    it('toString', () => {
+      const diffList = diff({ a: 1 }, {});
+      expect(diffList.toString()).toEqual(`[
+  {
+    "path": "a",
+    "value1": 1
+  }
+]`);
+    });
   });
 });
