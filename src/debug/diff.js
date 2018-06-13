@@ -1,4 +1,23 @@
-export default function diff(obj1, obj2, depth = 10, path = [], diffList = []) {
+// function createArray() {
+//   const arr = [];
+//   arr.__proto__ = new Array;
+//   arr.__proto__.format = function toString() {
+//     return this.map(obj => ({
+//       ...obj,
+//       path: obj.path.join(' > '),
+//     }));
+//   };
+//   arr.__proto__.toString = function toString() {
+//     return JSON.stringify(this.format(), null, 2);
+//   };
+//   return arr;
+// }
+
+class DiffArray extends Array {}
+DiffArray.prototype = new Array;
+
+// export default function diff(obj1, obj2, depth = 10, path = [], diffList = createArray()) {
+export default function diff(obj1, obj2, depth = 10, path = [], diffList = new DiffArray()) {
   if (depth <= 0) return diffList;
 
   const keys = new Set([...Object.keys(obj1), ...Object.keys(obj2)]);
