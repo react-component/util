@@ -40,7 +40,8 @@ describe('debug', () => {
     });
 
     it('toString', () => {
-      expect(diff({ a: 1 }, {}).toString()).toEqual(`[
+      const diffList = diff({ a: 1 }, {});
+      expect(diffList.toString()).toEqual(`[
   {
     "path": "a",
     "value1": 1
