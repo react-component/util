@@ -51,11 +51,13 @@
   "pre-commit": [
     "lint"
   ],
+  "peerDependencies": {
+    "react-dom": "^16.2.0"
+  },
   "dependencies": {
     "add-dom-event-listener": "1.x",
     "babel-runtime": "6.x",
     "prop-types": "^15.5.10",
-    "shallowequal": "^0.2.2",
-    "react-dom": "^16.2.0"
+    "shallowequal": "^0.2.2"
   }
 }
