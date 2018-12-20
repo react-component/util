@@ -43,7 +43,7 @@
     "coveralls": "^2.11.15",
     "create-react-class": "^15.6.3",
     "expect.js": "~0.3.1",
-    "jest": "20.x",
+    "jest": "23.x",
     "pre-commit": "^1.0.7",
     "rc-tools": "6.x",
     "react": "^16.2.0",
