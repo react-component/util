@@ -40,7 +40,7 @@ export default function getScrollBarSize(fresh) {
 export const getScrollBarSizeFunc = (fresh) => (
   document.body.scrollHeight >
     (window.innerHeight || document.documentElement.clientHeight) &&
-    (window.innerWidth || document.documentElement.clientWidth) > document.body.offsetWidth
+    window.innerWidth > document.body.offsetWidth
     ? getScrollBarSize(fresh)
     : 0
 );
