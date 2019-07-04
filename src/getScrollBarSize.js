@@ -37,11 +37,11 @@ export default function getScrollBarSize(fresh) {
   return cached;
 }
 
-export const getScrollBarSizeFunc = () => (
+export const getScrollBarSizeFunc = (fresh) => (
   document.body.scrollHeight >
     (window.innerHeight || document.documentElement.clientHeight) &&
     (window.innerWidth || document.documentElement.clientWidth) > document.body.offsetWidth
-    ? getScrollBarSize(true)// router 切换时可能会导至页面失去滚动条，所以需要时时获取。
+    ? getScrollBarSize(fresh)
     : 0
 );
 
