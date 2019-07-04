@@ -36,16 +36,3 @@ export default function getScrollBarSize(fresh) {
   }
   return cached;
 }
-
-export const switchScrollingEffect = (close) => {
-  if (close) {
-    document.body.style.position = '';
-    document.body.style.width = '';
-    return;
-  }
-  const scrollBarSize = getScrollBarSize();
-  if (scrollBarSize) {
-    document.body.style.position = 'relative';
-    document.body.style.width = `calc(100% - ${scrollBarSize}px)`;
-  }
-};
