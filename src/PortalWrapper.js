@@ -26,7 +26,7 @@ class PortalWrapper extends React.Component {
   state = {};
 
   shouldComponentUpdate({ visible, forceRender }) {
-    return !!(this.props.visible || visible) || (this.props.forceRender || forceRender);
+    return !!(this.props.visible || visible) || !!(this.props.forceRender || forceRender);
   }
   componentWillUnmount() {
     const { visible } = this.props;
