@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import { polyfill } from 'react-lifecycles-compat';
 import ContainerRender from './ContainerRender';
 import Portal from './Portal';
 
@@ -14,7 +15,7 @@ const windowIsUndefined = !(
 const IS_REACT_16 = 'createPortal' in ReactDOM;
 
 
-export default class PortalWrapper extends React.Component {
+class PortalWrapper extends React.Component {
   static propTypes = {
     wrapperClassName: PropTypes.string,
     forceRender: PropTypes.bool,
@@ -25,18 +26,11 @@ export default class PortalWrapper extends React.Component {
 
   constructor(props) {
     super(props);
-    const { visible, forceRender } = this.props;
-    const show = visible || forceRender;
-    if (show) {
-      openCount = show ? openCount + 1 : openCount - 1;
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { visible } = nextProps;
-    if (visible !== this.props.visible) {
-      openCount = visible && !this.props.visible ? openCount + 1 : openCount - 1;
-    }
+    const { visible } = props;
+    openCount = visible ? openCount + 1 : openCount;
+    this.state = {
+      visible,
+    };
   }
   shouldComponentUpdate({ visible, forceRender }) {
     return !!(this.props.visible || visible) || (this.props.forceRender || forceRender);
@@ -56,6 +50,15 @@ export default class PortalWrapper extends React.Component {
         this.removeContainer();
       }
     }
+  }
+  static getDerivedStateFromProps(props, { visible: prevVisible }) {
+    const { visible } = props;
+    if (visible !== prevVisible) {
+      openCount = visible && !prevVisible ? openCount + 1 : openCount - 1;
+    }
+    return {
+      visible,
+    };
   }
   getParent = () => {
     const { getContainer } = this.props;
@@ -127,3 +130,4 @@ export default class PortalWrapper extends React.Component {
     return portal;
   }
 }
+export default polyfill(PortalWrapper);
