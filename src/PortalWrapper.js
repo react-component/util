@@ -32,6 +32,7 @@ class PortalWrapper extends React.Component {
     const { visible } = this.props;
     this.container = null;
     this._component = null;
+    openCount = visible && openCount ? openCount - 1 : openCount;
     if (!IS_REACT_16) {
       if (visible) {
         this.renderComponent({
