@@ -33,6 +33,9 @@ class PortalWrapper extends React.Component {
   shouldComponentUpdate({ visible, forceRender }) {
     return !!(this.props.visible || visible || this.props.forceRender || forceRender);
   }
+  componentWillUpdate() {
+    this.setWrapperClassName();
+  }
   componentWillUnmount() {
     const { visible } = this.props;
     this.container = null;
@@ -82,14 +85,16 @@ class PortalWrapper extends React.Component {
       this.container = document.createElement('div');
       const parent = this.getParent();
       parent.appendChild(this.container);
-      const { wrapperClassName } = this.props;
-      if (wrapperClassName) {
-        this.container.className = wrapperClassName;
-      }
     }
+    this.setWrapperClassName();
     return this.container;
   }
-
+  setWrapperClassName = () => {
+    const { wrapperClassName } = this.props;
+    if (this.container && wrapperClassName && wrapperClassName !== this.container.className) {
+      this.container.className = wrapperClassName;
+    }
+  }
   savePortal = (c) => {
     this._component = c;
   }
