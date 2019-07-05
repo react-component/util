@@ -14,7 +14,6 @@ const windowIsUndefined = !(
 
 const IS_REACT_16 = 'createPortal' in ReactDOM;
 
-
 class PortalWrapper extends React.Component {
   static propTypes = {
     wrapperClassName: PropTypes.string,
@@ -23,10 +22,16 @@ class PortalWrapper extends React.Component {
     children: PropTypes.func,
     visible: PropTypes.bool,
   }
-  state = {};
+
+  constructor(props) {
+    super(props);
+    const { visible } = props;
+    openCount = visible ? openCount + 1 : openCount;
+    this.state = {};
+  }
 
   shouldComponentUpdate({ visible, forceRender }) {
-    return !!(this.props.visible || visible) || !!(this.props.forceRender || forceRender);
+    return !!(this.props.visible || visible || this.props.forceRender || forceRender);
   }
   componentWillUnmount() {
     const { visible } = this.props;
@@ -47,9 +52,7 @@ class PortalWrapper extends React.Component {
   }
   static getDerivedStateFromProps(props, { visible: prevVisible }) {
     const { visible } = props;
-    if (typeof prevVisible === 'undefined') {
-      openCount = visible ? openCount + 1 : openCount;
-    } else if (visible !== prevVisible) {
+    if (prevVisible !== undefined && visible !== prevVisible) {
       openCount = visible && !prevVisible ? openCount + 1 : openCount - 1;
     }
     return {
