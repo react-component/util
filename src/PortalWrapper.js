@@ -33,7 +33,7 @@ class PortalWrapper extends React.Component {
   shouldComponentUpdate({ visible, forceRender }) {
     return !!(this.props.visible || visible || this.props.forceRender || forceRender);
   }
-  componentWillUpdate() {
+  componentDidUpdate() {
     this.setWrapperClassName();
   }
   componentWillUnmount() {
