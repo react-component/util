@@ -56,6 +56,7 @@
     "add-dom-event-listener": "^1.1.0",
     "babel-runtime": "6.x",
     "prop-types": "^15.5.10",
+    "react-lifecycles-compat": "^3.0.4",
     "shallowequal": "^0.2.2"
   }
 }
