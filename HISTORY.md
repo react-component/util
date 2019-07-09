@@ -1,6 +1,10 @@
 # History
 ----
 
+## 4.8.0 / 2019-07-09
+
+- add findDOMNode to check if a DOM first and then use native findDOMNode
+
 ## 4.7.0 / 2019-07-08
 
 - add PortalWrapper to support body scroll control
