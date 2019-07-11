@@ -40,6 +40,7 @@ class PortalWrapper extends React.Component {
     const { visible } = this.props;
     this.container = null;
     this._component = null;
+    // 离开时不会 render， 导到离开时数值不变，改用 func 。。
     openCount = visible && openCount ? openCount - 1 : openCount;
     if (!IS_REACT_16) {
       if (visible) {
@@ -102,7 +103,7 @@ class PortalWrapper extends React.Component {
     const { children, forceRender, visible } = this.props;
     let portal = null;
     const childProps = {
-      openCount,
+      getOpenCount: () => openCount,
       getContainer: this.getContainer,
     };
     // suppport react15
