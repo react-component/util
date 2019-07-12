@@ -40,7 +40,7 @@
     }
   },
   "devDependencies": {
-    "coveralls": "^2.11.15",
+    "coveralls": "^3.0.5",
     "create-react-class": "^15.6.3",
     "expect.js": "~0.3.1",
     "jest": "20.x",
