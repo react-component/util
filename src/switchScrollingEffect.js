@@ -1,6 +1,12 @@
 import getScrollBarSize from './getScrollBarSize';
 
 export default (close) => {
+  const bodyIsOverflowing = document.body.scrollHeight >
+    (window.innerHeight || document.documentElement.clientHeight) &&
+    window.innerWidth > document.body.offsetWidth;
+  if (!bodyIsOverflowing) {
+    return;
+  }
   if (close) {
     document.body.style.position = '';
     document.body.style.width = '';
