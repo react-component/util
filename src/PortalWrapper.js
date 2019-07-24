@@ -110,7 +110,13 @@ class PortalWrapper extends React.Component {
           parent={this}
           visible={visible}
           autoDestroy={false}
-          getComponent={(extra = {}) => (children({ ...extra, ...childProps }))}
+          getComponent={(extra = {}) => children(
+            {
+              ...extra,
+              ...childProps,
+              ref: this.savePortal,
+            }
+          )}
           getContainer={this.getContainer}
           forceRender={forceRender}
         >
