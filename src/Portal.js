@@ -2,11 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-const windowIsUndefined = !(
-  typeof window !== 'undefined' &&
-  window.document &&
-  window.document.createElement
-);
 export default class Portal extends React.Component {
   static propTypes = {
     getContainer: PropTypes.func.isRequired,
@@ -15,7 +10,7 @@ export default class Portal extends React.Component {
   }
   constructor(props) {
     super(props);
-    if (props.getContainer && !windowIsUndefined) {
+    if (props.getContainer) {
       this._container = props.getContainer();
     }
   }
