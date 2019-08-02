@@ -8,17 +8,9 @@ export default class Portal extends React.Component {
     children: PropTypes.node.isRequired,
     didUpdate: PropTypes.func,
   }
-  constructor(props) {
-    super(props);
-    if (props.getContainer) {
-      this._container = props.getContainer();
-    }
-  }
 
   componentDidMount() {
-    if (!this._container) {
-      this.createContainer();
-    }
+    this.createContainer();
   }
 
   componentDidUpdate(prevProps) {
