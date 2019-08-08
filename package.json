@@ -34,13 +34,9 @@
     "create-react-class": "^15.6.3",
     "expect.js": "~0.3.1",
     "father": "^2.14.0",
-    "pre-commit": "^1.0.7",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
-  "pre-commit": [
-    "lint"
-  ],
   "dependencies": {
     "add-dom-event-listener": "^1.1.0",
     "babel-runtime": "6.x",
