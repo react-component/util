@@ -23,21 +23,18 @@
     "port": 8100
   },
   "scripts": {
-    "build": "rc-tools run build",
-    "compile": "rc-tools run compile",
-    "pub": "rc-tools run pub --babel-runtime",
-    "lint": "rc-tools run lint",
-    "test": "jest",
-    "coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls"
+    "lint": "eslint src/ --ext .tsx,.ts",
+    "compile": "father build",
+    "test": "father test",
+    "coverage": "father test --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "devDependencies": {
     "@types/warning": "^3.0.0",
     "coveralls": "^2.11.15",
     "create-react-class": "^15.6.3",
     "expect.js": "~0.3.1",
-    "jest": "20.x",
+    "father": "^2.14.0",
     "pre-commit": "^1.0.7",
-    "rc-tools": "^9.5.3",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
