@@ -1,6 +1,6 @@
 {
   "name": "rc-util",
-  "version": "4.8.8",
+  "version": "4.9.0",
   "description": "Common Utils For React Component",
   "keywords": [
     "react",
@@ -30,22 +30,14 @@
     "test": "jest",
     "coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/*"
-    ],
-    "transform": {
-      "\\.tsx?$": "./node_modules/rc-tools/scripts/jestPreprocessor.js",
-      "\\.jsx?$": "./node_modules/rc-tools/scripts/jestPreprocessor.js"
-    }
-  },
   "devDependencies": {
+    "@types/warning": "^3.0.0",
     "coveralls": "^2.11.15",
     "create-react-class": "^15.6.3",
     "expect.js": "~0.3.1",
     "jest": "20.x",
     "pre-commit": "^1.0.7",
-    "rc-tools": "6.x",
+    "rc-tools": "^9.5.3",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
@@ -57,6 +49,7 @@
     "babel-runtime": "6.x",
     "prop-types": "^15.5.10",
     "react-lifecycles-compat": "^3.0.4",
-    "shallowequal": "^0.2.2"
+    "shallowequal": "^0.2.2",
+    "warning": "^4.0.3"
   }
 }

@@ -1,8 +1,8 @@
-const createChainedFunction = require('../src/createChainedFunction');
-const PureRenderMixin = require('../src/PureRenderMixin');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const createReactClass = require('create-react-class');
+import createChainedFunction from '../src/createChainedFunction';
+import PureRenderMixin from '../src/PureRenderMixin';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import createReactClass from 'create-react-class';
 
 describe('rc-util', () => {
   it('createChainedFunction works', () => {

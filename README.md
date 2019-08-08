@@ -123,6 +123,18 @@ A shallow wrapper of `console.warn`.
 import warn from 'rc-util/lib/warn';
 ```
 
+### warning
+
+> (valid: boolean, msg: string): void
+
+A shallow wrapper of [warning](https://github.com/BerkeleyTrue/warning), but only warning once for the same msg.
+
+```jsx
+import warning from 'rc-util/lib/warning';
+
+warning(false, '[antd Component] test hello world');
+```
+
 ### Children
 
 A collection of functions to operate React elements' children.
