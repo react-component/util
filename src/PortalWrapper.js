@@ -27,7 +27,9 @@ class PortalWrapper extends React.Component {
     super(props);
     const { visible } = props;
     openCount = visible ? openCount + 1 : openCount;
-    this.state = {};
+    this.state = {
+      _self: this,
+    };
   }
 
   componentDidUpdate() {
@@ -35,29 +37,23 @@ class PortalWrapper extends React.Component {
   }
   componentWillUnmount() {
     const { visible } = this.props;
-    this.container = null;
-    this._component = null;
     // 离开时不会 render， 导到离开时数值不变，改用 func 。。
     openCount = visible && openCount ? openCount - 1 : openCount;
-    if (!IS_REACT_16) {
-      if (visible) {
-        this.renderComponent({
-          afterClose: this.removeContainer,
-          onClose() { },
-          visible: false,
-        });
-      } else {
-        this.removeContainer();
+    this.removeCurrentContainer(visible);
+  }
+  static getDerivedStateFromProps(props, { prevProps, _self }) {
+    const { visible, getContainer } = props;
+    if (prevProps) {
+      const { visible: prevVisible, getContainer: prevGetContainer } = prevProps;
+      if (visible !== prevVisible) {
+        openCount = visible && !prevVisible ? openCount + 1 : openCount - 1;
+      }
+      if (getContainer !== prevGetContainer) {
+        _self.removeCurrentContainer(false);
       }
     }
-  }
-  static getDerivedStateFromProps(props, { visible: prevVisible }) {
-    const { visible } = props;
-    if (prevVisible !== undefined && visible !== prevVisible) {
-      openCount = visible && !prevVisible ? openCount + 1 : openCount - 1;
-    }
     return {
-      visible,
+      prevProps: props,
     };
   }
   getParent = () => {
@@ -95,6 +91,21 @@ class PortalWrapper extends React.Component {
   }
   savePortal = (c) => {
     this._component = c;
+  }
+  removeCurrentContainer = (visible) => {
+    this.container = null;
+    this._component = null;
+    if (!IS_REACT_16) {
+      if (visible) {
+        this.renderComponent({
+          afterClose: this.removeContainer,
+          onClose() { },
+          visible: false,
+        });
+      } else {
+        this.removeContainer();
+      }
+    }
   }
   render() {
     const { children, forceRender, visible } = this.props;
