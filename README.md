@@ -127,7 +127,7 @@ import warn from 'rc-util/lib/warn';
 
 > (valid: boolean, msg: string): void
 
-A shallow wrapper of [warning](https://github.com/BerkeleyTrue/warning), but only warning once for the same msg.
+A shallow wrapper of [warning](https://github.com/BerkeleyTrue/warning), but only warning once for the same message.
 
 ```jsx
 import warning from 'rc-util/lib/warning';
