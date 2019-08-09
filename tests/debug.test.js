@@ -1,4 +1,4 @@
-const diff = require('../src/debug/diff');
+import diff from '../src/debug/diff';
 
 describe('debug', () => {
   describe('diff', () => {

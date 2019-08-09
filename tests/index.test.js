@@ -1,8 +1,9 @@
-const createChainedFunction = require('../src/createChainedFunction');
-const PureRenderMixin = require('../src/PureRenderMixin');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const createReactClass = require('create-react-class');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import createReactClass from 'create-react-class';
+
+import createChainedFunction from '../src/createChainedFunction';
+import PureRenderMixin from '../src/PureRenderMixin';
 
 describe('rc-util', () => {
   it('createChainedFunction works', () => {
@@ -28,7 +29,7 @@ describe('rc-util', () => {
     const div = document.createElement('div');
     document.body.appendChild(div);
     let count = 0;
-    const C = createReactClass({
+    const C = createReactClass({ // eslint-disable-line
       mixins: [PureRenderMixin],
       getInitialState() {
         return {
@@ -37,10 +38,10 @@ describe('rc-util', () => {
       },
       render() {
         count++;
-        return <span>{this.state.a}</span>;
+        return <span>{this.state.a}</span>; // eslint-disable-line
       },
     });
-    const c = ReactDOM.render(<C />, div);
+    const c = ReactDOM.render(<C />, div); // eslint-disable-line
     c.setState({
       a: 1,
     });
