@@ -65,7 +65,7 @@ Fields in `config` and their meanings.
 | isVisible | (instance): boolean | A function to get current visibility of the component | - |
 | isForceRender | (instance): boolean | A function to determine whether to render popup even it's not visible | - |
 | getComponent | (instance, extra): ReactNode | A function to get the component which will be rendered into container | - |
-| getContaienr | (instance): HTMLElement | A function to get the container | |
+| getContainer | (instance): HTMLElement | A function to get the container | |
 
 ### Portal
 
@@ -80,7 +80,7 @@ Props:
 | Prop | Type | Description | Default |
 |-------|------|-------------|---------|
 | children | ReactChildren | Content render to the container | - |
-| getContaienr | (): HTMLElement  | A function  to get the container | - |
+| getContainer | (): HTMLElement  | A function  to get the container | - |
 
 
 ### getScrollBarSize
