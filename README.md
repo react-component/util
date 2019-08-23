@@ -130,9 +130,12 @@ import warn from 'rc-util/lib/warn';
 A shallow wrapper of [warning](https://github.com/BerkeleyTrue/warning), but only warning once for the same message.
 
 ```jsx
-import warning from 'rc-util/lib/warning';
+import warning, { noteOnce } from 'rc-util/lib/warning';
 
 warning(false, '[antd Component] test hello world');
+
+// Low level note
+noteOnce(false, '[antd Component] test hello world');
 ```
 
 ### Children

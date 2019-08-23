@@ -1,6 +1,10 @@
 # History
 ----
 
+## 4.11.0 / 2019-08-23
+
+- warning support `noteOnce`
+
 ## 4.8.0 / 2019-07-09
 
 - add findDOMNode to check if a DOM first and then use native findDOMNode
