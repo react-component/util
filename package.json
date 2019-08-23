@@ -23,7 +23,7 @@
     "port": 8100
   },
   "scripts": {
-    "lint": "eslint src/ --ext .tsx,.ts",
+    "lint": "eslint src/ --ext .tsx,.ts & eslint tests/ --ext .js",
     "compile": "father build",
     "prepublishOnly": "npm run compile && np --no-cleanup --yolo --no-publish",
     "test": "father test",
@@ -44,7 +44,6 @@
     "babel-runtime": "6.x",
     "prop-types": "^15.5.10",
     "react-lifecycles-compat": "^3.0.4",
-    "shallowequal": "^0.2.2",
-    "warning": "^4.0.3"
+    "shallowequal": "^0.2.2"
   }
 }

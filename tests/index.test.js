@@ -1,3 +1,4 @@
+/* eslint-disable react/prefer-es6-class, react/no-render-return-value */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import createReactClass from 'create-react-class';
@@ -29,7 +30,7 @@ describe('rc-util', () => {
     const div = document.createElement('div');
     document.body.appendChild(div);
     let count = 0;
-    const C = createReactClass({ // eslint-disable-line
+    const C = createReactClass({
       mixins: [PureRenderMixin],
       getInitialState() {
         return {
@@ -37,14 +38,15 @@ describe('rc-util', () => {
         };
       },
       render() {
-        count++;
-        return <span>{this.state.a}</span>; // eslint-disable-line
+        count += 1;
+        return <span>{this.state.a}</span>;
       },
     });
-    const c = ReactDOM.render(<C />, div); // eslint-disable-line
+    const c = ReactDOM.render(<C />, div);
     c.setState({
       a: 1,
     });
     expect(count).toBe(1);
   });
 });
+/* eslint-enable */
