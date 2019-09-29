@@ -29,7 +29,13 @@
     "test": "father test",
     "coverage": "father test --coverage && cat ./coverage/lcov.info | coveralls"
   },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*"
+  },
   "devDependencies": {
+    "@types/react": "^16.9.3",
+    "@types/react-dom": "^16.9.1",
     "@types/warning": "^3.0.0",
     "coveralls": "^2.11.15",
     "create-react-class": "^15.6.3",
