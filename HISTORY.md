@@ -1,6 +1,14 @@
 # History
 ----
 
+## 4.13.0 / 2019-10-10
+
+- add `domHooks` for test
+
+## 4.12.0 / 2019-10-08
+
+- add `ref` util
+
 ## 4.11.0 / 2019-08-23
 
 - warning support `noteOnce`
