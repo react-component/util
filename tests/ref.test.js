@@ -1,4 +1,6 @@
-import { composeRef } from '../src/ref';
+import React from 'react';
+import { mount } from 'enzyme';
+import { composeRef, supportRef } from '../src/ref';
 
 describe('ref', () => {
   it('composeRef', () => {
@@ -10,5 +12,43 @@ describe('ref', () => {
     mergedRef(testRefObj);
     expect(refFunc1).toHaveBeenCalledWith(testRefObj);
     expect(refFunc2).toHaveBeenCalledWith(testRefObj);
+  });
+
+  describe('supportRef', () => {
+    it('function component', () => {
+      const FC = () => <div />;
+      const wrapper = mount(
+        <div>
+          <FC />
+        </div>,
+      );
+      expect(supportRef(wrapper.props().children)).toBeFalsy();
+    });
+
+    it('forwardRef function component', () => {
+      const FRC = React.forwardRef(() => <div />);
+      const wrapper = mount(
+        <div>
+          <FRC />
+        </div>,
+      );
+      expect(supportRef(wrapper.props().children)).toBeTruthy();
+    });
+
+    it('class component', () => {
+      class CC extends React.Component {
+        state = {};
+
+        render() {
+          return null;
+        }
+      }
+      const wrapper = mount(
+        <div>
+          <CC />
+        </div>,
+      );
+      expect(supportRef(wrapper.props().children)).toBeTruthy();
+    });
   });
 });

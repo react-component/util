@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import React from 'react';
+import * as React from 'react';
 
 export function fillRef<T>(ref: React.Ref<T>, node: T) {
   if (typeof ref === 'function') {
@@ -18,5 +18,14 @@ export function composeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
       fillRef(ref, node);
     });
   };
+}
+
+export function supportRef(node: any): boolean {
+  // Function component
+  if (node.type && node.type.prototype && !node.type.prototype.render) {
+    return false;
+  }
+
+  return true;
 }
 /* eslint-enable */

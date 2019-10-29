@@ -39,7 +39,7 @@
     "@types/warning": "^3.0.0",
     "coveralls": "^2.11.15",
     "create-react-class": "^15.6.3",
-    "expect.js": "~0.3.1",
+    "enzyme": "^3.10.0",
     "father": "^2.14.0",
     "np": "^5.0.3",
     "react": "^16.2.0",
