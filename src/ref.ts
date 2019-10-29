@@ -20,9 +20,18 @@ export function composeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
   };
 }
 
-export function supportRef(node: any): boolean {
+export function supportRef(nodeOrComponent: any): boolean {
+  // Function component node
+  if (
+    nodeOrComponent.type &&
+    nodeOrComponent.type.prototype &&
+    !nodeOrComponent.type.prototype.render
+  ) {
+    return false;
+  }
+
   // Function component
-  if (node.type && node.type.prototype && !node.type.prototype.render) {
+  if (typeof nodeOrComponent === 'function' && !nodeOrComponent.prototype.render) {
     return false;
   }
 

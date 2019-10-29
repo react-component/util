@@ -22,6 +22,7 @@ describe('ref', () => {
           <FC />
         </div>,
       );
+      expect(supportRef(FC)).toBeFalsy();
       expect(supportRef(wrapper.props().children)).toBeFalsy();
     });
 
@@ -32,6 +33,7 @@ describe('ref', () => {
           <FRC />
         </div>,
       );
+      expect(supportRef(FRC)).toBeTruthy();
       expect(supportRef(wrapper.props().children)).toBeTruthy();
     });
 
@@ -48,6 +50,7 @@ describe('ref', () => {
           <CC />
         </div>,
       );
+      expect(supportRef(CC)).toBeTruthy();
       expect(supportRef(wrapper.props().children)).toBeTruthy();
     });
   });
