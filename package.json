@@ -30,8 +30,8 @@
     "coverage": "father test --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-dom": "*"
+    "react": "^15.0.0 || ^16.0.0",
+    "react-dom": "^15.0.0 || ^16.0.0"
   },
   "devDependencies": {
     "@types/react": "^16.9.3",
