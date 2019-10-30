@@ -48,7 +48,10 @@ class PortalWrapper extends React.Component {
       if (visible !== prevVisible) {
         openCount = visible && !prevVisible ? openCount + 1 : openCount - 1;
       }
-      if (getContainer !== prevGetContainer) {
+      const getContainerIsFunc = typeof getContainer === 'function'
+        && typeof prevGetContainer === 'function';
+      if (getContainerIsFunc ? getContainer.toString() !== prevGetContainer.toString()
+        : getContainer !== prevGetContainer) {
         _self.removeCurrentContainer(false);
       }
     }
@@ -78,7 +81,9 @@ class PortalWrapper extends React.Component {
     if (!this.container) {
       this.container = document.createElement('div');
       const parent = this.getParent();
-      parent.appendChild(this.container);
+      if (parent) {
+        parent.appendChild(this.container);
+      }
     }
     this.setWrapperClassName();
     return this.container;
