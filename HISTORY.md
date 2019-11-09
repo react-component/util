@@ -2,6 +2,10 @@
 
 ---
 
+## 4.15.0 / 2019-11-09
+
+- Add `unsafeLifecyclesPolyfill`. ant-design/ant-design#9792
+
 ## 4.14.0 / 2019-10-29
 
 - add `supportRef` check

@@ -25,7 +25,7 @@
   "scripts": {
     "lint": "eslint src/ --ext .tsx,.ts & eslint tests/ --ext .js",
     "compile": "father build",
-    "prepublishOnly": "npm run compile && np --no-cleanup --yolo --no-publish",
+    "prepublishOnly": "npm run compile && np --yolo --no-publish",
     "test": "father test",
     "coverage": "father test --coverage && cat ./coverage/lcov.info | coveralls"
   },
@@ -40,6 +40,7 @@
     "coveralls": "^2.11.15",
     "create-react-class": "^15.6.3",
     "enzyme": "^3.10.0",
+    "eslint": "^6.6.0",
     "father": "^2.14.0",
     "np": "^5.0.3",
     "react": "^16.2.0",
