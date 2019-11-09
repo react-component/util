@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this, @typescript-eslint/no-empty-function */
+/* eslint-disable class-methods-use-this */
 import { spyElementPrototype } from '../src/test/domHook';
 
 describe('domHook', () => {
@@ -38,4 +38,3 @@ describe('domHook', () => {
     expect(test.func).toBe('little');
   });
 });
-/* eslint-enable */
