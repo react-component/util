@@ -1,5 +1,8 @@
 /* eslint-disable import/no-named-as-default */
+import React from 'react';
+import { mount } from 'enzyme';
 import warning, { resetWarned, noteOnce } from '../src/warning';
+import unsafeLifecyclesPolyfill from '../src/unsafeLifecyclesPolyfill';
 
 describe('warning', () => {
   beforeEach(() => {
@@ -43,5 +46,22 @@ describe('warning', () => {
 
     warnSpy.mockRestore();
   });
+
+  // https://github.com/ant-design/ant-design/issues/9792
+  it('should not warning React componentWillReceiveProps', () => {
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    class App extends React.Component {
+      componentWillReceiveProps() {}
+
+      render() {
+        return null;
+      }
+    }
+    const FixedWarningApp = unsafeLifecyclesPolyfill(App);
+    mount(<FixedWarningApp />);
+    expect(warnSpy).not.toHaveBeenCalledWith(
+      expect.stringContaining('componentWillReceiveProps has been renamed'),
+    );
+    warnSpy.mockRestore();
+  });
 });
-/* eslint-enable */
