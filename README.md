@@ -271,6 +271,20 @@ Whether text and modified key is entered at the same time.
 
 Whether character is entered.
 
+### switchScrollingEffect
+
+> (close: boolean) => void
+
+improve shake when page scroll bar hidden
+
+`switchScrollingEffect` change body style, and add a class `scroolling-effect` when called, so if you page look abnormal, please check this
+
+```js
+import switchScrollingEffect from "./src/switchScrollingEffect";
+
+switchScrollingEffect();
+```
+
 ## License
 
 rc-util is released under the MIT license.
