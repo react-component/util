@@ -277,7 +277,7 @@ Whether character is entered.
 
 improve shake when page scroll bar hidden
 
-`switchScrollingEffect` change body style, and add a class `scroolling-effect` when called, so if you page look abnormal, please check this
+`switchScrollingEffect` change body style, and add a class `switch-scrolling-effect` when called, so if you page look abnormal, please check this
 
 ```js
 import switchScrollingEffect from "./src/switchScrollingEffect";
