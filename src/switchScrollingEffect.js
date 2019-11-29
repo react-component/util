@@ -1,11 +1,18 @@
 import getScrollBarSize from './getScrollBarSize';
+import setStyle from './setStyle';
 
-export default close => {
-  const bodyIsOverflowing =
+function isBodyOverflowing() {
+  return (
     document.body.scrollHeight >
       (window.innerHeight || document.documentElement.clientHeight) &&
-    window.innerWidth > document.body.offsetWidth;
-  if (!bodyIsOverflowing && !close) {
+    window.innerWidth > document.body.offsetWidth
+  );
+}
+
+let cacheStyle = {};
+
+export default close => {
+  if (!isBodyOverflowing() && !close) {
     return;
   }
 
@@ -18,20 +25,21 @@ export default close => {
   const bodyClassName = document.body.className;
 
   if (close) {
-    document.body.style.position = '';
-    document.body.style.width = '';
-    if (scrollingEffectClassNameReg.test(bodyClassName)) {
-      document.body.className = bodyClassName
-        .replace(scrollingEffectClassNameReg, '')
-        .trim();
-    }
+    if (!scrollingEffectClassNameReg.test(bodyClassName)) return;
+    setStyle(cacheStyle);
+    cacheStyle = {};
+    document.body.className = bodyClassName
+      .replace(scrollingEffectClassNameReg, '')
+      .trim();
     return;
   }
 
   const scrollBarSize = getScrollBarSize();
   if (scrollBarSize) {
-    document.body.style.position = 'relative';
-    document.body.style.width = `calc(100% - ${scrollBarSize}px)`;
+    cacheStyle = setStyle({
+      position: 'relative',
+      width: `calc(100% - ${scrollBarSize}px)`,
+    });
     if (!scrollingEffectClassNameReg.test(bodyClassName)) {
       document.body.className = `${bodyClassName} ${scrollingEffectClassName}`;
     }

@@ -6,6 +6,7 @@ import { polyfill } from 'react-lifecycles-compat';
 import ContainerRender from './ContainerRender';
 import Portal from './Portal';
 import switchScrollingEffect from './switchScrollingEffect';
+import setStyle from './setStyle';
 
 let openCount = 0;
 const windowIsUndefined = !(
@@ -149,30 +150,16 @@ class PortalWrapper extends React.Component {
    * @memberof PortalWrapper
    */
   switchScrollingEffect = () => {
-    if (openCount === 1) {
-      if (cacheOverflow.hasOwnProperty('overflowX')) {
-        return;
-      }
-      cacheOverflow = {
-        overflowX: document.body.style.overflowX,
-        overflowY: document.body.style.overflowY,
-        overflow: document.body.style.overflow,
-      };
+    if (openCount === 1 && !Object.keys(cacheOverflow).length) {
       switchScrollingEffect();
       // Must be set after switchScrollingEffect
-      document.body.style.overflow = 'hidden';
+      cacheOverflow = setStyle({
+        overflow: 'hidden',
+        overflowX: 'hidden',
+        overflowY: 'hidden',
+      });
     } else if (!openCount) {
-      // IE browser doesn't merge overflow style, need to set it separately
-      // https://github.com/ant-design/ant-design/issues/19393
-      if (cacheOverflow.overflow !== undefined) {
-        document.body.style.overflow = cacheOverflow.overflow;
-      }
-      if (cacheOverflow.overflowX !== undefined) {
-        document.body.style.overflowX = cacheOverflow.overflowX;
-      }
-      if (cacheOverflow.overflowY !== undefined) {
-        document.body.style.overflowY = cacheOverflow.overflowY;
-      }
+      setStyle(cacheOverflow);
       cacheOverflow = {};
       switchScrollingEffect(true);
     }
