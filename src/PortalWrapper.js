@@ -1,9 +1,11 @@
+/* eslint-disable react/require-default-props */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { polyfill } from 'react-lifecycles-compat';
 import ContainerRender from './ContainerRender';
 import Portal from './Portal';
+import switchScrollingEffect from './switchScrollingEffect';
 
 let openCount = 0;
 const windowIsUndefined = !(
@@ -14,6 +16,10 @@ const windowIsUndefined = !(
 
 const IS_REACT_16 = 'createPortal' in ReactDOM;
 
+// https://github.com/ant-design/ant-design/issues/19340
+// https://github.com/ant-design/ant-design/issues/19332
+let cacheOverflow = {};
+
 class PortalWrapper extends React.Component {
   static propTypes = {
     wrapperClassName: PropTypes.string,
@@ -21,7 +27,7 @@ class PortalWrapper extends React.Component {
     getContainer: PropTypes.any,
     children: PropTypes.func,
     visible: PropTypes.bool,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -35,23 +41,32 @@ class PortalWrapper extends React.Component {
   componentDidUpdate() {
     this.setWrapperClassName();
   }
+
   componentWillUnmount() {
     const { visible } = this.props;
     // 离开时不会 render， 导到离开时数值不变，改用 func 。。
     openCount = visible && openCount ? openCount - 1 : openCount;
     this.removeCurrentContainer(visible);
   }
+
   static getDerivedStateFromProps(props, { prevProps, _self }) {
     const { visible, getContainer } = props;
     if (prevProps) {
-      const { visible: prevVisible, getContainer: prevGetContainer } = prevProps;
+      const {
+        visible: prevVisible,
+        getContainer: prevGetContainer,
+      } = prevProps;
       if (visible !== prevVisible) {
         openCount = visible && !prevVisible ? openCount + 1 : openCount - 1;
       }
-      const getContainerIsFunc = typeof getContainer === 'function'
-        && typeof prevGetContainer === 'function';
-      if (getContainerIsFunc ? getContainer.toString() !== prevGetContainer.toString()
-        : getContainer !== prevGetContainer) {
+      const getContainerIsFunc =
+        typeof getContainer === 'function' &&
+        typeof prevGetContainer === 'function';
+      if (
+        getContainerIsFunc
+          ? getContainer.toString() !== prevGetContainer.toString()
+          : getContainer !== prevGetContainer
+      ) {
         _self.removeCurrentContainer(false);
       }
     }
@@ -59,6 +74,7 @@ class PortalWrapper extends React.Component {
       prevProps: props,
     };
   }
+
   getParent = () => {
     const { getContainer } = this.props;
     if (getContainer) {
@@ -68,12 +84,16 @@ class PortalWrapper extends React.Component {
       if (typeof getContainer === 'function') {
         return getContainer();
       }
-      if (typeof getContainer === 'object' && getContainer instanceof window.HTMLElement) {
+      if (
+        typeof getContainer === 'object' &&
+        getContainer instanceof window.HTMLElement
+      ) {
         return getContainer;
       }
     }
     return document.body;
-  }
+  };
+
   getContainer = () => {
     if (windowIsUndefined) {
       return null;
@@ -87,37 +107,84 @@ class PortalWrapper extends React.Component {
     }
     this.setWrapperClassName();
     return this.container;
-  }
+  };
+
   setWrapperClassName = () => {
     const { wrapperClassName } = this.props;
-    if (this.container && wrapperClassName && wrapperClassName !== this.container.className) {
+    if (
+      this.container &&
+      wrapperClassName &&
+      wrapperClassName !== this.container.className
+    ) {
       this.container.className = wrapperClassName;
     }
-  }
-  savePortal = (c) => {
-    this._component = c;
-  }
-  removeCurrentContainer = (visible) => {
+  };
+
+  savePortal = c => {
+    this.component = c;
+  };
+
+  removeCurrentContainer = visible => {
     this.container = null;
-    this._component = null;
+    this.component = null;
     if (!IS_REACT_16) {
       if (visible) {
         this.renderComponent({
           afterClose: this.removeContainer,
-          onClose() { },
+          onClose() {},
           visible: false,
         });
       } else {
         this.removeContainer();
       }
     }
-  }
+  };
+
+  /**
+   * Enhance ./switchScrollingEffect
+   * 1. Simulate document body scroll bar with
+   * 2. Record body has overflow style and recover when all of PortalWrapper invisible
+   * 3. Disable body scroll when PortalWrapper has open
+   *
+   * @memberof PortalWrapper
+   */
+  switchScrollingEffect = () => {
+    if (openCount === 1) {
+      if (cacheOverflow.hasOwnProperty('overflowX')) {
+        return;
+      }
+      cacheOverflow = {
+        overflowX: document.body.style.overflowX,
+        overflowY: document.body.style.overflowY,
+        overflow: document.body.style.overflow,
+      };
+      switchScrollingEffect();
+      // Must be set after switchScrollingEffect
+      document.body.style.overflow = 'hidden';
+    } else if (!openCount) {
+      // IE browser doesn't merge overflow style, need to set it separately
+      // https://github.com/ant-design/ant-design/issues/19393
+      if (cacheOverflow.overflow !== undefined) {
+        document.body.style.overflow = cacheOverflow.overflow;
+      }
+      if (cacheOverflow.overflowX !== undefined) {
+        document.body.style.overflowX = cacheOverflow.overflowX;
+      }
+      if (cacheOverflow.overflowY !== undefined) {
+        document.body.style.overflowY = cacheOverflow.overflowY;
+      }
+      cacheOverflow = {};
+      switchScrollingEffect(true);
+    }
+  };
+
   render() {
     const { children, forceRender, visible } = this.props;
     let portal = null;
     const childProps = {
       getOpenCount: () => openCount,
       getContainer: this.getContainer,
+      switchScrollingEffect: this.switchScrollingEffect,
     };
     // suppport react15
     if (!IS_REACT_16) {
@@ -126,13 +193,13 @@ class PortalWrapper extends React.Component {
           parent={this}
           visible={visible}
           autoDestroy={false}
-          getComponent={(extra = {}) => children(
-            {
+          getComponent={(extra = {}) =>
+            children({
               ...extra,
               ...childProps,
               ref: this.savePortal,
-            }
-          )}
+            })
+          }
           getContainer={this.getContainer}
           forceRender={forceRender}
         >
@@ -144,9 +211,9 @@ class PortalWrapper extends React.Component {
         </ContainerRender>
       );
     }
-    if (forceRender || visible || this._component) {
+    if (forceRender || visible || this.component) {
       portal = (
-        <Portal getContainer={this.getContainer} ref={this.savePortal} >
+        <Portal getContainer={this.getContainer} ref={this.savePortal}>
           {children(childProps)}
         </Portal>
       );
