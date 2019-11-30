@@ -17,12 +17,14 @@ function setStyle(
   const { element = document.body } = options;
   const oldStyle: React.CSSProperties = {};
 
+  const styleKeys = Object.keys(style);
+
   // IE browser compatible
-  Object.keys(style).forEach(key => {
+  styleKeys.forEach(key => {
     oldStyle[key] = element.style[key];
   });
 
-  Object.keys(style).forEach(key => {
+  styleKeys.forEach(key => {
     element.style[key] = style[key];
   });
 
