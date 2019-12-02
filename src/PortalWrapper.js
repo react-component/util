@@ -1,4 +1,4 @@
-/* eslint-disable react/require-default-props */
+/* eslint-disable no-underscore-dangle,react/require-default-props */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
@@ -122,12 +122,14 @@ class PortalWrapper extends React.Component {
   };
 
   savePortal = c => {
-    this.component = c;
+    // Warning: don't rename _component
+    // https://github.com/react-component/util/pull/65#discussion_r352407916
+    this._component = c;
   };
 
   removeCurrentContainer = visible => {
     this.container = null;
-    this.component = null;
+    this._component = null;
     if (!IS_REACT_16) {
       if (visible) {
         this.renderComponent({
@@ -198,7 +200,7 @@ class PortalWrapper extends React.Component {
         </ContainerRender>
       );
     }
-    if (forceRender || visible || this.component) {
+    if (forceRender || visible || this._component) {
       portal = (
         <Portal getContainer={this.getContainer} ref={this.savePortal}>
           {children(childProps)}
