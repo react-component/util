@@ -25,3 +25,4 @@ lib
 coverage
 yarn.lock
 /es/
+package-lock.json
