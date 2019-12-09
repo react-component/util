@@ -2,6 +2,12 @@
 
 ---
 
+## 4.16.1 / 2019-12-09
+
+- PortaWrapper add `switchScrollingEffect` prop.
+- Add `setStyle`.
+- Improve `switchScrollingEffect` when closed
+
 ## 4.15.0 / 2019-11-09
 
 - Add `unsafeLifecyclesPolyfill`. ant-design/ant-design#9792
