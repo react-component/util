@@ -17,7 +17,7 @@ export default close => {
   }
 
   // https://github.com/ant-design/ant-design/issues/19729
-  const scrollingEffectClassName = 'switch-scrolling-effect';
+  const scrollingEffectClassName = 'ant-scrolling-effect';
   const scrollingEffectClassNameReg = new RegExp(
     `${scrollingEffectClassName}`,
     'g',
@@ -41,7 +41,8 @@ export default close => {
       width: `calc(100% - ${scrollBarSize}px)`,
     });
     if (!scrollingEffectClassNameReg.test(bodyClassName)) {
-      document.body.className = `${bodyClassName} ${scrollingEffectClassName}`;
+      const addClassName = `${bodyClassName} ${scrollingEffectClassName}`;
+      document.body.className = addClassName.trim();
     }
   }
 };

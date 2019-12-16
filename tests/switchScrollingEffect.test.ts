@@ -2,7 +2,9 @@ import switchScrollingEffect from '../src/switchScrollingEffect';
 import { spyElementPrototypes } from '../src/test/domHook';
 import getScrollBarSize from '../src/getScrollBarSize';
 
-jest.mock('../src/getScrollBarSize', () => jest.fn().mockImplementation(() => 20));
+jest.mock('../src/getScrollBarSize', () =>
+  jest.fn().mockImplementation(() => 20),
+);
 
 /**
  * Jest dom default window innerWidth is 1024, innerHeight is 768
@@ -35,7 +37,7 @@ describe('switchScrollingEffect', () => {
     switchScrollingEffect();
 
     expect(document.body.style.cssText).toBe('position: relative;');
-    expect(document.body.className).toBe(' switch-scrolling-effect');
+    expect(document.body.className).toBe('ant-scrolling-effect');
 
     // when closed
     switchScrollingEffect(true);
