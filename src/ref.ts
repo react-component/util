@@ -30,8 +30,12 @@ export function supportRef(nodeOrComponent: any): boolean {
     return false;
   }
 
-  // Function component
-  if (typeof nodeOrComponent === 'function' && !nodeOrComponent.prototype.render) {
+  // Class component
+  if (
+    typeof nodeOrComponent === 'function' &&
+    nodeOrComponent.prototype &&
+    !nodeOrComponent.prototype.render
+  ) {
     return false;
   }
 
