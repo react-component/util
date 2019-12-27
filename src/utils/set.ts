@@ -7,11 +7,17 @@ export default function set<Entity = any, Output = Entity, Value = any>(
     return (value as unknown) as Output;
   }
 
-  const clone = ((Array.isArray(entity)
-    ? [...entity]
-    : { ...entity }) as unknown) as Output;
-
   const [path, ...restPath] = paths;
+
+  let clone: Output;
+  if (!entity && typeof path === 'number') {
+    clone = ([] as unknown) as Output;
+  } else if (Array.isArray(entity)) {
+    clone = ([...entity] as unknown) as Output;
+  } else {
+    clone = ({ ...entity } as unknown) as Output;
+  }
+
   clone[path] = set(clone[path], restPath, value);
 
   return clone;

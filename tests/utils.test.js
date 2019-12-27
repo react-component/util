@@ -46,7 +46,7 @@ describe('utils', () => {
       [[[['light']]]],
     ]);
     expect(set([[[[[0]]]]], [0, 0, 0, 0, 0, 0], 'bamboo')).toEqual([
-      [[[[{ 0: 'bamboo' }]]]],
+      [[[[['bamboo']]]]],
     ]);
   });
 });
