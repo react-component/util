@@ -275,9 +275,9 @@ Whether character is entered.
 
 > (close: boolean) => void
 
-improve shake when page scroll bar hidden
+improve shake when page scroll bar hidden.
 
-`switchScrollingEffect` change body style, and add a class `ant-scrolling-effect` when called, so if you page look abnormal, please check this
+`switchScrollingEffect` change body style, and add a class `ant-scrolling-effect` when called, so if you page look abnormal, please check this;
 
 ```js
 import switchScrollingEffect from "./src/switchScrollingEffect";
@@ -287,4 +287,4 @@ switchScrollingEffect();
 
 ## License
 
-rc-util is released under the MIT license.
+[MIT](/LICENSE)

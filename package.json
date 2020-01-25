@@ -18,7 +18,7 @@
   "bugs": {
     "url": "http://github.com/react-component/util/issues"
   },
-  "licenses": "MIT",
+  "license": "MIT",
   "config": {
     "port": 8100
   },
