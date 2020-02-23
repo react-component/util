@@ -1,9 +1,21 @@
 import React from 'react';
 
-export default function toArray(children: React.ReactNode): React.ReactElement[] {
-  const ret = [];
-  React.Children.forEach(children, c => {
-    ret.push(c);
+function isFragment(node: React.ReactNode): boolean {
+  return node && (node as React.ReactElement).type === React.Fragment;
+}
+
+export default function toArray(
+  children: React.ReactNode,
+): React.ReactElement[] {
+  let ret: React.ReactElement[] = [];
+
+  React.Children.forEach(children, (child: any) => {
+    if (isFragment(child) && child.props) {
+      ret = ret.concat(toArray(child.props.children));
+    } else {
+      ret.push(child);
+    }
   });
+
   return ret;
 }
