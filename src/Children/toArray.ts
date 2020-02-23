@@ -1,8 +1,5 @@
 import React from 'react';
-
-function isFragment(node: React.ReactNode): boolean {
-  return node && (node as React.ReactElement).type === React.Fragment;
-}
+import { isFragment } from 'react-is';
 
 export default function toArray(
   children: React.ReactNode,
