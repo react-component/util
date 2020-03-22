@@ -7,7 +7,11 @@ export default class Portal extends React.Component {
     getContainer: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired,
     didUpdate: PropTypes.func,
-  }
+  };
+
+  static defaultProps = {
+    didUpdate: ()=> void,
+  };
 
   componentDidMount() {
     this.createContainer();
@@ -25,19 +29,23 @@ export default class Portal extends React.Component {
   }
 
   createContainer() {
-    this._container = this.props.getContainer();
+    this.portalContainer = this.props.getContainer();
     this.forceUpdate();
   }
 
   removeContainer() {
-    if (this._container) {
-      this._container.parentNode.removeChild(this._container);
+    if (this.portalContainer) {
+      this.portalContainer = null;
     }
   }
 
   render() {
-    if (this._container) {
-      return ReactDOM.createPortal(this.props.children, this._container);
+    if (this.portalContainer) {
+      const currentContainer = this.props.getContainer();
+      if (currentContainer && this.portalContainer !== currentContainer) {
+        this.portalContainer = currentContainer;
+      }
+      return ReactDOM.createPortal(this.props.children, this.portalContainer);
     }
     return null;
   }
