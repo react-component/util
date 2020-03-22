@@ -10,7 +10,7 @@ export default class Portal extends React.Component {
   };
 
   static defaultProps = {
-    didUpdate: ()=> void,
+    didUpdate: false,
   };
 
   componentDidMount() {
