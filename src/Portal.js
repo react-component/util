@@ -29,23 +29,23 @@ export default class Portal extends React.Component {
   }
 
   createContainer() {
-    this.portalContainer = this.props.getContainer();
+    this._container = this.props.getContainer();
     this.forceUpdate();
   }
 
   removeContainer() {
-    if (this.portalContainer) {
-      this.portalContainer = null;
+    if (this._container) {
+      this._container.parentNode.removeChild(this._container);
     }
   }
 
   render() {
-    if (this.portalContainer) {
+    if (this._container) {
       const currentContainer = this.props.getContainer();
-      if (currentContainer && this.portalContainer !== currentContainer) {
-        this.portalContainer = currentContainer;
+      if (currentContainer && this._container !== currentContainer) {
+        this._container = currentContainer;
       }
-      return ReactDOM.createPortal(this.props.children, this.portalContainer);
+      return ReactDOM.createPortal(this.props.children, this._container);
     }
     return null;
   }
