@@ -2,36 +2,31 @@ import React from 'react';
 import { mount } from 'enzyme';
 import PortalWrapper from '../src/PortalWrapper';
 
-const delay = timeout => new Promise(resolve => setTimeout(resolve, timeout));
-
 describe('container', () => {
   it('Same function returns different DOM', async () => {
-    let root = document.getElementById('root');
-    if (!root) {
-      root = document.createElement('div', { id: 'root' });
-      root.id = 'root';
-      document.body.appendChild(root);
-    }
     mount(
       <div>
         <div id="dom1">Hello</div>
         <div id="dom2">World</div>
       </div>,
-      { attachTo: root },
     );
-    const holdContainer = {
-      container: document.getElementById('dom1'),
-    };
-    const getContainer = () => holdContainer.container;
-    const wrapper = mount(
-      <PortalWrapper getContainer={getContainer}>
-        {() => 'Content'}
+    const portal = mount(
+      <PortalWrapper visible={false} getContainer={false}>
+        {() => <div id="children">Content</div>}
       </PortalWrapper>,
     );
-    expect(wrapper).toMatchSnapshot();
-    await delay(1000);
-    holdContainer.container = document.getElementById('dom2');
-    wrapper.setProps({ 'data-only-trigger-re-render': true });
-    expect(wrapper).toMatchSnapshot();
+    const oldWrapper = portal.parent();
+    portal.setProps({
+      visible: true,
+      getContainer: document.getElementById('dom1'),
+    });
+    const wrapperDom1 = portal.parent();
+    expect(oldWrapper !== wrapperDom1).toEqual(true);
+    portal.setProps({
+      visible: true,
+      getContainer: document.getElementById('dom2'),
+    });
+    const wrapperDom2 = portal.parent();
+    expect(wrapperDom1 !== wrapperDom2).toEqual(true);
   });
 });
