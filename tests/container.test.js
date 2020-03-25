@@ -3,30 +3,35 @@ import { mount } from 'enzyme';
 import PortalWrapper from '../src/PortalWrapper';
 
 describe('container', () => {
+  let div1;
+  let div2;
+  beforeAll(() => {
+    div1 = document.createElement('div');
+    div1.id = 'dom1';
+    div2 = document.createElement('div');
+    div2.id = 'dom2';
+    document.body.appendChild(div1);
+    document.body.appendChild(div2);
+  });
+  afterAll(() => {
+    document.body.removeChild(div1);
+    document.body.removeChild(div2);
+  });
   it('Same function returns different DOM', async () => {
-    mount(
-      <div>
-        <div id="dom1">Hello</div>
-        <div id="dom2">World</div>
-      </div>,
-    );
-    const portal = mount(
-      <PortalWrapper visible={false} getContainer={false}>
+    const wrapper = mount(
+      <PortalWrapper
+        visible
+        getContainer={() => document.getElementById('dom1')}
+      >
         {() => <div id="children">Content</div>}
       </PortalWrapper>,
     );
-    const oldWrapper = portal.parent();
-    portal.setProps({
-      visible: true,
-      getContainer: document.getElementById('dom1'),
-    });
-    const wrapperDom1 = portal.parent();
-    expect(oldWrapper !== wrapperDom1).toEqual(true);
-    portal.setProps({
-      visible: true,
-      getContainer: document.getElementById('dom2'),
-    });
-    const wrapperDom2 = portal.parent();
-    expect(wrapperDom1 !== wrapperDom2).toEqual(true);
+
+    expect(document.querySelector('#dom1 #children')).not.toBeNull();
+
+    wrapper.setProps({ getContainer: () => document.getElementById('dom2') });
+
+    expect(document.querySelector('#dom1 #children')).toBeNull();
+    expect(document.querySelector('#dom2 #children')).not.toBeNull();
   });
 });
