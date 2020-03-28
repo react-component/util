@@ -47,11 +47,11 @@
     "father": "^2.14.0",
     "np": "^5.0.3",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "typescript": "^3.8.3"
   },
   "dependencies": {
     "add-dom-event-listener": "^1.1.0",
-    "babel-runtime": "6.x",
     "prop-types": "^15.5.10",
     "react-is": "^16.12.0",
     "react-lifecycles-compat": "^3.0.4",
