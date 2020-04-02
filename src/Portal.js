@@ -39,6 +39,7 @@ export default class Portal extends React.Component {
     if (this._container) {
       const currentContainer = this.props.getContainer();
       if (currentContainer && this._container !== currentContainer) {
+        this.removeContainer();
         this._container = currentContainer;
       }
       return ReactDOM.createPortal(this.props.children, this._container);
