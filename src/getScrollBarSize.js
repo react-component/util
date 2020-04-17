@@ -23,7 +23,7 @@ export default function getScrollBarSize(fresh, outerClassName = '') {
     outerStyle.overflow = 'hidden';
     
     if (outerClassName) {
-      outer.className = outerClassName;
+      outer.setAttribute('class', outerClassName);
     }
 
     outer.appendChild(inner);
