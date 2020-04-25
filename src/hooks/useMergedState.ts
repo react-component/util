@@ -36,5 +36,12 @@ export default function useControlledState<T, R = T>(
     }
   }
 
+  // Effect of reset value to `undefined`
+  React.useEffect(() => {
+    if (value === undefined) {
+      setInnerValue(value);
+    }
+  }, [value]);
+
   return [(mergedValue as unknown) as R, triggerChange];
 }
