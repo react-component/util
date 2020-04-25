@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
 import useMemo from '../src/hooks/useMemo';
+import useMergedState from '../src/hooks/useMergedState';
 
 describe('hooks', () => {
   it('useMemo', () => {
@@ -24,5 +25,29 @@ describe('hooks', () => {
 
     wrapper.setProps({ data: 'repeat', open: true });
     expect(wrapper.find('div').props().memoData).toEqual('repeat');
+  });
+
+  describe('useMergedState', () => {
+    const FC = ({ value }) => {
+      const [val, setVal] = useMergedState(null, { value });
+      return (
+        <input
+          value={val}
+          onChange={e => {
+            setVal(e.target.value);
+          }}
+        />
+      );
+    };
+
+    it('still control of to undefined', () => {
+      const wrapper = mount(<FC value="test" />);
+
+      expect(wrapper.find('input').props().value).toEqual('test');
+
+      wrapper.setProps({ value: undefined });
+      wrapper.update();
+      expect(wrapper.find('input').props().value).toEqual(undefined);
+    });
   });
 });
