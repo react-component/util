@@ -37,7 +37,13 @@ export default function useControlledState<T, R = T>(
   }
 
   // Effect of reset value to `undefined`
+  const firstRenderRef = React.useRef(true);
   React.useEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
+
     if (value === undefined) {
       setInnerValue(value);
     }

@@ -28,8 +28,8 @@ describe('hooks', () => {
   });
 
   describe('useMergedState', () => {
-    const FC = ({ value }) => {
-      const [val, setVal] = useMergedState(null, { value });
+    const FC = ({ value, defaultValue }) => {
+      const [val, setVal] = useMergedState(null, { value, defaultValue });
       return (
         <input
           value={val}
@@ -48,6 +48,12 @@ describe('hooks', () => {
       wrapper.setProps({ value: undefined });
       wrapper.update();
       expect(wrapper.find('input').props().value).toEqual(undefined);
+    });
+
+    it('correct defaultValue', () => {
+      const wrapper = mount(<FC defaultValue="test" />);
+
+      expect(wrapper.find('input').props().value).toEqual('test');
     });
   });
 });
