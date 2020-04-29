@@ -1,5 +1,5 @@
 import React from 'react';
-import { isFragment } from 'react-is';
+import ReactIs from 'react-is';
 
 export default function toArray(
   children: React.ReactNode,
@@ -13,7 +13,7 @@ export default function toArray(
 
     if (Array.isArray(child)) {
       ret = ret.concat(toArray(child));
-    } else if (isFragment(child) && child.props) {
+    } else if (ReactIs.isFragment(child) && child.props) {
       ret = ret.concat(toArray(child.props.children));
     } else {
       ret.push(child);
