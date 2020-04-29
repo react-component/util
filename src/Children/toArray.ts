@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactIs from 'react-is';
+import * as ReactIs from 'react-is';
 
 export default function toArray(
   children: React.ReactNode,
