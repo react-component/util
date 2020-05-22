@@ -1,5 +1,6 @@
 import get from '../src/utils/get';
 import set from '../src/utils/set';
+import pickAttrs from '../src/pickAttrs';
 
 describe('utils', () => {
   it('get', () => {
@@ -48,5 +49,17 @@ describe('utils', () => {
     expect(set([[[[[0]]]]], [0, 0, 0, 0, 0, 0], 'bamboo')).toEqual([
       [[[[['bamboo']]]]],
     ]);
+  });
+
+  it('pickAttrs', () => {
+    expect(
+      pickAttrs({ onClick: null, 'data-my': 1, 'aria-this': 2, skip: true }),
+    ).toEqual({ onClick: null, 'data-my': 1, 'aria-this': 2 });
+    expect(
+      pickAttrs(
+        { onClick: null, 'data-my': 1, 'aria-this': 2, skip: true },
+        true,
+      ),
+    ).toEqual({ 'data-my': 1, 'aria-this': 2 });
   });
 });

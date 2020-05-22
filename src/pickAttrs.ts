@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 const attributes = `accept acceptCharset accessKey action allowFullScreen allowTransparency
     alt async autoComplete autoFocus autoPlay capture cellPadding cellSpacing challenge
     charSet checked classID className colSpan cols content contentEditable contextMenu
@@ -11,7 +10,9 @@ const attributes = `accept acceptCharset accessKey action allowFullScreen allowT
     reversed role rowSpan rows sandbox scope scoped scrolling seamless selected
     shape size sizes span spellCheck src srcDoc srcLang srcSet start step style
     summary tabIndex target title type useMap value width wmode wrap`
-        .replace(/\s+/g, ' ').replace(/\t|\n|\r/g, '').split(' ');
+  .replace(/\s+/g, ' ')
+  .replace(/\t|\n|\r/g, '')
+  .split(' ');
 const eventsName = `onCopy onCut onPaste onCompositionEnd onCompositionStart onCompositionUpdate onKeyDown
     onKeyPress onKeyUp onFocus onBlur onChange onInput onSubmit onClick onContextMenu onDoubleClick
     onDrag onDragEnd onDragEnter onDragExit onDragLeave onDragOver onDragStart onDrop onMouseDown
@@ -19,24 +20,23 @@ const eventsName = `onCopy onCut onPaste onCompositionEnd onCompositionStart onC
     onTouchEnd onTouchMove onTouchStart onScroll onWheel onAbort onCanPlay onCanPlayThrough
     onDurationChange onEmptied onEncrypted onEnded onError onLoadedData onLoadedMetadata
     onLoadStart onPause onPlay onPlaying onProgress onRateChange onSeeked onSeeking onStalled onSuspend onTimeUpdate onVolumeChange onWaiting onLoad onError`
-        .replace(/\s+/g, ' ').replace(/\t|\n|\r/g, '').split(' ');
+  .replace(/\s+/g, ' ')
+  .replace(/\t|\n|\r/g, '')
+  .split(' ');
 /* eslint-enable max-len */
-const attrsPrefix = ['data', 'aria'];
+const attrsPrefix = ['data-', 'aria-'];
 
-export default function pickAttrs(props) {
+export default function pickAttrs(props: object, attrsOnly = false) {
   const attrs = {};
-  for (const key in props) {
-    if (attributes.indexOf(key) > -1 || eventsName.indexOf(key) > -1) {
+  Object.keys(props).forEach(key => {
+    if (attrsPrefix.some(prefix => key.indexOf(prefix) === 0)) {
       attrs[key] = props[key];
-    /* eslint-disable no-loop-func */
-    } else if (attrsPrefix.map((prefix) => {
-      return new RegExp(`^${prefix}`);
-    }).some((reg) => {
-      return key.replace(reg, '') !== key;
-    })) {
-    /* eslint-enable no-loop-func */
+    } else if (
+      !attrsOnly &&
+      (attributes.includes(key) || eventsName.includes(key))
+    ) {
       attrs[key] = props[key];
     }
-  }
+  });
   return attrs;
 }
