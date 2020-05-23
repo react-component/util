@@ -29,10 +29,6 @@
     "test": "father test",
     "coverage": "father test --coverage && cat ./coverage/lcov.info | coveralls"
   },
-  "peerDependencies": {
-    "react": "^15.0.0 || ^16.0.0",
-    "react-dom": "^15.0.0 || ^16.0.0"
-  },
   "devDependencies": {
     "@types/enzyme": "^3.10.5",
     "@types/jest": "^24.0.23",
