@@ -6,7 +6,6 @@ if (typeof window !== 'undefined') {
   caf = cancelAnimationFrame;
 }
 
-// Support call raf with delay specified frame
 export default function wrapperRaf(callback: () => void): number {
   return raf(callback);
 }
