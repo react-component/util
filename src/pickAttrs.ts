@@ -9,31 +9,34 @@ const attributes = `accept acceptCharset accessKey action allowFullScreen allowT
     optimum pattern placeholder poster preload radioGroup readOnly rel required
     reversed role rowSpan rows sandbox scope scoped scrolling seamless selected
     shape size sizes span spellCheck src srcDoc srcLang srcSet start step style
-    summary tabIndex target title type useMap value width wmode wrap`
-  .replace(/\s+/g, ' ')
-  .replace(/\t|\n|\r/g, '')
-  .split(' ');
+    summary tabIndex target title type useMap value width wmode wrap`;
+
 const eventsName = `onCopy onCut onPaste onCompositionEnd onCompositionStart onCompositionUpdate onKeyDown
     onKeyPress onKeyUp onFocus onBlur onChange onInput onSubmit onClick onContextMenu onDoubleClick
     onDrag onDragEnd onDragEnter onDragExit onDragLeave onDragOver onDragStart onDrop onMouseDown
     onMouseEnter onMouseLeave onMouseMove onMouseOut onMouseOver onMouseUp onSelect onTouchCancel
     onTouchEnd onTouchMove onTouchStart onScroll onWheel onAbort onCanPlay onCanPlayThrough
     onDurationChange onEmptied onEncrypted onEnded onError onLoadedData onLoadedMetadata
-    onLoadStart onPause onPlay onPlaying onProgress onRateChange onSeeked onSeeking onStalled onSuspend onTimeUpdate onVolumeChange onWaiting onLoad onError`
-  .replace(/\s+/g, ' ')
-  .replace(/\t|\n|\r/g, '')
-  .split(' ');
-/* eslint-enable max-len */
-const attrsPrefix = ['data-', 'aria-'];
+    onLoadStart onPause onPlay onPlaying onProgress onRateChange onSeeked onSeeking onStalled onSuspend onTimeUpdate onVolumeChange onWaiting onLoad onError`;
 
-export default function pickAttrs(props: object, attrsOnly = false) {
+const propList = `${attributes} ${eventsName}`.split(/[\s\n]+/);
+
+/* eslint-enable max-len */
+const ariaPrefix = 'aria-';
+const dataPrefix = 'data-';
+
+function match(key: string, prefix: string) {
+  return key.indexOf(prefix) === 0;
+}
+
+export default function pickAttrs(props: object, ariaOnly = false) {
   const attrs = {};
   Object.keys(props).forEach(key => {
-    if (attrsPrefix.some(prefix => key.indexOf(prefix) === 0)) {
+    if (match(key, ariaPrefix)) {
       attrs[key] = props[key];
     } else if (
-      !attrsOnly &&
-      (attributes.includes(key) || eventsName.includes(key))
+      !ariaOnly &&
+      (propList.includes(key) || match(key, dataPrefix))
     ) {
       attrs[key] = props[key];
     }

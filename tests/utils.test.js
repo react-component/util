@@ -53,13 +53,26 @@ describe('utils', () => {
 
   it('pickAttrs', () => {
     expect(
-      pickAttrs({ onClick: null, 'data-my': 1, 'aria-this': 2, skip: true }),
-    ).toEqual({ onClick: null, 'data-my': 1, 'aria-this': 2 });
+      pickAttrs({
+        onClick: null,
+        checked: true,
+        'data-my': 1,
+        'aria-this': 2,
+        skip: true,
+      }),
+    ).toEqual({ onClick: null, checked: true, 'data-my': 1, 'aria-this': 2 });
+
     expect(
       pickAttrs(
-        { onClick: null, 'data-my': 1, 'aria-this': 2, skip: true },
+        {
+          onClick: null,
+          checked: true,
+          'data-my': 1,
+          'aria-this': 2,
+          skip: true,
+        },
         true,
       ),
-    ).toEqual({ 'data-my': 1, 'aria-this': 2 });
+    ).toEqual({ 'aria-this': 2 });
   });
 });
