@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle,react/require-default-props */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { polyfill } from 'react-lifecycles-compat';
 import ContainerRender from './ContainerRender';
 import Portal from './Portal';
 import switchScrollingEffect from './switchScrollingEffect';
@@ -201,4 +200,5 @@ class PortalWrapper extends React.Component {
     return portal;
   }
 }
-export default polyfill(PortalWrapper);
+
+export default PortalWrapper;
