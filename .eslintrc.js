@@ -6,5 +6,6 @@ module.exports = {
     ...base.rules,
     'react/no-did-update-set-state': 0,
     'react/no-find-dom-node': 0,
+    'import/no-extraneous-dependencies': 0,
   },
 };
