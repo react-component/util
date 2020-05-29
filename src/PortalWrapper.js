@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle,react/require-default-props */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import { polyfill } from 'react-lifecycles-compat';
 import ContainerRender from './ContainerRender';
 import Portal from './Portal';
@@ -22,14 +21,6 @@ const IS_REACT_16 = 'createPortal' in ReactDOM;
 let cacheOverflow = {};
 
 class PortalWrapper extends React.Component {
-  static propTypes = {
-    wrapperClassName: PropTypes.string,
-    forceRender: PropTypes.bool,
-    getContainer: PropTypes.any,
-    children: PropTypes.func,
-    visible: PropTypes.bool,
-  };
-
   constructor(props) {
     super(props);
     const { visible } = props;
