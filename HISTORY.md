@@ -2,6 +2,12 @@
 
 ---
 
+## 5.0.0
+
+- Remove `prop-types` from deps.
+- Remove `add-dom-event-listener` from deps.
+- Remove `react-lifecycles-compact` from deps.
+
 ## 4.16.1 / 2019-12-09
 
 - PortaWrapper add `switchScrollingEffect` prop.
