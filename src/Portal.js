@@ -1,14 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 
 export default class Portal extends React.Component {
-  static propTypes = {
-    getContainer: PropTypes.func.isRequired,
-    children: PropTypes.node.isRequired,
-    didUpdate: PropTypes.func,
-  }
-
   componentDidMount() {
     this.createContainer();
   }
