@@ -73,7 +73,7 @@ class PortalWrapper extends React.Component {
         return document.querySelectorAll(getContainer)[0];
       }
       if (typeof getContainer === 'function') {
-        return getContainer();
+        return getContainer() || document.body;
       }
       if (
         typeof getContainer === 'object' &&
