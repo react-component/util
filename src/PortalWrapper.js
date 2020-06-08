@@ -23,7 +23,9 @@ class PortalWrapper extends React.Component {
   constructor(props) {
     super(props);
     const { visible } = props;
-    openCount = visible ? openCount + 1 : openCount;
+    if (!windowIsUndefined && this.getParent() === document.body) {
+      openCount = visible ? openCount + 1 : openCount;
+    }
     this.state = {
       _self: this,
     };
@@ -35,8 +37,10 @@ class PortalWrapper extends React.Component {
 
   componentWillUnmount() {
     const { visible } = this.props;
-    // 离开时不会 render， 导到离开时数值不变，改用 func 。。
-    openCount = visible && openCount ? openCount - 1 : openCount;
+    if (!windowIsUndefined && this.getParent() === document.body) {
+      // 离开时不会 render， 导到离开时数值不变，改用 func 。。
+      openCount = visible && openCount ? openCount - 1 : openCount;
+    }
     this.removeCurrentContainer(visible);
   }
 
@@ -47,7 +51,7 @@ class PortalWrapper extends React.Component {
         visible: prevVisible,
         getContainer: prevGetContainer,
       } = prevProps;
-      if (visible !== prevVisible) {
+      if (visible !== prevVisible && !windowIsUndefined && this.getParent() === document.body) {
         openCount = visible && !prevVisible ? openCount + 1 : openCount - 1;
       }
       const getContainerIsFunc =
@@ -67,6 +71,9 @@ class PortalWrapper extends React.Component {
   }
 
   getParent = () => {
+    if (windowIsUndefined) {
+      return null;
+    }
     const { getContainer } = this.props;
     if (getContainer) {
       if (typeof getContainer === 'string') {
