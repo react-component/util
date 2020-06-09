@@ -19,11 +19,32 @@ const IS_REACT_16 = 'createPortal' in ReactDOM;
 // https://github.com/ant-design/ant-design/issues/19332
 let cacheOverflow = {};
 
+const getParent = getContainer => {
+  if (windowIsUndefined) {
+    return null;
+  }
+  if (getContainer) {
+    if (typeof getContainer === 'string') {
+      return document.querySelectorAll(getContainer)[0];
+    }
+    if (typeof getContainer === 'function') {
+      return getContainer();
+    }
+    if (
+      typeof getContainer === 'object' &&
+      getContainer instanceof window.HTMLElement
+    ) {
+      return getContainer;
+    }
+  }
+  return document.body;
+};
+
 class PortalWrapper extends React.Component {
   constructor(props) {
     super(props);
-    const { visible } = props;
-    if (!windowIsUndefined && this.getParent() === document.body) {
+    const { visible, getContainer } = props;
+    if (!windowIsUndefined && getParent(getContainer) === document.body) {
       openCount = visible ? openCount + 1 : openCount;
     }
     this.state = {
@@ -36,8 +57,8 @@ class PortalWrapper extends React.Component {
   }
 
   componentWillUnmount() {
-    const { visible } = this.props;
-    if (!windowIsUndefined && this.getParent() === document.body) {
+    const { visible, getContainer } = this.props;
+    if (!windowIsUndefined && getParent(getContainer) === document.body) {
       // 离开时不会 render， 导到离开时数值不变，改用 func 。。
       openCount = visible && openCount ? openCount - 1 : openCount;
     }
@@ -51,7 +72,11 @@ class PortalWrapper extends React.Component {
         visible: prevVisible,
         getContainer: prevGetContainer,
       } = prevProps;
-      if (visible !== prevVisible && !windowIsUndefined && this.getParent() === document.body) {
+      if (
+        visible !== prevVisible &&
+        !windowIsUndefined &&
+        getParent(getContainer) === document.body
+      ) {
         openCount = visible && !prevVisible ? openCount + 1 : openCount - 1;
       }
       const getContainerIsFunc =
@@ -70,35 +95,13 @@ class PortalWrapper extends React.Component {
     };
   }
 
-  getParent = () => {
-    if (windowIsUndefined) {
-      return null;
-    }
-    const { getContainer } = this.props;
-    if (getContainer) {
-      if (typeof getContainer === 'string') {
-        return document.querySelectorAll(getContainer)[0];
-      }
-      if (typeof getContainer === 'function') {
-        return getContainer();
-      }
-      if (
-        typeof getContainer === 'object' &&
-        getContainer instanceof window.HTMLElement
-      ) {
-        return getContainer;
-      }
-    }
-    return document.body;
-  };
-
   getContainer = () => {
     if (windowIsUndefined) {
       return null;
     }
     if (!this.container) {
       this.container = document.createElement('div');
-      const parent = this.getParent();
+      const parent = getParent(this.props.getContainer);
       if (parent) {
         parent.appendChild(this.container);
       }
