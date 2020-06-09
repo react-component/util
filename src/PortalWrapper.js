@@ -51,7 +51,7 @@ class PortalWrapper extends React.Component {
         visible: prevVisible,
         getContainer: prevGetContainer,
       } = prevProps;
-      if (visible !== prevVisible && !windowIsUndefined && this.getParent() === document.body) {
+      if (visible !== prevVisible && !windowIsUndefined && _self.getParent() === document.body) {
         openCount = visible && !prevVisible ? openCount + 1 : openCount - 1;
       }
       const getContainerIsFunc =
