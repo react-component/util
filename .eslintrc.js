@@ -1,6 +1,6 @@
 const base = require('@umijs/fabric/dist/eslint');
 
-module.exports = {
+const config = {
   ...base,
   rules: {
     ...base.rules,
@@ -9,3 +9,9 @@ module.exports = {
     'import/no-extraneous-dependencies': 0,
   },
 };
+
+config.parserOptions = {
+  project: './node_modules/father-build/template/tsconfig.json',
+};
+
+module.exports = config;

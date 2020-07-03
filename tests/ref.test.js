@@ -53,5 +53,29 @@ describe('ref', () => {
       expect(supportRef(CC)).toBeTruthy();
       expect(supportRef(wrapper.props().children)).toBeTruthy();
     });
+
+    it('memo of function component', () => {
+      const FC = () => <div />;
+      const MemoFC = React.memo(FC);
+      const wrapper = mount(
+        <div>
+          <MemoFC />
+        </div>,
+      );
+      expect(supportRef(MemoFC)).toBeFalsy();
+      expect(supportRef(wrapper.props().children)).toBeFalsy();
+    });
+
+    it('memo of forwardRef function component', () => {
+      const FRC = React.forwardRef(() => <div />);
+      const MemoFC = React.memo(FRC);
+      const wrapper = mount(
+        <div>
+          <MemoFC />
+        </div>,
+      );
+      expect(supportRef(MemoFC)).toBeTruthy();
+      expect(supportRef(wrapper.props().children)).toBeTruthy();
+    });
   });
 });
