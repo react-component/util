@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import * as React from 'react';
+import { isMemo } from 'react-is';
 
 export function fillRef<T>(ref: React.Ref<T>, node: T) {
   if (typeof ref === 'function') {
@@ -21,12 +22,12 @@ export function composeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
 }
 
 export function supportRef(nodeOrComponent: any): boolean {
+  const type = isMemo(nodeOrComponent)
+    ? nodeOrComponent.type.type
+    : nodeOrComponent.type;
+
   // Function component node
-  if (
-    nodeOrComponent.type &&
-    nodeOrComponent.type.prototype &&
-    !nodeOrComponent.type.prototype.render
-  ) {
+  if (type && type.prototype && !type.prototype.render) {
     return false;
   }
 
