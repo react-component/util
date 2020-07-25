@@ -1,3 +1,4 @@
+/* eslint-disable no-eval */
 import React from 'react';
 import { mount } from 'enzyme';
 import { composeRef, supportRef } from '../src/ref';
@@ -16,7 +17,21 @@ describe('ref', () => {
 
   describe('supportRef', () => {
     it('function component', () => {
-      const FC = () => <div />;
+      function FC() {
+        return <div />;
+      }
+      const wrapper = mount(
+        <div>
+          <FC />
+        </div>,
+      );
+      expect(supportRef(FC)).toBeFalsy();
+      expect(supportRef(wrapper.props().children)).toBeFalsy();
+    });
+
+    it('arrow function component', () => {
+      // Use eval since jest will convert arrow function to function
+      const FC = eval('() => null');
       const wrapper = mount(
         <div>
           <FC />

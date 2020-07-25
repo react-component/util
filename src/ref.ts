@@ -27,15 +27,14 @@ export function supportRef(nodeOrComponent: any): boolean {
     : nodeOrComponent.type;
 
   // Function component node
-  if (type && type.prototype && !type.prototype.render) {
+  if (typeof type === 'function' && !type.prototype?.render) {
     return false;
   }
 
   // Class component
   if (
     typeof nodeOrComponent === 'function' &&
-    nodeOrComponent.prototype &&
-    !nodeOrComponent.prototype.render
+    !nodeOrComponent.prototype?.render
   ) {
     return false;
   }
