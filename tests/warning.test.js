@@ -12,7 +12,9 @@ describe('warning', () => {
   it('warning', () => {
     const warnSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     warning(false, '[antd Component] test hello world');
-    expect(warnSpy).toHaveBeenCalledWith('Warning: [antd Component] test hello world');
+    expect(warnSpy).toHaveBeenCalledWith(
+      'Warning: [antd Component] test hello world',
+    );
 
     warning(false, '[antd Component] test hello world');
     expect(warnSpy).toHaveBeenCalledTimes(1);
@@ -31,7 +33,9 @@ describe('warning', () => {
   it('note', () => {
     const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     noteOnce(false, '[antd Component] test hello world');
-    expect(warnSpy).toHaveBeenCalledWith('Note: [antd Component] test hello world');
+    expect(warnSpy).toHaveBeenCalledWith(
+      'Note: [antd Component] test hello world',
+    );
 
     noteOnce(false, '[antd Component] test hello world');
     expect(warnSpy).toHaveBeenCalledTimes(1);
@@ -51,7 +55,7 @@ describe('warning', () => {
   it('should not warning React componentWillReceiveProps', () => {
     const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     class App extends React.Component {
-      componentWillReceiveProps() {}
+      state = {};
 
       render() {
         return null;
