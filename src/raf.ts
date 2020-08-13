@@ -1,9 +1,10 @@
-let raf = (fn: () => void) => +setTimeout(fn, 16);
+let raf = (callback: FrameRequestCallback) => +setTimeout(callback, 16);
 let caf = (num: number) => clearTimeout(num);
 
-if (typeof window !== 'undefined') {
-  raf = requestAnimationFrame;
-  caf = cancelAnimationFrame;
+if (typeof window !== 'undefined' && 'requestAnimationFrame' in window) {
+  raf = (callback: FrameRequestCallback) =>
+    window.requestAnimationFrame(callback);
+  caf = (handle: number) => window.cancelAnimationFrame(handle);
 }
 
 export default function wrapperRaf(callback: () => void): number {
