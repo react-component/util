@@ -49,5 +49,9 @@
   "dependencies": {
     "react-is": "^16.12.0",
     "shallowequal": "^1.1.0"
+  },
+  "peerDependencies": {
+    "react": ">= ^16.2.0",
+    "react-dom": ">= ^16.2.0"
   }
 }
