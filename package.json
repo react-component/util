@@ -30,34 +30,8 @@
     "coverage": "father test --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "exports": {
-    "./": {
-      "import": "./es/",
-      "require": "./lib/"
-    },
-    "./Children": {
-      "import": "./es/Children/",
-      "require": "./lib/Children/"
-    },
-    "./Dom": {
-      "import": "./es/Dom/",
-      "require": "./lib/Dom/"
-    },
-    "./debug": {
-      "import": "./es/debug/",
-      "require": "./lib/debug/"
-    },
-    "./hooks": {
-      "import": "./es/hooks",
-      "require": "./lib/hooks/"
-    },
-    "./test": {
-      "import": "./es/test/",
-      "require": "./lib/test/"
-    },
-    "./utils": {
-      "import": "./es/utils/",
-      "require": "./lib/utils/"
-    }
+    "./lib/": "./lib/",
+    "./es/": "./es/"
   },
   "devDependencies": {
     "@types/enzyme": "^3.10.5",
