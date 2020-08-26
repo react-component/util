@@ -22,8 +22,8 @@ export function lock(
   lockTarget: HTMLElement,
   targetOptions?: scrollLockOptions,
 ) {
-  // If lockTarget exist, return
-  if (locks.some(({ target }) => target === lockTarget)) {
+  // If lockTarget exist or lockTarget undefined, return
+  if (!lockTarget || locks.some(({ target }) => target === lockTarget)) {
     return;
   }
 

@@ -126,4 +126,16 @@ describe('ScrollLocker', () => {
     expect(testContainer.className).toBe('');
     expect(testContainer.getAttribute('style')).toBe('');
   });
+
+  it('Lock empty target and unLock', () => {
+    lock(undefined);
+
+    expect(document.body.className).toBe('');
+    expect(document.body.getAttribute('style')).toBe('');
+
+    unLock(undefined);
+
+    expect(document.body.className).toBe('');
+    expect(document.body.getAttribute('style')).toBe('');
+  });
 });
