@@ -14,6 +14,9 @@ function setStyle(
   style: React.CSSProperties,
   options: SetStyleOptions = {},
 ): React.CSSProperties {
+  if (!style) {
+    return {};
+  }
   const { element = document.body } = options;
   const oldStyle: React.CSSProperties = {};
 
