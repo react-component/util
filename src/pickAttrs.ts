@@ -32,7 +32,7 @@ function match(key: string, prefix: string) {
 export default function pickAttrs(props: object, ariaOnly = false) {
   const attrs = {};
   Object.keys(props).forEach(key => {
-    if (match(key, ariaPrefix)) {
+    if (key === 'role' || match(key, ariaPrefix)) {
       attrs[key] = props[key];
     } else if (
       !ariaOnly &&

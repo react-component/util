@@ -59,8 +59,15 @@ describe('utils', () => {
         'data-my': 1,
         'aria-this': 2,
         skip: true,
+        role: 'button',
       }),
-    ).toEqual({ onClick: null, checked: true, 'data-my': 1, 'aria-this': 2 });
+    ).toEqual({
+      onClick: null,
+      checked: true,
+      'data-my': 1,
+      'aria-this': 2,
+      role: 'button',
+    });
 
     expect(
       pickAttrs(
@@ -70,9 +77,10 @@ describe('utils', () => {
           'data-my': 1,
           'aria-this': 2,
           skip: true,
+          role: 'button',
         },
         true,
       ),
-    ).toEqual({ 'aria-this': 2 });
+    ).toEqual({ 'aria-this': 2, role: 'button' });
   });
 });
