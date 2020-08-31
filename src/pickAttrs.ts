@@ -29,14 +29,47 @@ function match(key: string, prefix: string) {
   return key.indexOf(prefix) === 0;
 }
 
-export default function pickAttrs(props: object, ariaOnly = false) {
+export interface PickConfig {
+  aria?: boolean;
+  data?: boolean;
+  attr?: boolean;
+}
+
+/**
+ * Picker props from exist props with filter
+ * @param props Passed props
+ * @param ariaOnly boolean | { aria?: boolean; data?: boolean; attr?: boolean; } filter config
+ */
+export default function pickAttrs(
+  props: object,
+  ariaOnly: boolean | PickConfig = false,
+) {
+  let mergedConfig: PickConfig;
+  if (ariaOnly === false) {
+    mergedConfig = {
+      aria: true,
+      data: true,
+      attr: true,
+    };
+  } else if (ariaOnly === true) {
+    mergedConfig = {
+      aria: true,
+    };
+  } else {
+    mergedConfig = {
+      ...ariaOnly,
+    };
+  }
+
   const attrs = {};
   Object.keys(props).forEach(key => {
-    if (match(key, ariaPrefix)) {
-      attrs[key] = props[key];
-    } else if (
-      !ariaOnly &&
-      (propList.includes(key) || match(key, dataPrefix))
+    if (
+      // Aria
+      (mergedConfig.aria && (key === 'role' || match(key, ariaPrefix))) ||
+      // Data
+      (mergedConfig.data && match(key, dataPrefix)) ||
+      // Attr
+      (mergedConfig.attr && propList.includes(key))
     ) {
       attrs[key] = props[key];
     }
