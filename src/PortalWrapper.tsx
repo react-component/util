@@ -2,7 +2,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import ContainerRender from './ContainerRender';
-import Portal from './Portal';
+import Portal, { PortalRef } from './Portal';
 import switchScrollingEffect from './switchScrollingEffect';
 import setStyle from './setStyle';
 
@@ -19,7 +19,7 @@ const IS_REACT_16 = 'createPortal' in ReactDOM;
 // https://github.com/ant-design/ant-design/issues/19332
 let cacheOverflow = {};
 
-const getParent = getContainer => {
+const getParent = (getContainer: GetContainer) => {
   if (windowIsUndefined) {
     return null;
   }
@@ -40,7 +40,7 @@ const getParent = getContainer => {
   return document.body;
 };
 
-export type GetContainer = HTMLElement;
+export type GetContainer = string | HTMLElement | (() => HTMLElement);
 
 export interface PortalWrapperProps {
   visible?: boolean;
@@ -65,7 +65,7 @@ class PortalWrapper extends React.Component<
 > {
   container?: HTMLElement;
 
-  _component?: any;
+  _component?: PortalRef;
 
   renderComponent?: (info: {
     afterClose: Function;
@@ -155,7 +155,7 @@ class PortalWrapper extends React.Component<
     }
   };
 
-  savePortal = (c: any) => {
+  savePortal = (c: PortalRef) => {
     // Warning: don't rename _component
     // https://github.com/react-component/util/pull/65#discussion_r352407916
     this._component = c;

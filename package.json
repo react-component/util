@@ -19,10 +19,8 @@
     "url": "http://github.com/react-component/util/issues"
   },
   "license": "MIT",
-  "config": {
-    "port": 8100
-  },
   "scripts": {
+    "start": "cross-env NODE_ENV=development father doc dev --storybook",
     "lint": "eslint src/ --ext .tsx,.ts & eslint tests/ --ext .js",
     "compile": "father build",
     "prepublishOnly": "npm run compile && np --yolo --no-publish",
@@ -38,6 +36,7 @@
     "@umijs/fabric": "^2.0.8",
     "coveralls": "^3.1.0",
     "create-react-class": "^15.6.3",
+    "cross-env": "^7.0.2",
     "enzyme": "^3.10.0",
     "eslint": "^6.6.0",
     "father": "^2.14.0",

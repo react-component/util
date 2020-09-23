@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { useRef } from 'react';
+import { useRef, forwardRef, useImperativeHandle } from 'react';
 import ReactDOM from 'react-dom';
 import canUseDom from './Dom/canUseDom';
+
+export type PortalRef = {};
 
 export interface PortalProps {
   /** @deprecated Not know who use this? */
@@ -10,10 +12,13 @@ export interface PortalProps {
   children?: React.ReactNode;
 }
 
-const Portal = (props: PortalProps) => {
+const Portal = forwardRef<PortalRef, PortalProps>((props, ref) => {
   const { didUpdate, getContainer, children } = props;
 
   const containerRef = useRef<HTMLElement>();
+
+  // Ref return nothing, only for wrapper check exist
+  useImperativeHandle(ref, () => ({}));
 
   // Create container in client side with sync to avoid useEffect not get ref
   const initRef = useRef(false);
@@ -35,6 +40,6 @@ const Portal = (props: PortalProps) => {
   return containerRef.current
     ? ReactDOM.createPortal(children, containerRef.current)
     : null;
-};
+});
 
 export default Portal;
