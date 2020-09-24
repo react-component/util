@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { useRef, forwardRef, useImperativeHandle } from 'react';
+import {
+  useRef,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from 'react';
 import ReactDOM from 'react-dom';
 import canUseDom from './Dom/canUseDom';
 
@@ -27,8 +32,8 @@ const Portal = forwardRef<PortalRef, PortalProps>((props, ref) => {
     initRef.current = true;
   }
 
-  // Not know who use this. Just keep it here
-  React.useEffect(() => {
+  useEffect(() => {
+    // Not know who use this. Just keep it here
     didUpdate?.(props);
 
     return () => {

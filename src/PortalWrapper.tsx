@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle,react/require-default-props */
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import raf from './raf';
 import ContainerRender from './ContainerRender';
 import Portal, { PortalRef } from './Portal';
 import switchScrollingEffect from './switchScrollingEffect';
@@ -67,6 +68,8 @@ class PortalWrapper extends React.Component<
 
   _component?: PortalRef;
 
+  rafId?: number;
+
   renderComponent?: (info: {
     afterClose: Function;
     onClose: Function;
@@ -86,8 +89,17 @@ class PortalWrapper extends React.Component<
     };
   }
 
+  componentDidMount() {
+    if (!this.attachToParent()) {
+      this.rafId = raf(() => {
+        this.forceUpdate();
+      });
+    }
+  }
+
   componentDidUpdate() {
     this.setWrapperClassName();
+    this.attachToParent();
   }
 
   componentWillUnmount() {
@@ -97,6 +109,7 @@ class PortalWrapper extends React.Component<
       openCount = visible && openCount ? openCount - 1 : openCount;
     }
     this.removeCurrentContainer(visible);
+    raf.cancel(this.rafId);
   }
 
   static getDerivedStateFromProps(props, { prevProps, _self }) {
@@ -129,16 +142,27 @@ class PortalWrapper extends React.Component<
     };
   }
 
+  attachToParent = (force = false) => {
+    if (force || (this.container && !this.container.parentNode)) {
+      const parent = getParent(this.props.getContainer);
+      if (parent) {
+        parent.appendChild(this.container);
+        return true;
+      }
+
+      return false;
+    }
+
+    return true;
+  };
+
   getContainer = () => {
     if (windowIsUndefined) {
       return null;
     }
     if (!this.container) {
       this.container = document.createElement('div');
-      const parent = getParent(this.props.getContainer);
-      if (parent) {
-        parent.appendChild(this.container);
-      }
+      this.attachToParent(true);
     }
     this.setWrapperClassName();
     return this.container;
