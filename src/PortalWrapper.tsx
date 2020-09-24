@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle,react/require-default-props */
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import ContainerRender from './ContainerRender';
-import Portal from './Portal';
+import Portal, { PortalRef } from './Portal';
 import switchScrollingEffect from './switchScrollingEffect';
 import setStyle from './setStyle';
 
@@ -19,7 +19,7 @@ const IS_REACT_16 = 'createPortal' in ReactDOM;
 // https://github.com/ant-design/ant-design/issues/19332
 let cacheOverflow = {};
 
-const getParent = getContainer => {
+const getParent = (getContainer: GetContainer) => {
   if (windowIsUndefined) {
     return null;
   }
@@ -40,8 +40,42 @@ const getParent = getContainer => {
   return document.body;
 };
 
-class PortalWrapper extends React.Component {
-  constructor(props) {
+export type GetContainer = string | HTMLElement | (() => HTMLElement);
+
+export interface PortalWrapperProps {
+  visible?: boolean;
+  getContainer?: GetContainer;
+  wrapperClassName?: string;
+  forceRender?: boolean;
+  children: (info: {
+    getOpenCount: () => number;
+    getContainer: () => HTMLElement;
+    switchScrollingEffect: () => void;
+    ref?: (c: any) => void;
+  }) => React.ReactNode;
+}
+
+export interface PortalWrapperState {
+  _self: PortalWrapper;
+}
+
+class PortalWrapper extends React.Component<
+  PortalWrapperProps,
+  PortalWrapperState
+> {
+  container?: HTMLElement;
+
+  _component?: PortalRef;
+
+  renderComponent?: (info: {
+    afterClose: Function;
+    onClose: Function;
+    visible: boolean;
+  }) => void;
+
+  removeContainer?: Function;
+
+  constructor(props: PortalWrapperProps) {
     super(props);
     const { visible, getContainer } = props;
     if (!windowIsUndefined && getParent(getContainer) === document.body) {
@@ -121,7 +155,7 @@ class PortalWrapper extends React.Component {
     }
   };
 
-  savePortal = c => {
+  savePortal = (c: PortalRef) => {
     // Warning: don't rename _component
     // https://github.com/react-component/util/pull/65#discussion_r352407916
     this._component = c;
@@ -175,7 +209,7 @@ class PortalWrapper extends React.Component {
       getContainer: this.getContainer,
       switchScrollingEffect: this.switchScrollingEffect,
     };
-    // suppport react15
+    // support react15
     if (!IS_REACT_16) {
       return (
         <ContainerRender
