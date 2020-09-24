@@ -24,6 +24,7 @@ const Portal = forwardRef<PortalRef, PortalProps>((props, ref) => {
   const initRef = useRef(false);
   if (!initRef.current && canUseDom()) {
     containerRef.current = getContainer();
+    initRef.current = true;
   }
 
   // Not know who use this. Just keep it here
