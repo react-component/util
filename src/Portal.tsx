@@ -11,7 +11,6 @@ import canUseDom from './Dom/canUseDom';
 export type PortalRef = {};
 
 export interface PortalProps {
-  /** @deprecated Not know who use this? */
   didUpdate?: (prevProps: PortalProps) => void;
   getContainer: () => HTMLElement;
   children?: React.ReactNode;
@@ -32,10 +31,12 @@ const Portal = forwardRef<PortalRef, PortalProps>((props, ref) => {
     initRef.current = true;
   }
 
+  // [Legacy] Used by `rc-trigger`
   useEffect(() => {
-    // Not know who use this. Just keep it here
     didUpdate?.(props);
+  });
 
+  useEffect(() => {
     return () => {
       if (containerRef.current) {
         containerRef.current.parentNode.removeChild(containerRef.current);
