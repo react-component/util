@@ -14,5 +14,12 @@ export default (element: HTMLElement | SVGGraphicsElement): boolean => {
     }
   }
 
+  if ((element as HTMLElement).getBoundingClientRect) {
+    const box = (element as HTMLElement).getBoundingClientRect();
+    if (box.width || box.height) {
+      return true;
+    }
+  }
+
   return false;
 };
