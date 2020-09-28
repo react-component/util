@@ -33,6 +33,8 @@ const Portal = forwardRef<PortalRef, PortalProps>((props, ref) => {
 
   useEffect(() => {
     return () => {
+      // [Legacy] This should not be handle by Portal but parent PortalWrapper instead.
+      // Since some component use `Portal` directly, we have to keep the logic here.
       containerRef.current?.parentNode?.removeChild(containerRef.current);
     };
   }, []);
