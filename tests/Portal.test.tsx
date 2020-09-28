@@ -15,7 +15,7 @@ describe('Portal', () => {
     document.body.removeChild(container);
   });
 
-  it.only('forceRender', () => {
+  it('forceRender', () => {
     const divRef = React.createRef<any>();
 
     const wrapper = mount(
