@@ -1,27 +1,20 @@
 /* eslint-disable no-underscore-dangle,react/require-default-props */
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import raf from './raf';
-import ContainerRender from './ContainerRender';
 import Portal, { PortalRef } from './Portal';
 import switchScrollingEffect from './switchScrollingEffect';
 import setStyle from './setStyle';
+import canUseDom from './Dom/canUseDom';
 
 let openCount = 0;
-const windowIsUndefined = !(
-  typeof window !== 'undefined' &&
-  window.document &&
-  window.document.createElement
-);
-
-const IS_REACT_16 = 'createPortal' in ReactDOM;
+const supportDom = canUseDom();
 
 // https://github.com/ant-design/ant-design/issues/19340
 // https://github.com/ant-design/ant-design/issues/19332
 let cacheOverflow = {};
 
 const getParent = (getContainer: GetContainer) => {
-  if (windowIsUndefined) {
+  if (!supportDom) {
     return null;
   }
   if (getContainer) {
@@ -66,7 +59,7 @@ class PortalWrapper extends React.Component<
 > {
   container?: HTMLElement;
 
-  _component?: PortalRef;
+  component?: PortalRef;
 
   rafId?: number;
 
@@ -81,7 +74,7 @@ class PortalWrapper extends React.Component<
   constructor(props: PortalWrapperProps) {
     super(props);
     const { visible, getContainer } = props;
-    if (!windowIsUndefined && getParent(getContainer) === document.body) {
+    if (supportDom && getParent(getContainer) === document.body) {
       openCount = visible ? openCount + 1 : openCount;
     }
     this.state = {
@@ -104,11 +97,11 @@ class PortalWrapper extends React.Component<
 
   componentWillUnmount() {
     const { visible, getContainer } = this.props;
-    if (!windowIsUndefined && getParent(getContainer) === document.body) {
+    if (supportDom && getParent(getContainer) === document.body) {
       // 离开时不会 render， 导到离开时数值不变，改用 func 。。
       openCount = visible && openCount ? openCount - 1 : openCount;
     }
-    this.removeCurrentContainer(visible);
+    this.removeCurrentContainer();
     raf.cancel(this.rafId);
   }
 
@@ -121,7 +114,7 @@ class PortalWrapper extends React.Component<
       } = prevProps;
       if (
         visible !== prevVisible &&
-        !windowIsUndefined &&
+        supportDom &&
         getParent(getContainer) === document.body
       ) {
         openCount = visible && !prevVisible ? openCount + 1 : openCount - 1;
@@ -157,7 +150,7 @@ class PortalWrapper extends React.Component<
   };
 
   getContainer = () => {
-    if (windowIsUndefined) {
+    if (!supportDom) {
       return null;
     }
     if (!this.container) {
@@ -182,23 +175,12 @@ class PortalWrapper extends React.Component<
   savePortal = (c: PortalRef) => {
     // Warning: don't rename _component
     // https://github.com/react-component/util/pull/65#discussion_r352407916
-    this._component = c;
+    this.component = c;
   };
 
-  removeCurrentContainer = visible => {
+  removeCurrentContainer = () => {
     this.container = null;
-    this._component = null;
-    if (!IS_REACT_16) {
-      if (visible) {
-        this.renderComponent({
-          afterClose: this.removeContainer,
-          onClose() {},
-          visible: false,
-        });
-      } else {
-        this.removeContainer();
-      }
-    }
+    this.component = null;
   };
 
   /**
@@ -233,32 +215,8 @@ class PortalWrapper extends React.Component<
       getContainer: this.getContainer,
       switchScrollingEffect: this.switchScrollingEffect,
     };
-    // support react15
-    if (!IS_REACT_16) {
-      return (
-        <ContainerRender
-          parent={this}
-          visible={visible}
-          autoDestroy={false}
-          getComponent={(extra = {}) =>
-            children({
-              ...extra,
-              ...childProps,
-              ref: this.savePortal,
-            })
-          }
-          getContainer={this.getContainer}
-          forceRender={forceRender}
-        >
-          {({ renderComponent, removeContainer }) => {
-            this.renderComponent = renderComponent;
-            this.removeContainer = removeContainer;
-            return null;
-          }}
-        </ContainerRender>
-      );
-    }
-    if (forceRender || visible || this._component) {
+
+    if (forceRender || visible || this.component) {
       portal = (
         <Portal getContainer={this.getContainer} ref={this.savePortal}>
           {children(childProps)}
