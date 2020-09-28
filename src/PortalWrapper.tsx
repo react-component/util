@@ -59,7 +59,7 @@ class PortalWrapper extends React.Component<
 > {
   container?: HTMLElement;
 
-  component?: PortalRef;
+  componentRef: React.RefObject<PortalRef> = React.createRef();
 
   rafId?: number;
 
@@ -68,8 +68,6 @@ class PortalWrapper extends React.Component<
     onClose: Function;
     visible: boolean;
   }) => void;
-
-  removeContainer?: Function;
 
   constructor(props: PortalWrapperProps) {
     super(props);
@@ -127,7 +125,7 @@ class PortalWrapper extends React.Component<
           ? getContainer.toString() !== prevGetContainer.toString()
           : getContainer !== prevGetContainer
       ) {
-        _self.removeCurrentContainer(false);
+        _self.removeCurrentContainer();
       }
     }
     return {
@@ -172,15 +170,8 @@ class PortalWrapper extends React.Component<
     }
   };
 
-  savePortal = (c: PortalRef) => {
-    // Warning: don't rename _component
-    // https://github.com/react-component/util/pull/65#discussion_r352407916
-    this.component = c;
-  };
-
   removeCurrentContainer = () => {
-    this.container = null;
-    this.component = null;
+    this.container.parentNode?.removeChild(this.container);
   };
 
   /**
@@ -216,9 +207,9 @@ class PortalWrapper extends React.Component<
       switchScrollingEffect: this.switchScrollingEffect,
     };
 
-    if (forceRender || visible || this.component) {
+    if (forceRender || visible || this.componentRef.current) {
       portal = (
-        <Portal getContainer={this.getContainer} ref={this.savePortal}>
+        <Portal getContainer={this.getContainer} ref={this.componentRef}>
           {children(childProps)}
         </Portal>
       );
