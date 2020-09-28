@@ -9,6 +9,11 @@ import canUseDom from './Dom/canUseDom';
 let openCount = 0;
 const supportDom = canUseDom();
 
+/** @private Test usage only */
+export function getOpenCount() {
+  return process.env.NODE_ENV === 'test' ? openCount : 0;
+}
+
 // https://github.com/ant-design/ant-design/issues/19340
 // https://github.com/ant-design/ant-design/issues/19332
 let cacheOverflow = {};
