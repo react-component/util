@@ -171,7 +171,9 @@ class PortalWrapper extends React.Component<
   };
 
   removeCurrentContainer = () => {
-    this.container.parentNode?.removeChild(this.container);
+    // Portal will remove from `parentNode`.
+    // Let's handle this again to avoid refactor issue.
+    this.container?.parentNode?.removeChild(this.container);
   };
 
   /**

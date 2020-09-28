@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  useRef,
-  useEffect,
-  forwardRef,
-  useImperativeHandle,
-} from 'react';
+import { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import ReactDOM from 'react-dom';
 import canUseDom from './Dom/canUseDom';
 
@@ -38,9 +33,7 @@ const Portal = forwardRef<PortalRef, PortalProps>((props, ref) => {
 
   useEffect(() => {
     return () => {
-      if (containerRef.current) {
-        containerRef.current.parentNode.removeChild(containerRef.current);
-      }
+      containerRef.current?.parentNode?.removeChild(containerRef.current);
     };
   }, []);
 
