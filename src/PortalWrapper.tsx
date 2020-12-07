@@ -68,11 +68,6 @@ class PortalWrapper extends React.Component<PortalWrapperProps> {
   }) => void;
 
   componentDidMount() {
-    const { visible, getContainer } = this.props;
-    if (supportDom && getParent(getContainer) === document.body) {
-      openCount = visible ? openCount + 1 : openCount;
-    }
-
     this.updateOpenCount({});
 
     if (!this.attachToParent()) {

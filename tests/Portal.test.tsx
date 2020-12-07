@@ -130,6 +130,8 @@ describe('Portal', () => {
       );
     };
 
+    expect(getOpenCount()).toEqual(0);
+
     const wrapper = mount(<Demo count={1} visible />);
     expect(getOpenCount()).toEqual(1);
 
