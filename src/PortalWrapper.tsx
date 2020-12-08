@@ -54,14 +54,7 @@ export interface PortalWrapperProps {
   }) => React.ReactNode;
 }
 
-export interface PortalWrapperState {
-  _self: PortalWrapper;
-}
-
-class PortalWrapper extends React.Component<
-  PortalWrapperProps,
-  PortalWrapperState
-> {
+class PortalWrapper extends React.Component<PortalWrapperProps> {
   container?: HTMLElement;
 
   componentRef: React.RefObject<PortalRef> = React.createRef();
@@ -74,18 +67,9 @@ class PortalWrapper extends React.Component<
     visible: boolean;
   }) => void;
 
-  constructor(props: PortalWrapperProps) {
-    super(props);
-    const { visible, getContainer } = props;
-    if (supportDom && getParent(getContainer) === document.body) {
-      openCount = visible ? openCount + 1 : openCount;
-    }
-    this.state = {
-      _self: this,
-    };
-  }
-
   componentDidMount() {
+    this.updateOpenCount();
+
     if (!this.attachToParent()) {
       this.rafId = raf(() => {
         this.forceUpdate();
@@ -93,10 +77,43 @@ class PortalWrapper extends React.Component<
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: PortalWrapperProps) {
+    this.updateOpenCount(prevProps);
+
     this.setWrapperClassName();
     this.attachToParent();
   }
+
+  updateOpenCount = (prevProps?: Partial<PortalWrapperProps>) => {
+    const { visible: prevVisible, getContainer: prevGetContainer } =
+      prevProps || {};
+    const { visible, getContainer } = this.props;
+
+    // Update count
+    if (
+      visible !== prevVisible &&
+      supportDom &&
+      getParent(getContainer) === document.body
+    ) {
+      if (visible && !prevVisible) {
+        openCount += 1;
+      } else if (prevProps) {
+        openCount -= 1;
+      }
+    }
+
+    // Clean up container if needed
+    const getContainerIsFunc =
+      typeof getContainer === 'function' &&
+      typeof prevGetContainer === 'function';
+    if (
+      getContainerIsFunc
+        ? getContainer.toString() !== prevGetContainer.toString()
+        : getContainer !== prevGetContainer
+    ) {
+      this.removeCurrentContainer();
+    }
+  };
 
   componentWillUnmount() {
     const { visible, getContainer } = this.props;
@@ -106,36 +123,6 @@ class PortalWrapper extends React.Component<
     }
     this.removeCurrentContainer();
     raf.cancel(this.rafId);
-  }
-
-  static getDerivedStateFromProps(props, { prevProps, _self }) {
-    const { visible, getContainer } = props;
-    if (prevProps) {
-      const {
-        visible: prevVisible,
-        getContainer: prevGetContainer,
-      } = prevProps;
-      if (
-        visible !== prevVisible &&
-        supportDom &&
-        getParent(getContainer) === document.body
-      ) {
-        openCount = visible && !prevVisible ? openCount + 1 : openCount - 1;
-      }
-      const getContainerIsFunc =
-        typeof getContainer === 'function' &&
-        typeof prevGetContainer === 'function';
-      if (
-        getContainerIsFunc
-          ? getContainer.toString() !== prevGetContainer.toString()
-          : getContainer !== prevGetContainer
-      ) {
-        _self.removeCurrentContainer();
-      }
-    }
-    return {
-      prevProps: props,
-    };
   }
 
   attachToParent = (force = false) => {
