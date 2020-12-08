@@ -117,32 +117,54 @@ describe('Portal', () => {
     });
   });
 
-  it('openCount', () => {
-    const Demo = ({ count, visible }: { count: number; visible: boolean }) => {
-      return (
-        <>
-          {new Array(count).fill(null).map((_, index) => (
-            <PortalWrapper key={index} visible={visible}>
-              {() => <div>2333</div>}
-            </PortalWrapper>
-          ))}
-        </>
+  describe('openCount', () => {
+    it('start as 0', () => {
+      expect(getOpenCount()).toEqual(0);
+
+      const wrapper = mount(
+        <PortalWrapper visible={false}>{() => <div>2333</div>}</PortalWrapper>,
       );
-    };
+      expect(getOpenCount()).toEqual(0);
 
-    expect(getOpenCount()).toEqual(0);
+      wrapper.setProps({ visible: true });
+      expect(getOpenCount()).toEqual(1);
 
-    const wrapper = mount(<Demo count={1} visible />);
-    expect(getOpenCount()).toEqual(1);
+      wrapper.unmount();
+    });
 
-    wrapper.setProps({ count: 2 });
-    expect(getOpenCount()).toEqual(2);
+    it('correct count', () => {
+      const Demo = ({
+        count,
+        visible,
+      }: {
+        count: number;
+        visible: boolean;
+      }) => {
+        return (
+          <>
+            {new Array(count).fill(null).map((_, index) => (
+              <PortalWrapper key={index} visible={visible}>
+                {() => <div>2333</div>}
+              </PortalWrapper>
+            ))}
+          </>
+        );
+      };
 
-    wrapper.setProps({ count: 1 });
-    expect(getOpenCount()).toEqual(1);
+      expect(getOpenCount()).toEqual(0);
 
-    wrapper.setProps({ visible: false });
-    expect(getOpenCount()).toEqual(0);
+      const wrapper = mount(<Demo count={1} visible />);
+      expect(getOpenCount()).toEqual(1);
+
+      wrapper.setProps({ count: 2 });
+      expect(getOpenCount()).toEqual(2);
+
+      wrapper.setProps({ count: 1 });
+      expect(getOpenCount()).toEqual(1);
+
+      wrapper.setProps({ visible: false });
+      expect(getOpenCount()).toEqual(0);
+    });
   });
 
   it('wrapperClassName', () => {
