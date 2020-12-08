@@ -68,7 +68,7 @@ class PortalWrapper extends React.Component<PortalWrapperProps> {
   }) => void;
 
   componentDidMount() {
-    this.updateOpenCount({});
+    this.updateOpenCount();
 
     if (!this.attachToParent()) {
       this.rafId = raf(() => {
@@ -84,10 +84,9 @@ class PortalWrapper extends React.Component<PortalWrapperProps> {
     this.attachToParent();
   }
 
-  updateOpenCount = ({
-    visible: prevVisible,
-    getContainer: prevGetContainer,
-  }: Partial<PortalWrapperProps>) => {
+  updateOpenCount = (prevProps?: Partial<PortalWrapperProps>) => {
+    const { visible: prevVisible, getContainer: prevGetContainer } =
+      prevProps || {};
     const { visible, getContainer } = this.props;
 
     // Update count
@@ -96,7 +95,11 @@ class PortalWrapper extends React.Component<PortalWrapperProps> {
       supportDom &&
       getParent(getContainer) === document.body
     ) {
-      openCount = visible && !prevVisible ? openCount + 1 : openCount - 1;
+      if (visible && !prevVisible) {
+        openCount += 1;
+      } else if (prevProps) {
+        openCount -= 1;
+      }
     }
 
     // Clean up container if needed
