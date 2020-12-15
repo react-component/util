@@ -1,141 +1,123 @@
-import { lock, unLock } from '../src/Dom/scrollLocker';
-import getScrollBarSize from '../src/getScrollBarSize';
+import ScrollLocker from '../src/Dom/scrollLocker';
 
 jest.mock('../src/getScrollBarSize', () =>
   jest.fn().mockImplementation(() => 20),
 );
 
 describe('ScrollLocker', () => {
-  let testTarget: HTMLElement;
   const effectClassname = 'ant-scrolling-effect';
+  let scrollLocker: ScrollLocker;
 
   // https://github.com/jsdom/jsdom/issues/1332
   // JSDom eats `calc`, so we don't test it.
   const effectStyle = 'position: relative;';
   beforeEach(() => {
-    testTarget = document.createElement('div');
+    scrollLocker = new ScrollLocker();
+  });
+
+  afterEach(() => {
+    if (scrollLocker) {
+      scrollLocker.unLock();
+    }
   });
 
   it('Lock and unLock', () => {
-    lock(testTarget);
+    scrollLocker.lock();
 
     expect(document.body.className).toBe(effectClassname);
     expect(document.body.getAttribute('style')).toBe(effectStyle);
 
-    unLock(testTarget);
+    scrollLocker.unLock();
 
     expect(document.body.className).toBe('');
     expect(document.body.getAttribute('style')).toBe('');
   });
 
   it('Lock multiple same target and unLock', () => {
-    lock(testTarget);
-    lock(testTarget);
-    lock(testTarget);
+    scrollLocker.lock();
+    scrollLocker.lock();
+    scrollLocker.lock();
 
     expect(document.body.className).toBe(effectClassname);
     expect(document.body.getAttribute('style')).toBe(effectStyle);
 
-    unLock(testTarget);
+    scrollLocker.unLock();
 
     expect(document.body.className).toBe('');
     expect(document.body.getAttribute('style')).toBe('');
 
-    unLock(testTarget);
+    scrollLocker.unLock();
 
     expect(document.body.className).toBe('');
     expect(document.body.getAttribute('style')).toBe('');
   });
 
   it('Lock multiple different target and unLock', () => {
-    const testTarget1 = document.createElement('div');
-    const testTarget2 = document.createElement('div');
+    const locker1 = new ScrollLocker();
+    const locker2 = new ScrollLocker();
 
-    // first-in-last-out
-    lock(testTarget);
-    lock(testTarget1);
-    lock(testTarget2);
-
-    expect(document.body.className).toBe(effectClassname);
-    expect(document.body.getAttribute('style')).toBe(effectStyle);
-
-    unLock(testTarget2);
+    scrollLocker.lock();
+    locker1.lock();
+    locker2.lock();
 
     expect(document.body.className).toBe(effectClassname);
     expect(document.body.getAttribute('style')).toBe(effectStyle);
 
-    unLock(testTarget1);
+    locker2.unLock();
 
     expect(document.body.className).toBe(effectClassname);
     expect(document.body.getAttribute('style')).toBe(effectStyle);
 
-    unLock(testTarget);
+    locker1.unLock();
+
+    expect(document.body.className).toBe(effectClassname);
+    expect(document.body.getAttribute('style')).toBe(effectStyle);
+
+    scrollLocker.unLock();
 
     expect(document.body.className).toBe('');
     expect(document.body.getAttribute('style')).toBe('');
   });
 
   it('Lock multiple different target and container and unLock', () => {
-    const testTarget1 = document.createElement('div');
-
     const testContainer = document.createElement('div');
-    const testContainerTarget1 = document.createElement('div');
-    const testContainerTarget2 = document.createElement('div');
 
-    // first-in-last-out
-    lock(testTarget);
-    lock(testContainerTarget1, {
+    const locker1 = new ScrollLocker({
+      container: testContainer,
+    });
+    const locker2 = new ScrollLocker({
       container: testContainer,
     });
 
-    expect(document.body.className).toBe(effectClassname);
-    expect(document.body.getAttribute('style')).toBe(effectStyle);
-    expect(testContainer.className).toBe(effectClassname);
-    expect(testContainer.getAttribute('style')).toBe(effectStyle);
-
-    lock(testTarget1);
-    lock(testContainerTarget2, {
-      container: testContainer,
-    });
+    scrollLocker.lock();
+    locker1.lock();
+    locker2.lock();
 
     expect(document.body.className).toBe(effectClassname);
     expect(document.body.getAttribute('style')).toBe(effectStyle);
     expect(testContainer.className).toBe(effectClassname);
     expect(testContainer.getAttribute('style')).toBe(effectStyle);
 
-    unLock(testTarget1);
+    locker1.unLock();
 
     expect(document.body.className).toBe(effectClassname);
     expect(document.body.getAttribute('style')).toBe(effectStyle);
     expect(testContainer.className).toBe(effectClassname);
     expect(testContainer.getAttribute('style')).toBe(effectStyle);
 
-    unLock(testTarget);
-    unLock(testContainerTarget2);
+    scrollLocker.unLock();
 
     expect(document.body.className).toBe('');
     expect(document.body.getAttribute('style')).toBe('');
     expect(testContainer.className).toBe(effectClassname);
     expect(testContainer.getAttribute('style')).toBe(effectStyle);
 
-    unLock(testTarget);
-    unLock(testContainerTarget1);
+    scrollLocker.unLock();
+    locker2.unLock();
 
     expect(document.body.className).toBe('');
     expect(document.body.getAttribute('style')).toBe('');
     expect(testContainer.className).toBe('');
     expect(testContainer.getAttribute('style')).toBe('');
-  });
-
-  it('Lock empty target and unLock', () => {
-    lock(undefined);
-
-    expect(document.body.className).toBe('');
-    expect(document.body.getAttribute('style')).toBe('');
-
-    unLock(undefined);
-
-    expect(document.body.className).toBe('');
-    expect(document.body.getAttribute('style')).toBe('');
   });
 });

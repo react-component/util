@@ -5,8 +5,10 @@ export interface scrollLockOptions {
   container: HTMLElement;
 }
 
+let uuid = 0;
+
 interface Ilocks {
-  target: HTMLElement;
+  target: typeof uuid;
   cacheStyle?: React.CSSProperties;
   options: scrollLockOptions;
 }
@@ -18,79 +20,89 @@ const scrollingEffectClassNameReg = new RegExp(
   'g',
 );
 
-export function lock(
-  lockTarget: HTMLElement,
-  targetOptions?: scrollLockOptions,
-) {
-  // If lockTarget exist or lockTarget undefined, return
-  if (!lockTarget || locks.some(({ target }) => target === lockTarget)) {
-    return;
+export default class ScrollLocker {
+  lockTarget: typeof uuid;
+
+  options: scrollLockOptions;
+
+  constructor(options?: scrollLockOptions) {
+    // eslint-disable-next-line no-plusplus
+    this.lockTarget = uuid++;
+    this.options = options;
   }
 
-  // If same container effect, return
-  if (
-    locks.some(({ options }) => options?.container === targetOptions?.container)
-  ) {
-    locks = [...locks, { target: lockTarget, options: targetOptions }];
-    return;
+  lock() {
+    // If lockTarget exist return
+    if (locks.some(({ target }) => target === this.lockTarget)) {
+      return;
+    }
+
+    // If same container effect, return
+    if (
+      locks.some(
+        ({ options }) => options?.container === this.options?.container,
+      )
+    ) {
+      locks = [...locks, { target: this.lockTarget, options: this.options }];
+      return;
+    }
+
+    // Add Effect
+    const scrollBarSize = getScrollBarSize();
+    const container = this.options?.container || document.body;
+    const containerClassName = container.className;
+
+    const cacheStyle = setStyle(
+      {
+        position: 'relative',
+        width: `calc(100% - ${scrollBarSize}px)`,
+      },
+      {
+        element: container,
+      },
+    );
+
+    // https://github.com/ant-design/ant-design/issues/19729
+    if (!scrollingEffectClassNameReg.test(containerClassName)) {
+      const addClassName = `${containerClassName} ${scrollingEffectClassName}`;
+      container.className = addClassName.trim();
+    }
+
+    locks = [
+      ...locks,
+      { target: this.lockTarget, options: this.options, cacheStyle },
+    ];
   }
 
-  // Add Effect
-  const scrollBarSize = getScrollBarSize();
+  unLock() {
+    const findLock = locks.find(({ target }) => target === this.lockTarget);
 
-  const container = targetOptions?.container || document.body;
-  const containerClassName = container.className;
+    locks = locks.filter(({ target }) => target !== this.lockTarget);
 
-  const cacheStyle = setStyle(
-    {
-      position: 'relative',
-      width: `calc(100% - ${scrollBarSize}px)`,
-    },
-    {
-      element: container,
-    },
-  );
+    if (
+      !findLock ||
+      locks.some(
+        ({ options }) => options?.container === findLock.options?.container,
+      )
+    ) {
+      return;
+    }
 
-  // https://github.com/ant-design/ant-design/issues/19729
-  if (!scrollingEffectClassNameReg.test(containerClassName)) {
-    const addClassName = `${containerClassName} ${scrollingEffectClassName}`;
-    container.className = addClassName.trim();
+    // Remove Effect
+    const container = this.options?.container || document.body;
+    const containerClassName = container.className;
+
+    if (!scrollingEffectClassNameReg.test(containerClassName)) return;
+    setStyle(
+      // @ts-ignore position should be empty string
+      findLock.cacheStyle || {
+        position: '',
+        width: '',
+      },
+      { element: container },
+    );
+    container.className = container.className
+      .replace(scrollingEffectClassNameReg, '')
+      .trim();
   }
-
-  locks = [
-    ...locks,
-    { target: lockTarget, options: targetOptions, cacheStyle },
-  ];
 }
-
-export function unLock(lockTarget: HTMLElement) {
-  const findLock = locks.find(({ target }) => target === lockTarget);
-
-  locks = locks.filter(({ target }) => target !== lockTarget);
-
-  if (
-    !findLock ||
-    locks.some(
-      ({ options }) => options?.container === findLock.options?.container,
-    )
-  ) {
-    return;
-  }
-
-  // Remove Effect
-  const container = findLock.options?.container || document.body;
-  const containerClassName = container.className;
-
-  if (!scrollingEffectClassNameReg.test(containerClassName)) return;
-  setStyle(findLock.cacheStyle, { element: container });
-  container.className = container.className
-    .replace(scrollingEffectClassNameReg, '')
-    .trim();
-}
-
-const scrollLocker = {
-  lock,
-  unLock,
-};
-
-export default scrollLocker;
