@@ -1,10 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-/**
- * @deprecated Since we do not need support React15 any more.
- * Will remove in next major version.
- */
 export default class ContainerRender extends React.Component {
   static defaultProps = {
     autoMount: true,
