@@ -58,14 +58,14 @@ import getContainerRenderMixin from 'rc-util/lib/getContainerRenderMixin';
 
 Fields in `config` and their meanings.
 
-| Field | Type | Description | Default |
-|-------|------|-------------|---------|
-| autoMount | boolean | Whether to render component into container automatically | true |
-| autoDestroy | boolean | Whether to remove container automatically while the component is unmounted | true |
-| isVisible | (instance): boolean | A function to get current visibility of the component | - |
-| isForceRender | (instance): boolean | A function to determine whether to render popup even it's not visible | - |
-| getComponent | (instance, extra): ReactNode | A function to get the component which will be rendered into container | - |
-| getContainer | (instance): HTMLElement | A function to get the container | |
+| Field         | Type                         | Description                                                                | Default |
+| ------------- | ---------------------------- | -------------------------------------------------------------------------- | ------- |
+| autoMount     | boolean                      | Whether to render component into container automatically                   | true    |
+| autoDestroy   | boolean                      | Whether to remove container automatically while the component is unmounted | true    |
+| isVisible     | (instance): boolean          | A function to get current visibility of the component                      | -       |
+| isForceRender | (instance): boolean          | A function to determine whether to render popup even it's not visible      | -       |
+| getComponent  | (instance, extra): ReactNode | A function to get the component which will be rendered into container      | -       |
+| getContainer  | (instance): HTMLElement      | A function to get the container                                            |         |
 
 ### Portal
 
@@ -77,11 +77,10 @@ import Portal from 'rc-util/lib/Portal';
 
 Props:
 
-| Prop | Type | Description | Default |
-|-------|------|-------------|---------|
-| children | ReactChildren | Content render to the container | - |
-| getContainer | (): HTMLElement  | A function  to get the container | - |
-
+| Prop         | Type            | Description                     | Default |
+| ------------ | --------------- | ------------------------------- | ------- |
+| children     | ReactChildren   | Content render to the container | -       |
+| getContainer | (): HTMLElement | A function to get the container | -       |
 
 ### getScrollBarSize
 
@@ -190,9 +189,9 @@ import canUseDom from 'rc-util/lib/Dom/canUseDom';
 
 A collection of functions to operate DOM nodes' class name.
 
-* `hasClass(node: HTMLElement, className: string): boolean`
-* `addClass(node: HTMLElement, className: string): void`
-* `removeClass(node: HTMLElement, className: string): void`
+- `hasClass(node: HTMLElement, className: string): boolean`
+- `addClass(node: HTMLElement, className: string): void`
+- `removeClass(node: HTMLElement, className: string): void`
 
 ```jsx
 import cssClass from 'rc-util/lib/Dom/class;
@@ -212,14 +211,14 @@ import contains from 'rc-util/lib/Dom/contains';
 
 A collection of functions to get or set css styles.
 
-* `get(node: HTMLElement, name?: string): any`
-* `set(node: HTMLElement, name?: string, value: any) | set(node, object)`
-* `getOuterWidth(el: HTMLElement): number`
-* `getOuterHeight(el: HTMLElement): number`
-* `getDocSize(): { width: number, height: number }`
-* `getClientSize(): { width: number, height: number }`
-* `getScroll(): { scrollLeft: number, scrollTop: number }`
-* `getOffset(node: HTMLElement): { left: number, top: number }`
+- `get(node: HTMLElement, name?: string): any`
+- `set(node: HTMLElement, name?: string, value: any) | set(node, object)`
+- `getOuterWidth(el: HTMLElement): number`
+- `getOuterHeight(el: HTMLElement): number`
+- `getDocSize(): { width: number, height: number }`
+- `getClientSize(): { width: number, height: number }`
+- `getScroll(): { scrollLeft: number, scrollTop: number }`
+- `getOffset(node: HTMLElement): { left: number, top: number }`
 
 ```jsx
 import css from 'rc-util/lib/Dom/css';
@@ -229,11 +228,11 @@ import css from 'rc-util/lib/Dom/css';
 
 A collection of functions to operate focus status of DOM node.
 
-* `saveLastFocusNode(): void`
-* `clearLastFocusNode(): void`
-* `backLastFocusNode(): void`
-* `getFocusNodeList(node: HTMLElement): HTMLElement[]` get a list of focusable nodes from the subtree of node.
-* `limitTabRange(node: HTMLElement, e: Event): void`
+- `saveLastFocusNode(): void`
+- `clearLastFocusNode(): void`
+- `backLastFocusNode(): void`
+- `getFocusNodeList(node: HTMLElement): HTMLElement[]` get a list of focusable nodes from the subtree of node.
+- `limitTabRange(node: HTMLElement, e: Event): void`
 
 ```jsx
 import focus from 'rc-util/lib/Dom/focus';
@@ -271,18 +270,24 @@ Whether text and modified key is entered at the same time.
 
 Whether character is entered.
 
-### switchScrollingEffect
+### ScrollLocker
 
-> (close: boolean) => void
+> ScrollLocker<{lock: (options: {container: HTMLElement}) => void, unLock: () => void}>
 
 improve shake when page scroll bar hidden.
 
-`switchScrollingEffect` change body style, and add a class `ant-scrolling-effect` when called, so if you page look abnormal, please check this;
+`ScrollLocker` change body style, and add a class `ant-scrolling-effect` when called, so if you page look abnormal, please check this;
 
 ```js
-import switchScrollingEffect from "./src/switchScrollingEffect";
+import ScrollLocker from 'rc-util/lib/Dom/scrollLocker';
 
-switchScrollingEffect();
+const scrollLocker = new ScrollLocker();
+
+// lock
+scrollLocker.lock()
+
+// unLock
+scrollLocker.unLock()
 ```
 
 ## License
