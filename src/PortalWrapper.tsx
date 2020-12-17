@@ -2,9 +2,8 @@
 import * as React from 'react';
 import raf from './raf';
 import Portal, { PortalRef } from './Portal';
-import switchScrollingEffect from './switchScrollingEffect';
-import setStyle from './setStyle';
 import canUseDom from './Dom/canUseDom';
+import ScrollLocker from './Dom/scrollLocker';
 
 let openCount = 0;
 const supportDom = canUseDom();
@@ -13,10 +12,6 @@ const supportDom = canUseDom();
 export function getOpenCount() {
   return process.env.NODE_ENV === 'test' ? openCount : 0;
 }
-
-// https://github.com/ant-design/ant-design/issues/19340
-// https://github.com/ant-design/ant-design/issues/19332
-let cacheOverflow = {};
 
 const getParent = (getContainer: GetContainer) => {
   if (!supportDom) {
@@ -49,7 +44,7 @@ export interface PortalWrapperProps {
   children: (info: {
     getOpenCount: () => number;
     getContainer: () => HTMLElement;
-    switchScrollingEffect: () => void;
+    scrollLocker: ScrollLocker;
     ref?: (c: any) => void;
   }) => React.ReactNode;
 }
@@ -60,6 +55,8 @@ class PortalWrapper extends React.Component<PortalWrapperProps> {
   componentRef: React.RefObject<PortalRef> = React.createRef();
 
   rafId?: number;
+
+  scrollLocker = new ScrollLocker();
 
   renderComponent?: (info: {
     afterClose: Function;
@@ -168,37 +165,13 @@ class PortalWrapper extends React.Component<PortalWrapperProps> {
     this.container?.parentNode?.removeChild(this.container);
   };
 
-  /**
-   * Enhance ./switchScrollingEffect
-   * 1. Simulate document body scroll bar with
-   * 2. Record body has overflow style and recover when all of PortalWrapper invisible
-   * 3. Disable body scroll when PortalWrapper has open
-   *
-   * @memberof PortalWrapper
-   */
-  switchScrollingEffect = () => {
-    if (openCount === 1 && !Object.keys(cacheOverflow).length) {
-      switchScrollingEffect();
-      // Must be set after switchScrollingEffect
-      cacheOverflow = setStyle({
-        overflow: 'hidden',
-        overflowX: 'hidden',
-        overflowY: 'hidden',
-      });
-    } else if (!openCount) {
-      setStyle(cacheOverflow);
-      cacheOverflow = {};
-      switchScrollingEffect(true);
-    }
-  };
-
   render() {
     const { children, forceRender, visible } = this.props;
     let portal = null;
     const childProps = {
       getOpenCount: () => openCount,
       getContainer: this.getContainer,
-      switchScrollingEffect: this.switchScrollingEffect,
+      scrollLocker: this.scrollLocker,
     };
 
     if (forceRender || visible || this.componentRef.current) {

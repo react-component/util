@@ -5,6 +5,31 @@ export interface scrollLockOptions {
   container: HTMLElement;
 }
 
+let passiveSupported = false;
+if (typeof window !== 'undefined') {
+  const passiveTestOption = {
+    get passive() {
+      passiveSupported = true;
+      return null;
+    },
+  };
+
+  window.addEventListener('testPassive', null, passiveTestOption);
+  // @ts-ignore compatible passive
+  window.removeEventListener('testPassive', null, passiveTestOption);
+}
+
+const preventDefault = (event: React.TouchEvent | TouchEvent): boolean => {
+  const e = event || window.event;
+
+  // If more than one touch we don't prevent
+  if ((e as TouchEvent).touches.length > 1) return true;
+
+  if (e.preventDefault) e.preventDefault();
+
+  return false;
+};
+
 let uuid = 0;
 
 interface Ilocks {
@@ -52,10 +77,15 @@ export default class ScrollLocker {
     const container = this.options?.container || document.body;
     const containerClassName = container.className;
 
+    // https://github.com/ant-design/ant-design/issues/19340
+    // https://github.com/ant-design/ant-design/issues/19332
     const cacheStyle = setStyle(
       {
         position: 'relative',
         width: `calc(100% - ${scrollBarSize}px)`,
+        overflow: 'hidden',
+        overflowX: 'hidden',
+        overflowY: 'hidden',
       },
       {
         element: container,
@@ -66,6 +96,12 @@ export default class ScrollLocker {
     if (!scrollingEffectClassNameReg.test(containerClassName)) {
       const addClassName = `${containerClassName} ${scrollingEffectClassName}`;
       container.className = addClassName.trim();
+
+      document.addEventListener(
+        'touchmove',
+        preventDefault,
+        passiveSupported ? { passive: false } : undefined,
+      );
     }
 
     locks = [
@@ -98,11 +134,21 @@ export default class ScrollLocker {
       findLock.cacheStyle || {
         position: '',
         width: '',
+        overflow: '',
+        overflowX: '',
+        overflowY: '',
       },
       { element: container },
     );
     container.className = container.className
       .replace(scrollingEffectClassNameReg, '')
       .trim();
+
+    // @ts-ignore compatible passive
+    document.removeEventListener(
+      'touchmove',
+      preventDefault,
+      passiveSupported ? { passive: false } : undefined,
+    );
   }
 }
