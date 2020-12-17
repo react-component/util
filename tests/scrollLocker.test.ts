@@ -10,7 +10,8 @@ describe('ScrollLocker', () => {
 
   // https://github.com/jsdom/jsdom/issues/1332
   // JSDom eats `calc`, so we don't test it.
-  const effectStyle = 'position: relative; overflow: hidden; overflow-x: hidden; overflow-y: hidden;';
+  const effectStyle =
+    'position: relative; overflow: hidden; overflow-x: hidden; overflow-y: hidden;';
   beforeEach(() => {
     scrollLocker = new ScrollLocker();
   });
