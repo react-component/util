@@ -56,7 +56,7 @@ export default class ScrollLocker {
     this.options = options;
   }
 
-  lock() {
+  lock = () => {
     // If lockTarget exist return
     if (locks.some(({ target }) => target === this.lockTarget)) {
       return;
@@ -72,8 +72,12 @@ export default class ScrollLocker {
       return;
     }
 
-    // Add Effect
-    const scrollBarSize = getScrollBarSize();
+    let scrollBarSize = 0;
+
+    if (window.innerWidth - document.documentElement.clientWidth > 0) {
+      scrollBarSize = getScrollBarSize();
+    }
+
     const container = this.options?.container || document.body;
     const containerClassName = container.className;
 
@@ -81,8 +85,7 @@ export default class ScrollLocker {
     // https://github.com/ant-design/ant-design/issues/19332
     const cacheStyle = setStyle(
       {
-        position: 'relative',
-        width: `calc(100% - ${scrollBarSize}px)`,
+        paddingRight: `${scrollBarSize}px`,
         overflow: 'hidden',
         overflowX: 'hidden',
         overflowY: 'hidden',
@@ -108,9 +111,9 @@ export default class ScrollLocker {
       ...locks,
       { target: this.lockTarget, options: this.options, cacheStyle },
     ];
-  }
+  };
 
-  unLock() {
+  unLock = () => {
     const findLock = locks.find(({ target }) => target === this.lockTarget);
 
     locks = locks.filter(({ target }) => target !== this.lockTarget);
@@ -129,11 +132,11 @@ export default class ScrollLocker {
     const containerClassName = container.className;
 
     if (!scrollingEffectClassNameReg.test(containerClassName)) return;
+
     setStyle(
       // @ts-ignore position should be empty string
       findLock.cacheStyle || {
-        position: '',
-        width: '',
+        paddingRight: '',
         overflow: '',
         overflowX: '',
         overflowY: '',
@@ -150,5 +153,5 @@ export default class ScrollLocker {
       preventDefault,
       passiveSupported ? { passive: false } : undefined,
     );
-  }
+  };
 }

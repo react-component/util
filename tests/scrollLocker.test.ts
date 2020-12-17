@@ -8,10 +8,12 @@ describe('ScrollLocker', () => {
   const effectClassname = 'ant-scrolling-effect';
   let scrollLocker: ScrollLocker;
 
-  // https://github.com/jsdom/jsdom/issues/1332
-  // JSDom eats `calc`, so we don't test it.
   const effectStyle =
-    'position: relative; overflow: hidden; overflow-x: hidden; overflow-y: hidden;';
+    'padding-right: 20px; overflow: hidden; overflow-x: hidden; overflow-y: hidden;';
+
+  // jsdom can not remove inset style, so we can ignore this
+  const initialStyle = 'padding-right: 20px;';
+
   beforeEach(() => {
     scrollLocker = new ScrollLocker();
   });
@@ -31,7 +33,8 @@ describe('ScrollLocker', () => {
     scrollLocker.unLock();
 
     expect(document.body.className).toBe('');
-    expect(document.body.getAttribute('style')).toBe('');
+    document.body.style.paddingRight = undefined;
+    expect(document.body.getAttribute('style')).toBe(initialStyle);
   });
 
   it('Lock multiple same target and unLock', () => {
@@ -45,12 +48,12 @@ describe('ScrollLocker', () => {
     scrollLocker.unLock();
 
     expect(document.body.className).toBe('');
-    expect(document.body.getAttribute('style')).toBe('');
+    expect(document.body.getAttribute('style')).toBe(initialStyle);
 
     scrollLocker.unLock();
 
     expect(document.body.className).toBe('');
-    expect(document.body.getAttribute('style')).toBe('');
+    expect(document.body.getAttribute('style')).toBe(initialStyle);
   });
 
   it('Lock multiple different target and unLock', () => {
@@ -77,7 +80,7 @@ describe('ScrollLocker', () => {
     scrollLocker.unLock();
 
     expect(document.body.className).toBe('');
-    expect(document.body.getAttribute('style')).toBe('');
+    expect(document.body.getAttribute('style')).toBe(initialStyle);
   });
 
   it('Lock multiple different target and container and unLock', () => {
@@ -109,7 +112,7 @@ describe('ScrollLocker', () => {
     scrollLocker.unLock();
 
     expect(document.body.className).toBe('');
-    expect(document.body.getAttribute('style')).toBe('');
+    expect(document.body.getAttribute('style')).toBe(initialStyle);
     expect(testContainer.className).toBe(effectClassname);
     expect(testContainer.getAttribute('style')).toBe(effectStyle);
 
@@ -117,8 +120,8 @@ describe('ScrollLocker', () => {
     locker2.unLock();
 
     expect(document.body.className).toBe('');
-    expect(document.body.getAttribute('style')).toBe('');
+    expect(document.body.getAttribute('style')).toBe(initialStyle);
     expect(testContainer.className).toBe('');
-    expect(testContainer.getAttribute('style')).toBe('');
+    expect(testContainer.getAttribute('style')).toBe(initialStyle);
   });
 });
