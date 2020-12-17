@@ -56,7 +56,14 @@ class PortalWrapper extends React.Component<PortalWrapperProps> {
 
   rafId?: number;
 
-  scrollLocker = new ScrollLocker();
+  scrollLocker: ScrollLocker;
+
+  constructor(props: PortalWrapperProps) {
+    super(props);
+    this.scrollLocker = new ScrollLocker({
+      container: getParent(props.getContainer) as HTMLElement,
+    });
+  }
 
   renderComponent?: (info: {
     afterClose: Function;
