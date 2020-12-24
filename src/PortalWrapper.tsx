@@ -2,9 +2,10 @@
 import * as React from 'react';
 import raf from './raf';
 import Portal, { PortalRef } from './Portal';
+import canUseDom from './Dom/canUseDom';
 import switchScrollingEffect from './switchScrollingEffect';
 import setStyle from './setStyle';
-import canUseDom from './Dom/canUseDom';
+import ScrollLocker from './Dom/scrollLocker';
 
 let openCount = 0;
 const supportDom = canUseDom();
@@ -50,6 +51,7 @@ export interface PortalWrapperProps {
     getOpenCount: () => number;
     getContainer: () => HTMLElement;
     switchScrollingEffect: () => void;
+    scrollLocker: ScrollLocker;
     ref?: (c: any) => void;
   }) => React.ReactNode;
 }
@@ -60,6 +62,15 @@ class PortalWrapper extends React.Component<PortalWrapperProps> {
   componentRef: React.RefObject<PortalRef> = React.createRef();
 
   rafId?: number;
+
+  scrollLocker: ScrollLocker;
+
+  constructor(props: PortalWrapperProps) {
+    super(props);
+    this.scrollLocker = new ScrollLocker({
+      container: getParent(props.getContainer) as HTMLElement,
+    });
+  }
 
   renderComponent?: (info: {
     afterClose: Function;
@@ -199,6 +210,7 @@ class PortalWrapper extends React.Component<PortalWrapperProps> {
       getOpenCount: () => openCount,
       getContainer: this.getContainer,
       switchScrollingEffect: this.switchScrollingEffect,
+      scrollLocker: this.scrollLocker,
     };
 
     if (forceRender || visible || this.componentRef.current) {
