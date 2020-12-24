@@ -30,11 +30,8 @@ const preventDefault = (event: React.TouchEvent | TouchEvent): boolean => {
   return false;
 };
 
-let uuid = 0;
-
 interface Ilocks {
   target: typeof uuid;
-  cacheStyle?: React.CSSProperties;
   options: scrollLockOptions;
 }
 
@@ -44,6 +41,12 @@ const scrollingEffectClassNameReg = new RegExp(
   `${scrollingEffectClassName}`,
   'g',
 );
+
+let uuid = 0;
+
+// https://github.com/ant-design/ant-design/issues/19340
+// https://github.com/ant-design/ant-design/issues/19332
+const cacheStyle = new Map<Element, React.CSSProperties>();
 
 export default class ScrollLocker {
   lockTarget: typeof uuid;
@@ -81,19 +84,26 @@ export default class ScrollLocker {
     const container = this.options?.container || document.body;
     const containerClassName = container.className;
 
-    // https://github.com/ant-design/ant-design/issues/19340
-    // https://github.com/ant-design/ant-design/issues/19332
-    const cacheStyle = setStyle(
-      {
-        paddingRight: `${scrollBarSize}px`,
-        overflow: 'hidden',
-        overflowX: 'hidden',
-        overflowY: 'hidden',
-      },
-      {
-        element: container,
-      },
-    );
+    if (
+      locks.filter(
+        ({ options }) => options?.container === this.options?.container,
+      ).length === 0
+    ) {
+      cacheStyle.set(
+        container,
+        setStyle(
+          {
+            paddingRight: `${scrollBarSize}px`,
+            overflow: 'hidden',
+            overflowX: 'hidden',
+            overflowY: 'hidden',
+          },
+          {
+            element: container,
+          },
+        ),
+      );
+    }
 
     // https://github.com/ant-design/ant-design/issues/19729
     if (!scrollingEffectClassNameReg.test(containerClassName)) {
@@ -107,10 +117,7 @@ export default class ScrollLocker {
       );
     }
 
-    locks = [
-      ...locks,
-      { target: this.lockTarget, options: this.options, cacheStyle },
-    ];
+    locks = [...locks, { target: this.lockTarget, options: this.options }];
   };
 
   unLock = () => {
@@ -135,14 +142,10 @@ export default class ScrollLocker {
 
     setStyle(
       // @ts-ignore position should be empty string
-      findLock.cacheStyle || {
-        paddingRight: '',
-        overflow: '',
-        overflowX: '',
-        overflowY: '',
-      },
+      cacheStyle.get(container),
       { element: container },
     );
+    cacheStyle.delete(container)
     container.className = container.className
       .replace(scrollingEffectClassNameReg, '')
       .trim();
