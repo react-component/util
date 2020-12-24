@@ -140,12 +140,8 @@ export default class ScrollLocker {
 
     if (!scrollingEffectClassNameReg.test(containerClassName)) return;
 
-    setStyle(
-      // @ts-ignore position should be empty string
-      cacheStyle.get(container),
-      { element: container },
-    );
-    cacheStyle.delete(container)
+    setStyle(cacheStyle.get(container), { element: container });
+    cacheStyle.delete(container);
     container.className = container.className
       .replace(scrollingEffectClassNameReg, '')
       .trim();
