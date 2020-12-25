@@ -5,31 +5,6 @@ export interface scrollLockOptions {
   container: HTMLElement;
 }
 
-let passiveSupported = false;
-if (typeof window !== 'undefined') {
-  const passiveTestOption = {
-    get passive() {
-      passiveSupported = true;
-      return null;
-    },
-  };
-
-  window.addEventListener('testPassive', null, passiveTestOption);
-  // @ts-ignore compatible passive
-  window.removeEventListener('testPassive', null, passiveTestOption);
-}
-
-const preventDefault = (event: React.TouchEvent | TouchEvent): boolean => {
-  const e = event || window.event;
-
-  // If more than one touch we don't prevent
-  if ((e as TouchEvent).touches.length > 1) return true;
-
-  if (e.preventDefault) e.preventDefault();
-
-  return false;
-};
-
 interface Ilocks {
   target: typeof uuid;
   options: scrollLockOptions;
@@ -109,12 +84,6 @@ export default class ScrollLocker {
     if (!scrollingEffectClassNameReg.test(containerClassName)) {
       const addClassName = `${containerClassName} ${scrollingEffectClassName}`;
       container.className = addClassName.trim();
-
-      document.addEventListener(
-        'touchmove',
-        preventDefault,
-        passiveSupported ? { passive: false } : undefined,
-      );
     }
 
     locks = [...locks, { target: this.lockTarget, options: this.options }];
@@ -145,12 +114,5 @@ export default class ScrollLocker {
     container.className = container.className
       .replace(scrollingEffectClassNameReg, '')
       .trim();
-
-    // @ts-ignore compatible passive
-    document.removeEventListener(
-      'touchmove',
-      preventDefault,
-      passiveSupported ? { passive: false } : undefined,
-    );
   };
 }
