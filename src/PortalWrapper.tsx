@@ -97,8 +97,7 @@ class PortalWrapper extends React.Component<PortalWrapperProps> {
   }
 
   updateScrollLocker = (prevProps?: Partial<PortalWrapperProps>) => {
-    const { visible: prevVisible, getContainer: prevGetContainer } =
-      prevProps || {};
+    const { visible: prevVisible } = prevProps || {};
     const { getContainer, visible } = this.props;
 
     if (
