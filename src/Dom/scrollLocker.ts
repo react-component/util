@@ -41,12 +41,17 @@ export default class ScrollLocker {
   // if options change...
   reLock = (options?: scrollLockOptions) => {
     const findLock = locks.find(({ target }) => target === this.lockTarget);
-    findLock && this.unLock();
+
+    if (findLock) {
+      this.unLock();
+    }
 
     this.options = options;
-    findLock && (findLock.options = options);
 
-    findLock && this.lock();
+    if (findLock) {
+      findLock.options = options;
+      this.lock();
+    }
   };
 
   lock = () => {
