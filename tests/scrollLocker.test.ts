@@ -124,4 +124,22 @@ describe('ScrollLocker', () => {
     expect(testContainer.className).toBe('');
     expect(testContainer.getAttribute('style')).toBe(initialStyle);
   });
+
+  it('reLock', () => {
+    scrollLocker.lock();
+    const testContainer = document.createElement('div');
+
+    expect(document.body.className).toBe(effectClassname);
+    expect(document.body.getAttribute('style')).toBe(effectStyle);
+
+    scrollLocker.reLock({
+      container: testContainer,
+    });
+
+    expect(document.body.className).toBe('');
+    expect(document.body.getAttribute('style')).toBe(initialStyle);
+
+    expect(testContainer.className).toBe(effectClassname);
+    expect(testContainer.getAttribute('style')).toBe(effectStyle);
+  });
 });

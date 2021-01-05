@@ -24,15 +24,30 @@ let uuid = 0;
 const cacheStyle = new Map<Element, React.CSSProperties>();
 
 export default class ScrollLocker {
-  lockTarget: typeof uuid;
+  private lockTarget: typeof uuid;
 
-  options: scrollLockOptions;
+  private options: scrollLockOptions;
 
   constructor(options?: scrollLockOptions) {
     // eslint-disable-next-line no-plusplus
     this.lockTarget = uuid++;
     this.options = options;
   }
+
+  getContainer = (): HTMLElement | undefined => {
+    return this.options?.container;
+  };
+
+  // if options change...
+  reLock = (options?: scrollLockOptions) => {
+    const findLock = locks.find(({ target }) => target === this.lockTarget);
+    findLock && this.unLock();
+
+    this.options = options;
+    findLock && (findLock.options = options);
+
+    findLock && this.lock();
+  };
 
   lock = () => {
     // If lockTarget exist return

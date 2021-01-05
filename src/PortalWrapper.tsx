@@ -90,10 +90,27 @@ class PortalWrapper extends React.Component<PortalWrapperProps> {
 
   componentDidUpdate(prevProps: PortalWrapperProps) {
     this.updateOpenCount(prevProps);
+    this.updateScrollLocker(prevProps);
 
     this.setWrapperClassName();
     this.attachToParent();
   }
+
+  updateScrollLocker = (prevProps?: Partial<PortalWrapperProps>) => {
+    const { visible: prevVisible } = prevProps || {};
+    const { getContainer, visible } = this.props;
+
+    if (
+      visible &&
+      visible !== prevVisible &&
+      supportDom &&
+      getParent(getContainer) !== this.scrollLocker.getContainer()
+    ) {
+      this.scrollLocker.reLock({
+        container: getParent(getContainer) as HTMLElement,
+      });
+    }
+  };
 
   updateOpenCount = (prevProps?: Partial<PortalWrapperProps>) => {
     const { visible: prevVisible, getContainer: prevGetContainer } =
