@@ -92,7 +92,7 @@ export default class ScrollLocker {
         container,
         setStyle(
           {
-            paddingRight: `${scrollBarSize}px`,
+            width: `calc(100% - ${scrollBarSize}px)`,
             overflow: 'hidden',
             overflowX: 'hidden',
             overflowY: 'hidden',
