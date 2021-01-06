@@ -10,10 +10,10 @@ describe('ScrollLocker', () => {
   let scrollLocker: ScrollLocker;
 
   const effectStyle =
-    'padding-right: 20px; overflow: hidden; overflow-x: hidden; overflow-y: hidden;';
+    'overflow: hidden; overflow-x: hidden; overflow-y: hidden;';
 
-  // jsdom can not remove inset style, so we can ignore this
-  const initialStyle = 'padding-right: 20px;';
+  // jsdom can not capture calc
+  const initialStyle = '';
 
   beforeEach(() => {
     scrollLocker = new ScrollLocker();
