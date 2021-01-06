@@ -1,3 +1,4 @@
+import { spyElementPrototypes } from '../src/test/domHook';
 import ScrollLocker from '../src/Dom/scrollLocker';
 
 jest.mock('../src/getScrollBarSize', () =>
@@ -86,6 +87,15 @@ describe('ScrollLocker', () => {
   it('Lock multiple different target and container and unLock', () => {
     const testContainer = document.createElement('div');
 
+    const domSpy = spyElementPrototypes(HTMLDivElement, {
+      scrollHeight: {
+        get: () => 100,
+      },
+      clientWidth: {
+        get: () => 90,
+      },
+    });
+
     const locker1 = new ScrollLocker({
       container: testContainer,
     });
@@ -123,11 +133,22 @@ describe('ScrollLocker', () => {
     expect(document.body.getAttribute('style')).toBe(initialStyle);
     expect(testContainer.className).toBe('');
     expect(testContainer.getAttribute('style')).toBe(initialStyle);
+
+    domSpy.mockRestore();
   });
 
   it('reLock', () => {
     scrollLocker.lock();
     const testContainer = document.createElement('div');
+
+    const domSpy = spyElementPrototypes(HTMLDivElement, {
+      scrollHeight: {
+        get: () => 100,
+      },
+      clientWidth: {
+        get: () => 90,
+      },
+    });
 
     expect(document.body.className).toBe(effectClassname);
     expect(document.body.getAttribute('style')).toBe(effectStyle);
@@ -141,5 +162,7 @@ describe('ScrollLocker', () => {
 
     expect(testContainer.className).toBe(effectClassname);
     expect(testContainer.getAttribute('style')).toBe(effectStyle);
+
+    domSpy.mockRestore();
   });
 });
