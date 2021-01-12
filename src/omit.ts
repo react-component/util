@@ -4,9 +4,11 @@ export default function omit<T extends object, K extends keyof T>(
 ): Omit<T, K> {
   const clone = { ...obj };
 
-  fields.forEach(key => {
-    delete clone[key];
-  });
+  if (Array.isArray(fields)) {
+    fields.forEach(key => {
+      delete clone[key];
+    });
+  }
 
   return clone;
 }
