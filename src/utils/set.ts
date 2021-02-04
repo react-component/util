@@ -1,7 +1,10 @@
-export default function set<Entity = any, Output = Entity, Value = any>(
+import get from './get';
+
+function internalSet<Entity = any, Output = Entity, Value = any>(
   entity: Entity,
   paths: (string | number)[],
   value: Value,
+  removeIfUndefined: boolean = false,
 ): Output {
   if (!paths.length) {
     return (value as unknown) as Output;
@@ -18,7 +21,31 @@ export default function set<Entity = any, Output = Entity, Value = any>(
     clone = ({ ...entity } as unknown) as Output;
   }
 
-  clone[path] = set(clone[path], restPath, value);
+  // Delete prop if `removeIfUndefined` and value is undefined
+  if (removeIfUndefined && value === undefined && restPath.length === 1) {
+    delete clone[path][restPath[0]];
+  } else {
+    clone[path] = internalSet(clone[path], restPath, value, removeIfUndefined);
+  }
 
   return clone;
+}
+
+export default function set<Entity = any, Output = Entity, Value = any>(
+  entity: Entity,
+  paths: (string | number)[],
+  value: Value,
+  removeIfUndefined: boolean = false,
+): Output {
+  // Do nothing if `removeIfUndefined` and parent object not exist
+  if (
+    paths.length &&
+    removeIfUndefined &&
+    value === undefined &&
+    !get(entity, paths.slice(0, -1))
+  ) {
+    return (entity as unknown) as Output;
+  }
+
+  return internalSet(entity, paths, value, removeIfUndefined);
 }
