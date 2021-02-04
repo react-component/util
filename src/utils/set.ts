@@ -4,7 +4,7 @@ function internalSet<Entity = any, Output = Entity, Value = any>(
   entity: Entity,
   paths: (string | number)[],
   value: Value,
-  removeIfUndefined: boolean = false,
+  removeIfUndefined: boolean,
 ): Output {
   if (!paths.length) {
     return (value as unknown) as Output;
