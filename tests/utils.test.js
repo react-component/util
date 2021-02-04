@@ -76,6 +76,16 @@ describe('utils', () => {
       expect(midTgt).toEqual({ lv1: { lv2: {} } });
       expect('lv3' in midTgt.lv1.lv2).toBeFalsy();
 
+      // Long path not exist
+      const longNotExistTgt = set(
+        { lv1: { lv2: {} } },
+        ['lv1', 'lv2', 'lv3', 'lv4'],
+        undefined,
+        true,
+      );
+      expect(longNotExistTgt).toEqual({ lv1: { lv2: {} } });
+      expect('lv3' in longNotExistTgt.lv1.lv2).toBeFalsy();
+
       // Long path remove
       const longTgt = set(
         { lv1: { lv2: { lv3: { lv4: { lv: 5 } } } } },
