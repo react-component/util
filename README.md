@@ -252,7 +252,7 @@ import support from 'rc-util/lib/Dom/support';
 
 > Enum
 
-Enum of KeyCode, please check the [definition](https://github.com/react-component/util/blob/master/src/KeyCode.js) of it.
+Enum of KeyCode, please check the [definition](https://github.com/react-component/util/blob/master/src/KeyCode.ts) of it.
 
 ```jsx
 import KeyCode from 'rc-util/lib/KeyCode';
