@@ -1,4 +1,8 @@
 export default () => {
+  if (typeof navigator === 'undefined' || typeof window === 'undefined') {
+    return false;
+  }
+
   const agent =
     navigator.userAgent || navigator.vendor || (window as any).opera;
   if (
