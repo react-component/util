@@ -32,6 +32,14 @@ describe('dynamicCSS', () => {
       );
       expect(document.body.querySelector('style').nonce).toEqual('light');
     });
+
+    it('prepend', () => {
+      const style = injectCSS(TEST_STYLE, { prepend: true });
+      expect(document.body.contains(style));
+      expect(document.body.querySelector('style').innerHTML).toEqual(
+        TEST_STYLE,
+      );
+    });
   });
 
   describe('updateCSS', () => {
