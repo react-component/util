@@ -9,7 +9,12 @@ interface Options {
 }
 
 function getContainer(option: Options) {
-  return option.attachTo || document.body;
+  if (option.attachTo) {
+    return option.attachTo;
+  }
+
+  const head = document.querySelector('head');
+  return head || document.body;
 }
 
 export function injectCSS(css: string, option: Options = {}) {

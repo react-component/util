@@ -18,27 +18,26 @@ describe('dynamicCSS', () => {
 
     it('basic', () => {
       const style = injectCSS(TEST_STYLE);
-      expect(document.body.contains(style));
-      expect(document.body.querySelector('style').innerHTML).toEqual(
-        TEST_STYLE,
-      );
+      expect(document.querySelector('style').contains(style));
+      expect(document.querySelector('style').innerHTML).toEqual(TEST_STYLE);
     });
 
     it('with CSP', () => {
       const style = injectCSS(TEST_STYLE, { csp: 'light' });
-      expect(document.body.contains(style));
-      expect(document.body.querySelector('style').innerHTML).toEqual(
-        TEST_STYLE,
-      );
-      expect(document.body.querySelector('style').nonce).toEqual('light');
+      expect(document.contains(style));
+      expect(document.querySelector('style').innerHTML).toEqual(TEST_STYLE);
+      expect(document.querySelector('style').nonce).toEqual('light');
     });
 
     it('prepend', () => {
+      const head = document.querySelector('head');
+      head.append(document.createElement('script'));
+
       const style = injectCSS(TEST_STYLE, { prepend: true });
-      expect(document.body.contains(style));
-      expect(document.body.querySelector('style').innerHTML).toEqual(
-        TEST_STYLE,
-      );
+
+      expect(head.firstElementChild).toBe(style);
+      expect(document.contains(style));
+      expect(document.querySelector('style').innerHTML).toEqual(TEST_STYLE);
     });
   });
 
@@ -59,9 +58,7 @@ describe('dynamicCSS', () => {
       updateCSS(REPLACE_STYLE, 'unique');
 
       expect(document.querySelectorAll('style')).toHaveLength(1);
-      expect(document.body.querySelector('style').innerHTML).toEqual(
-        REPLACE_STYLE,
-      );
+      expect(document.querySelector('style').innerHTML).toEqual(REPLACE_STYLE);
     });
 
     it('replace with CSP', () => {
@@ -69,10 +66,8 @@ describe('dynamicCSS', () => {
       updateCSS(REPLACE_STYLE, 'unique', { csp: 'only' });
 
       expect(document.querySelectorAll('style')).toHaveLength(1);
-      expect(document.body.querySelector('style').innerHTML).toEqual(
-        REPLACE_STYLE,
-      );
-      expect(document.body.querySelector('style').nonce).toEqual('only');
+      expect(document.querySelector('style').innerHTML).toEqual(REPLACE_STYLE);
+      expect(document.querySelector('style').nonce).toEqual('only');
     });
   });
 });
