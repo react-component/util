@@ -4,7 +4,7 @@ const MARK_KEY = `rc-util-key` as any;
 
 interface Options {
   attachTo?: Element;
-  csp?: string;
+  csp?: { nonce: string };
   prepend?: boolean;
 }
 
@@ -23,7 +23,7 @@ export function injectCSS(css: string, option: Options = {}) {
   }
 
   const styleNode = document.createElement('style');
-  styleNode.nonce = option.csp;
+  styleNode.nonce = option.csp?.nonce;
   styleNode.innerHTML = css;
 
   const container = getContainer(option);

@@ -23,7 +23,7 @@ describe('dynamicCSS', () => {
     });
 
     it('with CSP', () => {
-      const style = injectCSS(TEST_STYLE, { csp: 'light' });
+      const style = injectCSS(TEST_STYLE, { csp: { nonce: 'light' } });
       expect(document.contains(style));
       expect(document.querySelector('style').innerHTML).toEqual(TEST_STYLE);
       expect(document.querySelector('style').nonce).toEqual('light');
@@ -63,7 +63,7 @@ describe('dynamicCSS', () => {
 
     it('replace with CSP', () => {
       const REPLACE_STYLE = '.bamboo { context: "little" }';
-      updateCSS(REPLACE_STYLE, 'unique', { csp: 'only' });
+      updateCSS(REPLACE_STYLE, 'unique', { csp: { nonce: 'only' } });
 
       expect(document.querySelectorAll('style')).toHaveLength(1);
       expect(document.querySelector('style').innerHTML).toEqual(REPLACE_STYLE);
