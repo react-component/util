@@ -4,7 +4,7 @@ const MARK_KEY = `rc-util-key` as any;
 
 interface Options {
   attachTo?: Element;
-  csp?: { nonce: string };
+  csp?: { nonce?: string };
   prepend?: boolean;
 }
 
