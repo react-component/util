@@ -27,11 +27,12 @@ export function injectCSS(css: string, option: Options = {}) {
   styleNode.innerHTML = css;
 
   const container = getContainer(option);
+  const { firstChild } = container;
 
-  if (option.prepend) {
-    container.prepend(styleNode);
+  if (option.prepend && firstChild) {
+    container.insertBefore(styleNode, firstChild);
   } else {
-    container.append(styleNode);
+    container.appendChild(styleNode);
   }
 
   return styleNode;
