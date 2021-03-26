@@ -38,23 +38,32 @@ export function injectCSS(css: string, option: Options = {}) {
   return styleNode;
 }
 
+const containerCache = new Map<Element, Element>();
+
 export function updateCSS(css: string, key: string, option: Options = {}) {
-  // Handle QianKun injection
-  const measureNode = injectCSS('', option);
-  const { parentElement } = measureNode;
+  const container = getContainer(option);
 
-  // Find exist style
-  const existNode = [...parentElement.children].find(
-    node => node.tagName === 'STYLE' && node[MARK_KEY] === key,
-  );
-
-  // Remove all
-  if (existNode) {
-    parentElement.removeChild(existNode);
+  // Get real parent
+  if (!containerCache.has(container)) {
+    const placeholderStyle = injectCSS('', option);
+    const { parentElement } = placeholderStyle;
+    containerCache.set(container, parentElement);
+    parentElement.removeChild(placeholderStyle);
   }
-  parentElement.removeChild(measureNode);
 
-  // Inject new one
+  const existNode = [...containerCache.get(container).children].find(
+    node => node.tagName === 'STYLE' && node[MARK_KEY] === key,
+  ) as HTMLStyleElement;
+
+  if (existNode) {
+    if (existNode.innerHTML !== css || existNode.nonce !== option.csp?.nonce) {
+      existNode.innerHTML = css;
+      existNode.nonce = option.csp?.nonce;
+    }
+
+    return existNode;
+  }
+
   const newNode = injectCSS(css, option);
   newNode[MARK_KEY] = key;
   return newNode;
