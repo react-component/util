@@ -39,15 +39,22 @@ export function injectCSS(css: string, option: Options = {}) {
 }
 
 export function updateCSS(css: string, key: string, option: Options = {}) {
-  const container = getContainer(option);
-  const existNode = [...container.children].find(
+  // Handle QianKun injection
+  const measureNode = injectCSS('', option);
+  const { parentElement } = measureNode;
+
+  // Find exist style
+  const existNode = [...parentElement.children].find(
     node => node.tagName === 'STYLE' && node[MARK_KEY] === key,
   );
 
+  // Remove all
   if (existNode) {
-    existNode.parentElement.removeChild(existNode);
+    parentElement.removeChild(existNode);
   }
+  parentElement.removeChild(measureNode);
 
+  // Inject new one
   const newNode = injectCSS(css, option);
   newNode[MARK_KEY] = key;
   return newNode;
