@@ -23,7 +23,9 @@ export function injectCSS(css: string, option: Options = {}) {
   }
 
   const styleNode = document.createElement('style');
-  styleNode.nonce = option.csp?.nonce;
+  if (option.csp?.nonce) {
+    styleNode.nonce = option.csp?.nonce;
+  }
   styleNode.innerHTML = css;
 
   const container = getContainer(option);
@@ -56,9 +58,12 @@ export function updateCSS(css: string, key: string, option: Options = {}) {
   ) as HTMLStyleElement;
 
   if (existNode) {
-    if (existNode.innerHTML !== css || existNode.nonce !== option.csp?.nonce) {
-      existNode.innerHTML = css;
+    if (option.csp?.nonce && existNode.nonce !== option.csp?.nonce) {
       existNode.nonce = option.csp?.nonce;
+    }
+
+    if (existNode.innerHTML !== css) {
+      existNode.innerHTML = css;
     }
 
     return existNode;
