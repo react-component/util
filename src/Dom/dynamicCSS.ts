@@ -53,7 +53,7 @@ export function updateCSS(css: string, key: string, option: Options = {}) {
     parentElement.removeChild(placeholderStyle);
   }
 
-  const existNode = [...containerCache.get(container).children].find(
+  const existNode = Array.from(containerCache.get(container).children).find(
     node => node.tagName === 'STYLE' && node[MARK_KEY] === key,
   ) as HTMLStyleElement;
 
