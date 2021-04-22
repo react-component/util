@@ -1,4 +1,4 @@
-function composeFuncProps<T = any>(object: Partial<T>, source: T) {
+function composeFuncProps<T = any>(object: Partial<T>, source: Partial<T>) {
   const composeProps = {};
   Object.keys(object).forEach(key => {
     if (typeof object[key] === 'function') {
