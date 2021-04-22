@@ -1,7 +1,7 @@
 function composeProps<T extends Record<string, any>>(
   originProps: T,
   patchProps: Partial<T>,
-  isAll: boolean = true,
+  isAll: boolean,
 ) {
   const composedProps: Record<string, any> = {
     ...originProps,

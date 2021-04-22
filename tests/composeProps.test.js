@@ -8,7 +8,7 @@ describe('composeProps', () => {
     const sourceProps = { value: '11', onChange: aChange, onBlur: aBlur };
     const patchProps = { onChange: bChange, placeholder: 'x' };
 
-    const props = composeProps(sourceProps, patchProps);
+    const props = composeProps(sourceProps, patchProps, true);
     props.onChange();
     props.onBlur();
     expect(aChange).toHaveBeenCalled();
@@ -28,7 +28,7 @@ describe('composeProps', () => {
     const sourceProps = { value: '11', onChange: aChange, onBlur: aBlur };
     const patchProps = { onChange: bChange, placeholder: 'x' };
 
-    const props = composeProps(sourceProps, patchProps, false);
+    const props = composeProps(sourceProps, patchProps);
     props.onChange();
     props.onBlur();
     expect(aChange).toHaveBeenCalled();
