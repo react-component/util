@@ -6,15 +6,19 @@ describe('composeFuncProps', () => {
     const aBlur = jest.fn();
     const bChange = jest.fn();
     const sourceProps = { value: '11', onChange: aChange, onBlur: aBlur };
-    const patchProps = { onChange: bChange };
+    const patchProps = { onChange: bChange, placeholder: 'x' };
 
-    const props = composeFuncProps(patchProps, sourceProps);
+    const props = composeFuncProps(sourceProps, patchProps);
     props.onChange();
     props.onBlur();
     expect(aChange).toHaveBeenCalled();
     expect(aBlur).toHaveBeenCalled();
     expect(bChange).toHaveBeenCalled();
-
-    expect(Object.keys(props)).toEqual(['value', 'onChange', 'onBlur']);
+    expect(Object.keys(props)).toEqual([
+      'value',
+      'onChange',
+      'onBlur',
+      'placeholder',
+    ]);
   });
 });
