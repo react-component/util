@@ -5,10 +5,10 @@ describe('composeFuncProps', () => {
     const aChange = jest.fn();
     const aBlur = jest.fn();
     const bChange = jest.fn();
-    const a = { value: '11', onChange: aChange, onBlur: aBlur };
-    const b = { onChange: bChange };
+    const sourceProps = { value: '11', onChange: aChange, onBlur: aBlur };
+    const patchProps = { onChange: bChange };
 
-    const props = composeFuncProps(a, b);
+    const props = composeFuncProps(patchProps, sourceProps);
     props.onChange();
     props.onBlur();
     expect(aChange).toHaveBeenCalled();

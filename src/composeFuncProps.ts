@@ -1,17 +1,14 @@
-function composeFuncProps<T = Record<string, any>>(
-  itemProps: T,
-  childrenProps: Partial<T>,
-) {
-  const composeProps = { ...itemProps, ...childrenProps };
-  Object.keys(composeProps).forEach(key => {
-    if (typeof composeProps[key] === 'function') {
+function composeFuncProps<T = any>(object: Partial<T>, source: T) {
+  const composeProps = {};
+  Object.keys(object).forEach(key => {
+    if (typeof object[key] === 'function') {
       composeProps[key] = (...args: any[]) => {
-        itemProps[key]?.(...args);
-        childrenProps[key]?.(...args);
+        object[key]?.(...args);
+        source[key]?.(...args);
       };
     }
   });
-  return composeProps;
+  return { ...object, ...source, ...composeProps };
 }
 
 export default composeFuncProps;
