@@ -13,7 +13,7 @@ function composeProps<T extends Record<string, any>>(
     if (typeof func === 'function') {
       composedProps[key] = (...args) => {
         func(...args);
-        return originProps[key](...args);
+        return originProps[key]?.(...args);
       };
     }
   });
