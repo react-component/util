@@ -12,6 +12,9 @@ describe('ScrollLocker', () => {
   const effectStyle =
     'overflow: hidden; overflow-x: hidden; overflow-y: hidden;';
 
+  const bodyEffectStyle =
+    'overflow: hidden; overflow-x: hidden; overflow-y: hidden; position: fixed; top: -0px;';
+
   // jsdom can not capture calc
   const initialStyle = '';
 
@@ -29,7 +32,7 @@ describe('ScrollLocker', () => {
     scrollLocker.lock();
 
     expect(document.body.className).toBe(effectClassname);
-    expect(document.body.getAttribute('style')).toBe(effectStyle);
+    expect(document.body.getAttribute('style')).toBe(bodyEffectStyle);
 
     scrollLocker.unLock();
 
@@ -44,7 +47,7 @@ describe('ScrollLocker', () => {
     scrollLocker.lock();
 
     expect(document.body.className).toBe(effectClassname);
-    expect(document.body.getAttribute('style')).toBe(effectStyle);
+    expect(document.body.getAttribute('style')).toBe(bodyEffectStyle);
 
     scrollLocker.unLock();
 
@@ -66,17 +69,17 @@ describe('ScrollLocker', () => {
     locker2.lock();
 
     expect(document.body.className).toBe(effectClassname);
-    expect(document.body.getAttribute('style')).toBe(effectStyle);
+    expect(document.body.getAttribute('style')).toBe(bodyEffectStyle);
 
     locker2.unLock();
 
     expect(document.body.className).toBe(effectClassname);
-    expect(document.body.getAttribute('style')).toBe(effectStyle);
+    expect(document.body.getAttribute('style')).toBe(bodyEffectStyle);
 
     locker1.unLock();
 
     expect(document.body.className).toBe(effectClassname);
-    expect(document.body.getAttribute('style')).toBe(effectStyle);
+    expect(document.body.getAttribute('style')).toBe(bodyEffectStyle);
 
     scrollLocker.unLock();
 
@@ -108,14 +111,14 @@ describe('ScrollLocker', () => {
     locker2.lock();
 
     expect(document.body.className).toBe(effectClassname);
-    expect(document.body.getAttribute('style')).toBe(effectStyle);
+    expect(document.body.getAttribute('style')).toBe(bodyEffectStyle);
     expect(testContainer.className).toBe(effectClassname);
     expect(testContainer.getAttribute('style')).toBe(effectStyle);
 
     locker1.unLock();
 
     expect(document.body.className).toBe(effectClassname);
-    expect(document.body.getAttribute('style')).toBe(effectStyle);
+    expect(document.body.getAttribute('style')).toBe(bodyEffectStyle);
     expect(testContainer.className).toBe(effectClassname);
     expect(testContainer.getAttribute('style')).toBe(effectStyle);
 
@@ -151,7 +154,7 @@ describe('ScrollLocker', () => {
     });
 
     expect(document.body.className).toBe(effectClassname);
-    expect(document.body.getAttribute('style')).toBe(effectStyle);
+    expect(document.body.getAttribute('style')).toBe(bodyEffectStyle);
 
     scrollLocker.reLock({
       container: testContainer,
