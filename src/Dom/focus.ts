@@ -17,31 +17,47 @@ function visible(node: HTMLElement) {
   return true;
 }
 
-function focusable(node: HTMLElement): boolean {
-  const nodeName = node.nodeName.toLowerCase();
-  const tabIndex = parseInt(node.getAttribute('tabindex'), 10);
-  const hasTabIndex = !Number.isNaN(tabIndex) && tabIndex > -1;
-
+function focusable(node: HTMLElement, includePositive = false): boolean {
   if (visible(node)) {
-    if (['input', 'select', 'textarea', 'button'].indexOf(nodeName) > -1) {
-      return !(node as any).disabled;
+    const nodeName = node.nodeName.toLowerCase();
+    const isFocusableElement =
+      // Focusable element
+      ['input', 'select', 'textarea', 'button'].includes(nodeName) ||
+      // Editable element
+      node.isContentEditable ||
+      // Anchor with href element
+      (nodeName === 'a' && !!node.getAttribute('href'));
+
+    // Get tabIndex
+    const tabIndexAttr = node.getAttribute('tabindex');
+    const tabIndexNum = Number(tabIndexAttr);
+
+    // Parse as number if validate
+    let tabIndex: number = null;
+    if (tabIndexAttr && !Number.isNaN(tabIndexNum)) {
+      tabIndex = tabIndexNum;
+    } else if (isFocusableElement && tabIndex === null) {
+      tabIndex = 0;
     }
 
-    if (nodeName === 'a') {
-      return !!node.getAttribute('href') || hasTabIndex;
+    // Block focusable if disabled
+    if (isFocusableElement && (node as any).disabled) {
+      tabIndex = null;
     }
 
-    return node.isContentEditable || hasTabIndex;
+    return (
+      tabIndex !== null && (tabIndex >= 0 || (includePositive && tabIndex < 0))
+    );
   }
 
   return false;
 }
 
-export function getFocusNodeList(node: HTMLElement) {
+export function getFocusNodeList(node: HTMLElement, includePositive = false) {
   const res = [...node.querySelectorAll('*')].filter(child => {
-    return focusable(child as HTMLElement);
+    return focusable(child as HTMLElement, includePositive);
   });
-  if (focusable(node)) {
+  if (focusable(node, includePositive)) {
     res.unshift(node);
   }
   return res as HTMLElement[];
