@@ -1,24 +1,7 @@
-function hidden(node: HTMLElement) {
-  return node.style.display === 'none';
-}
-
-function visible(node: HTMLElement) {
-  let current = node;
-
-  while (current) {
-    if (current === document.body) {
-      break;
-    }
-    if (hidden(current)) {
-      return false;
-    }
-    current = current.parentNode as HTMLElement;
-  }
-  return true;
-}
+import isVisible from './isVisible';
 
 function focusable(node: HTMLElement, includePositive = false): boolean {
-  if (visible(node)) {
+  if (isVisible(node)) {
     const nodeName = node.nodeName.toLowerCase();
     const isFocusableElement =
       // Focusable element
