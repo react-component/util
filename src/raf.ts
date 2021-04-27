@@ -7,8 +7,42 @@ if (typeof window !== 'undefined' && 'requestAnimationFrame' in window) {
   caf = (handle: number) => window.cancelAnimationFrame(handle);
 }
 
-export default function wrapperRaf(callback: () => void): number {
-  return raf(callback);
+let rafUUID = 0;
+const rafIds = new Map<number, number>();
+
+function cleanup(id: number) {
+  rafIds.delete(id);
 }
 
-wrapperRaf.cancel = caf;
+export default function wrapperRaf(callback: () => void, times = 1): number {
+  rafUUID += 1;
+  const id = rafUUID;
+
+  function callRef(leftTimes: number) {
+    if (leftTimes === 0) {
+      // Clean up
+      cleanup(id);
+
+      // Trigger
+      callback();
+    } else {
+      // Next raf
+      const realId = raf(() => {
+        callRef(leftTimes - 1);
+      });
+
+      // Bind real raf id
+      rafIds.set(id, realId);
+    }
+  }
+
+  callRef(times);
+
+  return id;
+}
+
+wrapperRaf.cancel = (id: number) => {
+  const realId = rafIds.get(id);
+  cleanup(realId);
+  return caf(realId);
+};
