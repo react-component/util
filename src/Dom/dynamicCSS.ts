@@ -40,7 +40,7 @@ export function injectCSS(css: string, option: Options = {}) {
   return styleNode;
 }
 
-const containerCache = new Map<Element, Element>();
+const containerCache = new Map<Element, Node & ParentNode>();
 
 export function updateCSS(css: string, key: string, option: Options = {}) {
   const container = getContainer(option);
@@ -48,9 +48,9 @@ export function updateCSS(css: string, key: string, option: Options = {}) {
   // Get real parent
   if (!containerCache.has(container)) {
     const placeholderStyle = injectCSS('', option);
-    const { parentElement } = placeholderStyle;
-    containerCache.set(container, parentElement);
-    parentElement.removeChild(placeholderStyle);
+    const { parentNode } = placeholderStyle;
+    containerCache.set(container, parentNode);
+    parentNode.removeChild(placeholderStyle);
   }
 
   const existNode = Array.from(containerCache.get(container).children).find(
