@@ -31,7 +31,11 @@ export function injectCSS(css: string, option: Options = {}) {
   const container = getContainer(option);
   const { firstChild } = container;
 
-  if (option.prepend && firstChild) {
+  if (option.prepend && container.prepend) {
+    // Use `prepend` first
+    container.prepend(styleNode);
+  } else if (option.prepend && firstChild) {
+    // Fallback to `insertBefore` like IE not support `prepend`
     container.insertBefore(styleNode, firstChild);
   } else {
     container.appendChild(styleNode);

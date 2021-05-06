@@ -29,15 +29,31 @@ describe('dynamicCSS', () => {
       expect(document.querySelector('style').nonce).toEqual('light');
     });
 
-    it('prepend', () => {
-      const head = document.querySelector('head');
-      head.append(document.createElement('script'));
+    describe('prepend', () => {
+      function testPrepend() {
+        const head = document.querySelector('head');
+        head.append(document.createElement('script'));
 
-      const style = injectCSS(TEST_STYLE, { prepend: true });
+        const style = injectCSS(TEST_STYLE, { prepend: true });
 
-      expect(head.firstElementChild).toBe(style);
-      expect(document.contains(style));
-      expect(document.querySelector('style').innerHTML).toEqual(TEST_STYLE);
+        expect(head.firstElementChild).toBe(style);
+        expect(document.contains(style));
+        expect(document.querySelector('style').innerHTML).toEqual(TEST_STYLE);
+      }
+
+      it('basic', () => {
+        testPrepend();
+      });
+
+      it('prepend with IE', () => {
+        const head = document.querySelector('head');
+        const originPrepend = head.prepend;
+        head.prepend = null;
+
+        testPrepend();
+
+        head.prepend = originPrepend;
+      });
     });
   });
 
