@@ -1,6 +1,6 @@
 let cached;
 
-export default function getScrollBarSize(fresh) {
+export default function getScrollBarSize(fresh, outerClassName = '') {
   if (typeof document === 'undefined') {
     return 0;
   }
@@ -21,6 +21,10 @@ export default function getScrollBarSize(fresh) {
     outerStyle.width = '200px';
     outerStyle.height = '150px';
     outerStyle.overflow = 'hidden';
+    
+    if (outerClassName) {
+      outer.setAttribute('class', outerClassName);
+    }
 
     outer.appendChild(inner);
 
