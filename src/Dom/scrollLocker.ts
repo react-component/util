@@ -31,7 +31,8 @@ const setContainerStyle = (
     overflowY: 'hidden',
   };
 
-  if (container === document.body) {
+  const isIosDevice = /iP(ad|hone|od)|MacIntel/.test(window.navigator.platform);
+  if (isIosDevice && container === document.body) {
     scrollPosition = window.pageYOffset;
     return {
       ...defaultStyle,
