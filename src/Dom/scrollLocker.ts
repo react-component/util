@@ -19,6 +19,7 @@ const scrollingEffectClassNameReg = new RegExp(
 );
 
 let scrollPosition = 0;
+const isIosDevice = /iP(ad|hone|od)|MacIntel/.test(window.navigator.platform);
 
 const setContainerStyle = (
   container: HTMLElement,
@@ -31,7 +32,6 @@ const setContainerStyle = (
     overflowY: 'hidden',
   };
 
-  const isIosDevice = /iP(ad|hone|od)|MacIntel/.test(window.navigator.platform);
   if (isIosDevice && container === document.body) {
     scrollPosition = window.pageYOffset;
     return {
@@ -158,7 +158,7 @@ export default class ScrollLocker {
 
     setStyle(cacheStyle.get(container), { element: container });
     // https://github.com/ant-design/ant-design/issues/23202
-    if (container === document.body) {
+    if (isIosDevice && container === document.body) {
       window.scrollTo(0, scrollPosition);
     }
     cacheStyle.delete(container);
