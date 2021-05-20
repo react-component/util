@@ -49,8 +49,8 @@ function ensureSize(str: string) {
   return Number.isNaN(value) ? getScrollBarSize() : value;
 }
 
-export function getTargetScrollBarSize(target: HTMLDivElement) {
-  if (typeof document === 'undefined') {
+export function getTargetScrollBarSize(target: HTMLElement) {
+  if (typeof document === 'undefined' || !target) {
     return { width: 0, height: 0 };
   }
 
