@@ -1,6 +1,8 @@
-let cached;
+/* eslint-disable no-param-reassign */
 
-export default function getScrollBarSize(fresh) {
+let cached: number;
+
+export default function getScrollBarSize(fresh?: boolean) {
   if (typeof document === 'undefined') {
     return 0;
   }
@@ -14,8 +16,8 @@ export default function getScrollBarSize(fresh) {
     const outerStyle = outer.style;
 
     outerStyle.position = 'absolute';
-    outerStyle.top = 0;
-    outerStyle.left = 0;
+    outerStyle.top = '0';
+    outerStyle.left = '0';
     outerStyle.pointerEvents = 'none';
     outerStyle.visibility = 'hidden';
     outerStyle.width = '200px';
@@ -39,4 +41,22 @@ export default function getScrollBarSize(fresh) {
     cached = widthContained - widthScroll;
   }
   return cached;
+}
+
+function ensureSize(str: string) {
+  const match = str.match(/^(.*)px$/);
+  const value = Number(match?.[1]);
+  return Number.isNaN(value) ? getScrollBarSize() : value;
+}
+
+export function getTargetScrollBarSize(target: HTMLDivElement) {
+  if (typeof document === 'undefined') {
+    return { width: 0, height: 0 };
+  }
+
+  const { width, height } = getComputedStyle(target, '::-webkit-scrollbar');
+  return {
+    width: ensureSize(width),
+    height: ensureSize(height),
+  };
 }
