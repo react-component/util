@@ -36,18 +36,31 @@ describe('getScrollBarSize', () => {
     expect(getScrollBarSize(true)).toEqual(33);
   });
 
-  it('getTargetScrollBarSize', () => {
-    jest.spyOn(window, 'getComputedStyle').mockImplementation(
-      () =>
-        ({
-          width: '23px',
-          height: '93px',
-        } as any),
-    );
+  describe('getTargetScrollBarSize', () => {
+    it('validate', () => {
+      const getSpy = jest.spyOn(window, 'getComputedStyle').mockImplementation(
+        () =>
+          ({
+            width: '23px',
+            height: '93px',
+          } as any),
+      );
 
-    expect(getTargetScrollBarSize(document.createElement('div'))).toEqual({
-      width: 23,
-      height: 93,
+      expect(getTargetScrollBarSize(document.createElement('div'))).toEqual({
+        width: 23,
+        height: 93,
+      });
+
+      getSpy.mockRestore();
+    });
+
+    it('invalidate', () => {
+      expect(
+        getTargetScrollBarSize({ notValidateObject: true } as any),
+      ).toEqual({
+        width: 0,
+        height: 0,
+      });
     });
   });
 });

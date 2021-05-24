@@ -50,7 +50,7 @@ function ensureSize(str: string) {
 }
 
 export function getTargetScrollBarSize(target: HTMLElement) {
-  if (typeof document === 'undefined' || !target) {
+  if (typeof document === 'undefined' || !target || !(target instanceof Element)) {
     return { width: 0, height: 0 };
   }
 
