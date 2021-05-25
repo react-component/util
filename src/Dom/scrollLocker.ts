@@ -1,5 +1,6 @@
 import getScrollBarSize from '../getScrollBarSize';
 import setStyle from '../setStyle';
+import type React from 'react';
 
 export interface scrollLockOptions {
   container: HTMLElement;
@@ -16,6 +17,32 @@ const scrollingEffectClassNameReg = new RegExp(
   `${scrollingEffectClassName}`,
   'g',
 );
+
+let scrollPosition = 0;
+const isIosDevice = /iP(ad|hone|od)|MacIntel/.test(window.navigator.platform);
+
+const setContainerStyle = (
+  container: HTMLElement,
+  scrollBarSize: number,
+): React.CSSProperties => {
+  const defaultStyle: React.CSSProperties = {
+    width: `calc(100% - ${scrollBarSize}px)`,
+    overflow: 'hidden',
+    overflowX: 'hidden',
+    overflowY: 'hidden',
+  };
+
+  if (isIosDevice && container === document.body) {
+    scrollPosition = window.pageYOffset;
+    return {
+      ...defaultStyle,
+      position: 'fixed',
+      top: `-${scrollPosition}px`,
+    };
+  }
+
+  return defaultStyle;
+};
 
 let uuid = 0;
 
@@ -91,12 +118,8 @@ export default class ScrollLocker {
       cacheStyle.set(
         container,
         setStyle(
-          {
-            width: `calc(100% - ${scrollBarSize}px)`,
-            overflow: 'hidden',
-            overflowX: 'hidden',
-            overflowY: 'hidden',
-          },
+          // https://github.com/ant-design/ant-design/issues/23202
+          setContainerStyle(container, scrollBarSize),
           {
             element: container,
           },
@@ -134,6 +157,10 @@ export default class ScrollLocker {
     if (!scrollingEffectClassNameReg.test(containerClassName)) return;
 
     setStyle(cacheStyle.get(container), { element: container });
+    // https://github.com/ant-design/ant-design/issues/23202
+    if (isIosDevice && container === document.body) {
+      window.scrollTo(0, scrollPosition);
+    }
     cacheStyle.delete(container);
     container.className = container.className
       .replace(scrollingEffectClassNameReg, '')
