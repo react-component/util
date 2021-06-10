@@ -84,6 +84,9 @@ describe('hooks', () => {
       wrapper.find('input').simulate('change', { target: { value: '1' } });
       wrapper.update();
       expect(wrapper.find('label').props().children).toEqual('1a');
+      wrapper.find('input').simulate('change', { target: { value: '2' } });
+      wrapper.update();
+      expect(wrapper.find('label').props().children).toEqual('2a');
     });
   });
 });
