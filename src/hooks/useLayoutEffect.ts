@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import * as React from 'react';
-import isBrowserClient from 'src/isBrowserClient';
+import isBrowserClient from '../isBrowserClient';
 
 /**
  * Wrap `React.useLayoutEffect` which will not throw warning message in test env
