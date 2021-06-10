@@ -2,6 +2,7 @@ import * as React from 'react';
 import { mount } from 'enzyme';
 import useMemo from '../src/hooks/useMemo';
 import useMergedState from '../src/hooks/useMergedState';
+import useLayoutEffect from '../src/hooks/useLayoutEffect';
 
 describe('hooks', () => {
   it('useMemo', () => {
@@ -54,6 +55,35 @@ describe('hooks', () => {
       const wrapper = mount(<FC defaultValue="test" />);
 
       expect(wrapper.find('input').props().value).toEqual('test');
+    });
+  });
+
+  describe('useLayoutEffect', () => {
+    const FC = ({ defaultValue }) => {
+      const [val, setVal] = React.useState(defaultValue);
+      const [val2, setVal2] = React.useState();
+      useLayoutEffect(() => {
+        setVal2(`${val}a`);
+      }, [val]);
+      return (
+        <div>
+          <input
+            value={val}
+            onChange={e => {
+              setVal(e.target.value);
+            }}
+          />
+          <label>{val2}</label>
+        </div>
+      );
+    };
+
+    it('correct effect', () => {
+      const wrapper = mount(<FC defaultValue="test" />);
+      expect(wrapper.find('label').props().children).toEqual('testa');
+      wrapper.find('input').simulate('change', { target: { value: '1' } });
+      wrapper.update();
+      expect(wrapper.find('label').props().children).toEqual('1a');
     });
   });
 });
