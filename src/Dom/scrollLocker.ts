@@ -92,7 +92,7 @@ export default class ScrollLocker {
         container,
         setStyle(
           {
-            width: `calc(100% - ${scrollBarSize}px)`,
+            width: scrollBarSize !== 0 ? `calc(100% - ${scrollBarSize}px)` : undefined,
             overflow: 'hidden',
             overflowX: 'hidden',
             overflowY: 'hidden',
