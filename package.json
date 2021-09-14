@@ -25,7 +25,8 @@
     "compile": "father build",
     "prepublishOnly": "npm run compile && np --yolo --no-publish",
     "test": "father test",
-    "coverage": "father test --coverage && cat ./coverage/lcov.info | coveralls"
+    "coverage": "father test --coverage && cat ./coverage/lcov.info | coveralls",
+    "now-build": "father doc build --storybook"
   },
   "devDependencies": {
     "@types/enzyme": "^3.10.5",
