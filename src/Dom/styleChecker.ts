@@ -1,6 +1,6 @@
 import canUseDom from './canUseDom';
 
-export const isStyleSupport = (styleName: string | string[]): boolean => {
+const isStyleNameSupport = (styleName: string | string[]): boolean => {
   if (canUseDom() && window.document.documentElement) {
     const styleNameList = Array.isArray(styleName) ? styleName : [styleName];
     const { documentElement } = window.document;
@@ -10,8 +10,8 @@ export const isStyleSupport = (styleName: string | string[]): boolean => {
   return false;
 };
 
-export const isStyleValueSupport = (styleName: string, value: any) => {
-  if (!isStyleSupport(styleName)) {
+const isStyleValueSupport = (styleName: string, value: any) => {
+  if (!isStyleNameSupport(styleName)) {
     return false;
   }
 
@@ -20,3 +20,14 @@ export const isStyleValueSupport = (styleName: string, value: any) => {
   ele.style[styleName] = value;
   return ele.style[styleName] !== origin;
 };
+
+export function isStyleSupport(styleName: string | string[]): boolean;
+export function isStyleSupport(styleName: string, styleValue: any): boolean;
+
+export function isStyleSupport(styleName: string | string[], styleValue?: any) {
+  if (!Array.isArray(styleName) && styleValue !== undefined) {
+    return isStyleValueSupport(styleName, styleValue);
+  }
+
+  return isStyleNameSupport(styleName);
+}
