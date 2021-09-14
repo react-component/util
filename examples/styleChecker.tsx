@@ -1,10 +1,10 @@
 import React from 'react';
-import { isStyleSupport, isStyleValueSupport } from '../src/Dom/styleChecker';
+import { isStyleSupport } from '../src/Dom/styleChecker';
 
 export default () => {
   const supportFlex = isStyleSupport('flex');
-  const supportSticky = isStyleValueSupport('position', 'sticky');
-  const supportNotExistValue = isStyleValueSupport('position', 'sticky2');
+  const supportSticky = isStyleSupport('position', 'sticky');
+  const supportNotExistValue = isStyleSupport('position', 'sticky2');
 
   return (
     <ul>
