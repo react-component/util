@@ -19,7 +19,12 @@ const eventsName = `onCopy onCut onPaste onCompositionEnd onCompositionStart onC
     onDurationChange onEmptied onEncrypted onEnded onError onLoadedData onLoadedMetadata
     onLoadStart onPause onPlay onPlaying onProgress onRateChange onSeeked onSeeking onStalled onSuspend onTimeUpdate onVolumeChange onWaiting onLoad onError`;
 
-const propList = `${attributes} ${eventsName}`.split(/[\s\n]+/);
+const propMap = `${attributes} ${eventsName}`
+  .split(/[\s\n]+/)
+  .reduce((prev, curr) => {
+    prev[curr] = true;
+    return prev;
+  }, {});
 
 /* eslint-enable max-len */
 const ariaPrefix = 'aria-';
@@ -69,7 +74,7 @@ export default function pickAttrs(
       // Data
       (mergedConfig.data && match(key, dataPrefix)) ||
       // Attr
-      (mergedConfig.attr && propList.includes(key))
+      (mergedConfig.attr && propMap.hasOwnProperty(key))
     ) {
       attrs[key] = props[key];
     }
