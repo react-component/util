@@ -79,6 +79,10 @@ describe('hooks', () => {
     };
 
     it('correct effect', () => {
+      const errorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+
       const wrapper = mount(<FC defaultValue="test" />);
       expect(wrapper.find('label').props().children).toEqual('testa');
       wrapper.find('input').simulate('change', { target: { value: '1' } });
@@ -87,6 +91,9 @@ describe('hooks', () => {
       wrapper.find('input').simulate('change', { target: { value: '2' } });
       wrapper.update();
       expect(wrapper.find('label').props().children).toEqual('2a');
+
+      expect(errorSpy).not.toHaveBeenCalled();
+      errorSpy.mockRestore();
     });
   });
 });
