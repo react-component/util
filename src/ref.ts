@@ -21,7 +21,7 @@ export function composeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
   };
 }
 
-export function supportRef(nodeOrComponent: any): boolean {
+export function supportRef(nodeOrComponent: any): nodeOrComponent is React.FunctionComponentElement<any> | React.ComponentElement<any, any> {
   const type = isMemo(nodeOrComponent)
     ? nodeOrComponent.type.type
     : nodeOrComponent.type;
