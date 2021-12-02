@@ -1,4 +1,3 @@
-/* eslint-disable import/no-named-as-default */
 import React from 'react';
 import { mount } from 'enzyme';
 import warning, { resetWarned, noteOnce } from '../src/warning';
