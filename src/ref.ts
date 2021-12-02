@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
-import * as React from 'react';
+import type * as React from 'react';
 import { isMemo } from 'react-is';
+import useMemo from './hooks/useMemo';
 
 export function fillRef<T>(ref: React.Ref<T>, node: T) {
   if (typeof ref === 'function') {
@@ -14,11 +15,25 @@ export function fillRef<T>(ref: React.Ref<T>, node: T) {
  * Merge refs into one ref function to support ref passing.
  */
 export function composeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
+  const refList = refs.filter(ref => ref);
+  if (refList.length <= 1) {
+    return refList[0];
+  }
+
   return (node: T) => {
     refs.forEach(ref => {
       fillRef(ref, node);
     });
   };
+}
+
+export function useComposeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
+  return useMemo(
+    () => composeRef(...refs),
+    refs,
+    (prev, next) =>
+      prev.length === next.length && prev.every((ref, i) => ref === next[i]),
+  );
 }
 
 export function supportRef(nodeOrComponent: any): boolean {

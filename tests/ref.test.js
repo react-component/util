@@ -1,18 +1,40 @@
 /* eslint-disable no-eval */
 import React from 'react';
 import { mount } from 'enzyme';
-import { composeRef, supportRef } from '../src/ref';
+import { composeRef, supportRef, useComposeRef } from '../src/ref';
 
 describe('ref', () => {
-  it('composeRef', () => {
-    const refFunc1 = jest.fn();
-    const refFunc2 = jest.fn();
+  describe('composeRef', () => {
+    it('basic', () => {
+      const refFunc1 = jest.fn();
+      const refFunc2 = jest.fn();
 
-    const mergedRef = composeRef(refFunc1, refFunc2);
-    const testRefObj = {};
-    mergedRef(testRefObj);
-    expect(refFunc1).toHaveBeenCalledWith(testRefObj);
-    expect(refFunc2).toHaveBeenCalledWith(testRefObj);
+      const mergedRef = composeRef(refFunc1, refFunc2);
+      const testRefObj = {};
+      mergedRef(testRefObj);
+      expect(refFunc1).toHaveBeenCalledWith(testRefObj);
+      expect(refFunc2).toHaveBeenCalledWith(testRefObj);
+    });
+
+    it('ignore empty', () => {
+      const ref = React.createRef();
+      expect(composeRef(undefined, ref, null)).toBe(ref);
+      expect(composeRef(undefined, null)).toBeFalsy();
+    });
+
+    it('useComposeRef', () => {
+      const Demo = ({ ref1, ref2 }) => {
+        const mergedRef = useComposeRef(ref1, ref2);
+        return <div ref={mergedRef} />;
+      };
+
+      const ref1 = React.createRef();
+      const ref2 = React.createRef();
+      mount(<Demo ref1={ref1} ref2={ref2} />);
+
+      expect(ref1.current).toBeTruthy();
+      expect(ref1.current).toBe(ref2.current);
+    });
   });
 
   describe('supportRef', () => {
