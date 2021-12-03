@@ -56,6 +56,26 @@ describe('hooks', () => {
 
       expect(wrapper.find('input').props().value).toEqual('test');
     });
+
+    it('not rerender when setState as deps', () => {
+      let renderTimes = 0;
+
+      const Test = () => {
+        const [val, setVal] = useMergedState(0);
+
+        React.useEffect(() => {
+          renderTimes += 1;
+          expect(renderTimes < 10).toBeTruthy();
+
+          setVal(1);
+        }, [setVal]);
+
+        return <div>{val}</div>;
+      };
+
+      const wrapper = mount(<Test />);
+      expect(wrapper.text()).toEqual('1');
+    });
   });
 
   describe('useLayoutEffect', () => {
