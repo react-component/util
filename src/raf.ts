@@ -50,9 +50,9 @@ useRafByMap.cancel = (key: number) => {
   return caf(realId);
 };
 
-const cleanupByWeakSet = (key: number[]) => {
-  const [timeId] = key || [];
-  let oldKey = key;
+const cleanupByWeakSet = (key: number[] | number) => {
+  let oldKey = typeof key === "number" ? [+key] : key;
+  const [timeId] = oldKey || [+oldKey];
   if (timeId) {
     caf(timeId);
     rafKeys.delete(oldKey);
