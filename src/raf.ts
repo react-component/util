@@ -54,14 +54,10 @@ const cleanupByWeakSet = (key: number[] | number) => {
   let oldKey = typeof key === "number" ? [+key] : key;
   const [timeId] = oldKey || [];
   if (timeId) {
-    caf(timeId);
     rafKeys.delete(oldKey);
-    const bool = !!rafKeys.has(oldKey);
     oldKey = null;
-    return bool;
-  } else {
-    return false;
   }
+  return timeId;
 };
 
 const useRafByWeakSet = (callback: () => void, times = 1): number => {
