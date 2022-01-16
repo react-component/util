@@ -90,5 +90,6 @@ const useRafByWeakSet = (callback: () => void, times = 1): number => {
 };
 
 useRafByWeakSet.cancel = (key: number[]) => cleanupByWeakSet(key);
+const useRaf = hasWeakSet ? useRafByWeakSet : useRafByMap;
 
-export const useRaf = hasWeakSet ? useRafByWeakSet : useRafByMap;
+export default useRaf;
