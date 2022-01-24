@@ -46,6 +46,20 @@ export function injectCSS(css: string, option: Options = {}) {
 
 const containerCache = new Map<Element, Node & ParentNode>();
 
+function findExistNode(key: string, option: Options = {}) {
+  const container = getContainer(option);
+
+  return Array.from(containerCache.get(container).children).find(
+    node => node.tagName === 'STYLE' && node[MARK_KEY] === key,
+  ) as HTMLStyleElement;
+}
+
+export function removeCSS(key: string, option: Options = {}) {
+  const existNode = findExistNode(key, option);
+
+  existNode?.parentNode?.removeChild(existNode);
+}
+
 export function updateCSS(css: string, key: string, option: Options = {}) {
   const container = getContainer(option);
 
@@ -57,9 +71,7 @@ export function updateCSS(css: string, key: string, option: Options = {}) {
     parentNode.removeChild(placeholderStyle);
   }
 
-  const existNode = Array.from(containerCache.get(container).children).find(
-    node => node.tagName === 'STYLE' && node[MARK_KEY] === key,
-  ) as HTMLStyleElement;
+  const existNode = findExistNode(key, option);
 
   if (existNode) {
     if (option.csp?.nonce && existNode.nonce !== option.csp?.nonce) {

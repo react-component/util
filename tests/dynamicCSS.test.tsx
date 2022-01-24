@@ -1,5 +1,5 @@
 /* eslint-disable no-eval */
-import { injectCSS, updateCSS } from '../src/Dom/dynamicCSS';
+import { injectCSS, updateCSS, removeCSS } from '../src/Dom/dynamicCSS';
 
 const TEST_STYLE = '.bamboo { context: "light" }';
 
@@ -85,5 +85,16 @@ describe('dynamicCSS', () => {
       expect(document.querySelector('style').innerHTML).toEqual(REPLACE_STYLE);
       expect(document.querySelector('style').nonce).toEqual('only');
     });
+  });
+
+  it('remove should work', () => {
+    // Update
+    const style = updateCSS(TEST_STYLE, 'remove-test');
+    expect(document.querySelector('style')).toBeTruthy();
+    expect(document.querySelector('style').contains(style));
+
+    // Remove
+    removeCSS('remove-test');
+    expect(document.querySelector('style')).toBeFalsy();
   });
 });
