@@ -2,10 +2,15 @@ import canUseDom from './canUseDom';
 
 const MARK_KEY = `rc-util-key` as any;
 
+function getMark({ mark }: Options = {}) {
+  return mark ? `data-${mark}` : MARK_KEY;
+}
+
 interface Options {
   attachTo?: Element;
   csp?: { nonce?: string };
   prepend?: boolean;
+  mark?: string;
 }
 
 function getContainer(option: Options) {
@@ -50,7 +55,8 @@ function findExistNode(key: string, option: Options = {}) {
   const container = getContainer(option);
 
   return Array.from(containerCache.get(container).children).find(
-    node => node.tagName === 'STYLE' && node[MARK_KEY] === key,
+    node =>
+      node.tagName === 'STYLE' && node.getAttribute(getMark(option)) === key,
   ) as HTMLStyleElement;
 }
 
@@ -86,6 +92,6 @@ export function updateCSS(css: string, key: string, option: Options = {}) {
   }
 
   const newNode = injectCSS(css, option);
-  newNode[MARK_KEY] = key;
+  newNode.setAttribute(getMark(option), key);
   return newNode;
 }
