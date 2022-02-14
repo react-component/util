@@ -57,14 +57,25 @@ describe('dynamicCSS', () => {
     });
   });
 
+  it('remove should work', () => {
+    // Update
+    const style = updateCSS(TEST_STYLE, 'remove-test');
+    expect(document.querySelector('style')).toBeTruthy();
+    expect(document.querySelector('style').contains(style));
+
+    // Remove
+    removeCSS('remove-test');
+    expect(document.querySelector('style')).toBeFalsy();
+  });
+
   describe('updateCSS', () => {
-    beforeAll(() => {
+    beforeEach(() => {
       updateCSS(TEST_STYLE, 'unique');
     });
 
-    afterAll(() => {
+    afterEach(() => {
       const styles = document.querySelectorAll('style');
-      styles.forEach(style => {
+      Array.from(styles).forEach(style => {
         style.parentNode.removeChild(style);
       });
     });
@@ -85,16 +96,22 @@ describe('dynamicCSS', () => {
       expect(document.querySelector('style').innerHTML).toEqual(REPLACE_STYLE);
       expect(document.querySelector('style').nonce).toEqual('only');
     });
-  });
 
-  it('remove should work', () => {
-    // Update
-    const style = updateCSS(TEST_STYLE, 'remove-test');
-    expect(document.querySelector('style')).toBeTruthy();
-    expect(document.querySelector('style').contains(style));
+    it('customize mark', () => {
+      // Clean up
+      removeCSS('unique');
 
-    // Remove
-    removeCSS('remove-test');
-    expect(document.querySelector('style')).toBeFalsy();
+      const ORIGIN_STYLE = '.light { context: "little" }';
+      updateCSS(ORIGIN_STYLE, 'marked', { mark: 'light' });
+
+      expect(document.querySelectorAll('style')).toHaveLength(1);
+      expect(document.querySelector('style').innerHTML).toEqual(ORIGIN_STYLE);
+
+      const REPLACE_STYLE = '.light { context: "bamboo" }';
+      updateCSS(REPLACE_STYLE, 'marked', { mark: 'light' });
+
+      expect(document.querySelectorAll('style')).toHaveLength(1);
+      expect(document.querySelector('style').innerHTML).toEqual(REPLACE_STYLE);
+    });
   });
 });
