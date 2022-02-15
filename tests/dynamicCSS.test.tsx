@@ -97,21 +97,48 @@ describe('dynamicCSS', () => {
       expect(document.querySelector('style').nonce).toEqual('only');
     });
 
-    it('customize mark', () => {
-      // Clean up
-      removeCSS('unique');
+    describe('customize mark', () => {
+      beforeEach(() => {
+        // Clean up
+        removeCSS('unique');
+      });
 
       const ORIGIN_STYLE = '.light { context: "little" }';
-      updateCSS(ORIGIN_STYLE, 'marked', { mark: 'light' });
-
-      expect(document.querySelectorAll('style')).toHaveLength(1);
-      expect(document.querySelector('style').innerHTML).toEqual(ORIGIN_STYLE);
-
       const REPLACE_STYLE = '.light { context: "bamboo" }';
-      updateCSS(REPLACE_STYLE, 'marked', { mark: 'light' });
 
-      expect(document.querySelectorAll('style')).toHaveLength(1);
-      expect(document.querySelector('style').innerHTML).toEqual(REPLACE_STYLE);
+      it('basic', () => {
+        updateCSS(ORIGIN_STYLE, 'marked', { mark: 'light' });
+
+        expect(document.querySelectorAll('style')).toHaveLength(1);
+        expect(document.querySelector('style').innerHTML).toEqual(ORIGIN_STYLE);
+
+        updateCSS(REPLACE_STYLE, 'marked', { mark: 'light' });
+
+        expect(document.querySelectorAll('style')).toHaveLength(1);
+        expect(document.querySelector('style').innerHTML).toEqual(
+          REPLACE_STYLE,
+        );
+        expect(
+          document.querySelector('style').getAttribute('data-light'),
+        ).toBeTruthy();
+      });
+
+      it('start with data-', () => {
+        updateCSS(ORIGIN_STYLE, 'marked', { mark: 'data-good' });
+
+        expect(document.querySelectorAll('style')).toHaveLength(1);
+        expect(document.querySelector('style').innerHTML).toEqual(ORIGIN_STYLE);
+
+        updateCSS(REPLACE_STYLE, 'marked', { mark: 'data-good' });
+
+        expect(document.querySelectorAll('style')).toHaveLength(1);
+        expect(document.querySelector('style').innerHTML).toEqual(
+          REPLACE_STYLE,
+        );
+        expect(
+          document.querySelector('style').getAttribute('data-good'),
+        ).toBeTruthy();
+      });
     });
   });
 });

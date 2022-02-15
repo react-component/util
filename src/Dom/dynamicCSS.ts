@@ -3,7 +3,10 @@ import canUseDom from './canUseDom';
 const MARK_KEY = `rc-util-key` as any;
 
 function getMark({ mark }: Options = {}) {
-  return mark ? `data-${mark}` : MARK_KEY;
+  if (mark) {
+    return mark.startsWith('data-') ? mark : `data-${mark}`;
+  }
+  return MARK_KEY;
 }
 
 interface Options {
