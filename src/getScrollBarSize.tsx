@@ -50,13 +50,21 @@ function ensureSize(str: string) {
 }
 
 export function getTargetScrollBarSize(target: HTMLElement) {
-  if (typeof document === 'undefined' || !target || !(target instanceof Element)) {
+  if (
+    typeof document === 'undefined' ||
+    !target ||
+    !(target instanceof Element)
+  ) {
     return { width: 0, height: 0 };
   }
 
-  const { width, height } = getComputedStyle(target, '::-webkit-scrollbar');
-  return {
-    width: ensureSize(width),
-    height: ensureSize(height),
-  };
+  try {
+    const { width, height } = getComputedStyle(target, '::-webkit-scrollbar');
+    return {
+      width: ensureSize(width),
+      height: ensureSize(height),
+    };
+  } catch (e) {
+    return { width: 0, height: 0 };
+  }
 }
