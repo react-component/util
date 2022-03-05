@@ -1,5 +1,5 @@
 /* eslint-disable no-eval */
-import { injectCSS, updateCSS } from '../src/Dom/dynamicCSS';
+import { injectCSS, updateCSS, removeCSS } from '../src/Dom/dynamicCSS';
 
 const TEST_STYLE = '.bamboo { context: "light" }';
 
@@ -57,14 +57,25 @@ describe('dynamicCSS', () => {
     });
   });
 
+  it('remove should work', () => {
+    // Update
+    const style = updateCSS(TEST_STYLE, 'remove-test');
+    expect(document.querySelector('style')).toBeTruthy();
+    expect(document.querySelector('style').contains(style));
+
+    // Remove
+    removeCSS('remove-test');
+    expect(document.querySelector('style')).toBeFalsy();
+  });
+
   describe('updateCSS', () => {
-    beforeAll(() => {
+    beforeEach(() => {
       updateCSS(TEST_STYLE, 'unique');
     });
 
-    afterAll(() => {
+    afterEach(() => {
       const styles = document.querySelectorAll('style');
-      styles.forEach(style => {
+      Array.from(styles).forEach(style => {
         style.parentNode.removeChild(style);
       });
     });
@@ -84,6 +95,50 @@ describe('dynamicCSS', () => {
       expect(document.querySelectorAll('style')).toHaveLength(1);
       expect(document.querySelector('style').innerHTML).toEqual(REPLACE_STYLE);
       expect(document.querySelector('style').nonce).toEqual('only');
+    });
+
+    describe('customize mark', () => {
+      beforeEach(() => {
+        // Clean up
+        removeCSS('unique');
+      });
+
+      const ORIGIN_STYLE = '.light { context: "little" }';
+      const REPLACE_STYLE = '.light { context: "bamboo" }';
+
+      it('basic', () => {
+        updateCSS(ORIGIN_STYLE, 'marked', { mark: 'light' });
+
+        expect(document.querySelectorAll('style')).toHaveLength(1);
+        expect(document.querySelector('style').innerHTML).toEqual(ORIGIN_STYLE);
+
+        updateCSS(REPLACE_STYLE, 'marked', { mark: 'light' });
+
+        expect(document.querySelectorAll('style')).toHaveLength(1);
+        expect(document.querySelector('style').innerHTML).toEqual(
+          REPLACE_STYLE,
+        );
+        expect(
+          document.querySelector('style').getAttribute('data-light'),
+        ).toBeTruthy();
+      });
+
+      it('start with data-', () => {
+        updateCSS(ORIGIN_STYLE, 'marked', { mark: 'data-good' });
+
+        expect(document.querySelectorAll('style')).toHaveLength(1);
+        expect(document.querySelector('style').innerHTML).toEqual(ORIGIN_STYLE);
+
+        updateCSS(REPLACE_STYLE, 'marked', { mark: 'data-good' });
+
+        expect(document.querySelectorAll('style')).toHaveLength(1);
+        expect(document.querySelector('style').innerHTML).toEqual(
+          REPLACE_STYLE,
+        );
+        expect(
+          document.querySelector('style').getAttribute('data-good'),
+        ).toBeTruthy();
+      });
     });
   });
 });

@@ -2,10 +2,18 @@ import canUseDom from './canUseDom';
 
 const MARK_KEY = `rc-util-key` as any;
 
+function getMark({ mark }: Options = {}) {
+  if (mark) {
+    return mark.startsWith('data-') ? mark : `data-${mark}`;
+  }
+  return MARK_KEY;
+}
+
 interface Options {
   attachTo?: Element;
   csp?: { nonce?: string };
   prepend?: boolean;
+  mark?: string;
 }
 
 function getContainer(option: Options) {
@@ -46,6 +54,21 @@ export function injectCSS(css: string, option: Options = {}) {
 
 const containerCache = new Map<Element, Node & ParentNode>();
 
+function findExistNode(key: string, option: Options = {}) {
+  const container = getContainer(option);
+
+  return Array.from(containerCache.get(container).children).find(
+    node =>
+      node.tagName === 'STYLE' && node.getAttribute(getMark(option)) === key,
+  ) as HTMLStyleElement;
+}
+
+export function removeCSS(key: string, option: Options = {}) {
+  const existNode = findExistNode(key, option);
+
+  existNode?.parentNode?.removeChild(existNode);
+}
+
 export function updateCSS(css: string, key: string, option: Options = {}) {
   const container = getContainer(option);
 
@@ -57,9 +80,7 @@ export function updateCSS(css: string, key: string, option: Options = {}) {
     parentNode.removeChild(placeholderStyle);
   }
 
-  const existNode = Array.from(containerCache.get(container).children).find(
-    node => node.tagName === 'STYLE' && node[MARK_KEY] === key,
-  ) as HTMLStyleElement;
+  const existNode = findExistNode(key, option);
 
   if (existNode) {
     if (option.csp?.nonce && existNode.nonce !== option.csp?.nonce) {
@@ -74,6 +95,6 @@ export function updateCSS(css: string, key: string, option: Options = {}) {
   }
 
   const newNode = injectCSS(css, option);
-  newNode[MARK_KEY] = key;
+  newNode.setAttribute(getMark(option), key);
   return newNode;
 }

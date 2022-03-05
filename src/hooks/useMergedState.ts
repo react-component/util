@@ -29,12 +29,19 @@ export default function useControlledState<T, R = T>(
     mergedValue = postState(mergedValue);
   }
 
-  function triggerChange(newValue: T) {
-    setInnerValue(newValue);
-    if (mergedValue !== newValue && onChange) {
-      onChange(newValue, mergedValue);
-    }
-  }
+  // setState
+  const onChangeRef = React.useRef(onChange);
+  onChangeRef.current = onChange;
+
+  const triggerChange = React.useCallback(
+    (newValue: T) => {
+      setInnerValue(newValue);
+      if (mergedValue !== newValue && onChangeRef.current) {
+        onChangeRef.current(newValue, mergedValue);
+      }
+    },
+    [mergedValue, onChangeRef],
+  );
 
   // Effect of reset value to `undefined`
   const firstRenderRef = React.useRef(true);
@@ -49,5 +56,5 @@ export default function useControlledState<T, R = T>(
     }
   }, [value]);
 
-  return [(mergedValue as unknown) as R, triggerChange];
+  return [mergedValue as unknown as R, triggerChange];
 }
