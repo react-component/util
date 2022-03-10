@@ -8,7 +8,7 @@ type SetState<T> = (
    * Will not update state when destroyed.
    * Developer should make sure this is safe to ignore.
    */
-  ignoreDestroy: boolean,
+  ignoreDestroy?: boolean,
 ) => void;
 
 /**
