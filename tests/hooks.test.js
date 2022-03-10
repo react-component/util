@@ -3,6 +3,7 @@ import { mount } from 'enzyme';
 import useMemo from '../src/hooks/useMemo';
 import useMergedState from '../src/hooks/useMergedState';
 import useLayoutEffect from '../src/hooks/useLayoutEffect';
+import useState from '../src/hooks/useState';
 
 describe('hooks', () => {
   it('useMemo', () => {
@@ -115,5 +116,32 @@ describe('hooks', () => {
       expect(errorSpy).not.toHaveBeenCalled();
       errorSpy.mockRestore();
     });
+  });
+
+  it('useState', done => {
+    const errorSpy = jest.spyOn(console, 'error');
+
+    const Demo = () => {
+      const [val, setValue] = useState(0);
+
+      React.useEffect(
+        () => () => {
+          setTimeout(() => {
+            setValue(1, true);
+          }, 0);
+        },
+        [],
+      );
+
+      return null;
+    };
+
+    const wrapper = mount(<Demo />);
+    wrapper.unmount();
+
+    setTimeout(() => {
+      expect(errorSpy).not.toHaveBeenCalled();
+      done();
+    }, 50);
   });
 });
