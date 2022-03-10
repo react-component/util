@@ -29,7 +29,7 @@ export default function useState<T>(
     [],
   );
 
-  function safeSetState(updater: Updater<T>, ignoreDestroy: boolean) {
+  function safeSetState(updater: Updater<T>, ignoreDestroy?: boolean) {
     if (ignoreDestroy && destroyRef.current) {
       return;
     }

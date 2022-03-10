@@ -118,30 +118,59 @@ describe('hooks', () => {
     });
   });
 
-  it('useState', done => {
-    const errorSpy = jest.spyOn(console, 'error');
+  describe('useState', () => {
+    it('not throw', done => {
+      const errorSpy = jest.spyOn(console, 'error');
 
-    const Demo = () => {
-      const [val, setValue] = useState(0);
+      const Demo = () => {
+        const [val, setValue] = useState(0);
 
-      React.useEffect(
-        () => () => {
-          setTimeout(() => {
-            setValue(1, true);
-          }, 0);
-        },
-        [],
-      );
+        React.useEffect(
+          () => () => {
+            setTimeout(() => {
+              setValue(1, true);
+            }, 0);
+          },
+          [],
+        );
 
-      return null;
-    };
+        return null;
+      };
 
-    const wrapper = mount(<Demo />);
-    wrapper.unmount();
+      const wrapper = mount(<Demo />);
+      wrapper.unmount();
 
-    setTimeout(() => {
-      expect(errorSpy).not.toHaveBeenCalled();
-      done();
-    }, 50);
+      setTimeout(() => {
+        expect(errorSpy).not.toHaveBeenCalled();
+        done();
+      }, 50);
+    });
+
+    it('throw', done => {
+      const errorSpy = jest.spyOn(console, 'error');
+
+      const Demo = () => {
+        const [val, setValue] = useState(0);
+
+        React.useEffect(
+          () => () => {
+            setTimeout(() => {
+              setValue(1);
+            }, 0);
+          },
+          [],
+        );
+
+        return null;
+      };
+
+      const wrapper = mount(<Demo />);
+      wrapper.unmount();
+
+      setTimeout(() => {
+        expect(errorSpy).toHaveBeenCalled();
+        done();
+      }, 50);
+    });
   });
 });
