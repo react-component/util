@@ -1,5 +1,10 @@
 import * as React from 'react';
+import useState from './useState';
 
+/**
+ * Similar to `useState` but will use props value if provided.
+ * Note that internal use rc-util `useState` hook.
+ */
 export default function useControlledState<T, R = T>(
   defaultStateValue: T | (() => T),
   option?: {
@@ -8,9 +13,9 @@ export default function useControlledState<T, R = T>(
     onChange?: (value: T, prevValue: T) => void;
     postState?: (value: T) => T;
   },
-): [R, (value: T) => void] {
+): [R, (value: T, ignoreDestroy?: boolean) => void] {
   const { defaultValue, value, onChange, postState } = option || {};
-  const [innerValue, setInnerValue] = React.useState<T>(() => {
+  const [innerValue, setInnerValue] = useState<T>(() => {
     if (value !== undefined) {
       return value;
     }
@@ -34,8 +39,8 @@ export default function useControlledState<T, R = T>(
   onChangeRef.current = onChange;
 
   const triggerChange = React.useCallback(
-    (newValue: T) => {
-      setInnerValue(newValue);
+    (newValue: T, ignoreDestroy?: boolean) => {
+      setInnerValue(newValue, ignoreDestroy);
       if (mergedValue !== newValue && onChangeRef.current) {
         onChangeRef.current(newValue, mergedValue);
       }

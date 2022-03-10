@@ -2,7 +2,7 @@ import * as React from 'react';
 
 type Updater<T> = T | ((prevValue: T) => T);
 
-type SetState<T> = (
+export type SetState<T> = (
   nextValue: Updater<T>,
   /**
    * Will not update state when destroyed.
