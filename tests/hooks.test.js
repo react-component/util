@@ -4,6 +4,7 @@ import useMemo from '../src/hooks/useMemo';
 import useMergedState from '../src/hooks/useMergedState';
 import useLayoutEffect from '../src/hooks/useLayoutEffect';
 import useState from '../src/hooks/useState';
+import useIsFirstRender from '../src/hooks/useIsFirstRender';
 
 describe('hooks', () => {
   it('useMemo', () => {
@@ -176,5 +177,25 @@ describe('hooks', () => {
         done();
       }, 50);
     });
+  });
+
+  it('useIsFirstRender', () => {
+    const Demo = () => {
+      const isFirstRender = useIsFirstRender();
+      const [, update] = useState();
+      return (
+        <>
+          <div id="state">{String(isFirstRender)}</div>
+          <button id="update" onClick={update} />
+        </>
+      );
+    };
+
+    const wrapper = mount(<Demo />);
+    expect(wrapper.text()).toEqual('true');
+    wrapper.find('#update').simulate('click');
+    expect(wrapper.text()).toEqual('false');
+    wrapper.find('#update').simulate('click');
+    expect(wrapper.text()).toEqual('false');
   });
 });
