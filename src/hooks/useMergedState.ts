@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useState from './useState';
+import useIsFirstRender from './useIsFirstRender';
 
 /**
  * Similar to `useState` but will use props value if provided.
@@ -49,10 +50,9 @@ export default function useControlledState<T, R = T>(
   );
 
   // Effect of reset value to `undefined`
-  const firstRenderRef = React.useRef(true);
+  const isFirstRender = useIsFirstRender();
   React.useEffect(() => {
-    if (firstRenderRef.current) {
-      firstRenderRef.current = false;
+    if (isFirstRender) {
       return;
     }
 
