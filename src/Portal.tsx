@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import ReactDOM from 'react-dom';
 import canUseDom from './Dom/canUseDom';
@@ -14,6 +14,7 @@ export interface PortalProps {
 const Portal = forwardRef<PortalRef, PortalProps>((props, ref) => {
   const { didUpdate, getContainer, children } = props;
 
+  const parentRef = useRef<ParentNode>();
   const containerRef = useRef<HTMLElement>();
 
   // Ref return nothing, only for wrapper check exist
@@ -23,6 +24,7 @@ const Portal = forwardRef<PortalRef, PortalProps>((props, ref) => {
   const initRef = useRef(false);
   if (!initRef.current && canUseDom()) {
     containerRef.current = getContainer();
+    parentRef.current = containerRef.current.parentNode;
     initRef.current = true;
   }
 
@@ -32,6 +34,13 @@ const Portal = forwardRef<PortalRef, PortalProps>((props, ref) => {
   });
 
   useEffect(() => {
+    // Restore container to original place
+    if (
+      containerRef.current.parentNode === null &&
+      parentRef.current !== null
+    ) {
+      parentRef.current.appendChild(containerRef.current);
+    }
     return () => {
       // [Legacy] This should not be handle by Portal but parent PortalWrapper instead.
       // Since some component use `Portal` directly, we have to keep the logic here.
