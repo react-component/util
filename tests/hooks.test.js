@@ -179,23 +179,46 @@ describe('hooks', () => {
     });
   });
 
-  it('useIsFirstRender', () => {
+  it('useState in StrictMode', () => {
+    const Demo = () => {
+      const [count, setCount] = useState(0);
+
+      React.useEffect(() => {
+        setCount(count => count + 1);
+      }, []);
+
+      return count;
+    };
+
+    const { container } = render(<Demo />);
+    const { container: strictContainer } = render(<Demo />, {
+      wrapper: React.StrictMode,
+    });
+
+    expect(container.textContent).toBe('1');
+    // useEffect will be triggered twice in StrictMode,
+    // useState should work in StrictMode
+    expect(strictContainer.textContent).toBe('2');
+  });
+
+  it('useIsFirstRender', async () => {
     const Demo = () => {
       const isFirstRender = useIsFirstRender();
-      const [, update] = useState();
+      const [, update] = React.useState();
       return (
         <>
           <div id="state">{String(isFirstRender)}</div>
-          <button id="update" onClick={update} />
+          <button data-testid="update" onClick={update} />
         </>
       );
     };
 
-    const wrapper = mount(<Demo />);
-    expect(wrapper.text()).toEqual('true');
-    wrapper.find('#update').simulate('click');
-    expect(wrapper.text()).toEqual('false');
-    wrapper.find('#update').simulate('click');
-    expect(wrapper.text()).toEqual('false');
+    const { container, findByTestId } = render(<Demo />);
+    const button = await findByTestId('update');
+    expect(container.textContent).toEqual('true');
+    fireEvent.click(button);
+    expect(container.textContent).toEqual('false');
+    fireEvent.click(button);
+    expect(container.textContent).toEqual('false');
   });
 });
