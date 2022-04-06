@@ -26,6 +26,7 @@ describe('rc-util', () => {
     expect(ret).toEqual([1, 2, 3]);
   });
 
+  // Note: Seems useless but not remove in case some code still use it
   it('PureRenderMixin works', () => {
     const div = document.createElement('div');
     document.body.appendChild(div);

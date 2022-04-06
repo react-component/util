@@ -1,29 +1,29 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import PortalWrapper, { getOpenCount } from '../src/PortalWrapper';
 import Portal from '../src/Portal';
 
 describe('Portal', () => {
-  let container: HTMLDivElement;
+  let domContainer: HTMLDivElement;
 
   // Mock for raf
   window.requestAnimationFrame = callback => window.setTimeout(callback);
   window.cancelAnimationFrame = id => window.clearTimeout(id);
 
   beforeEach(() => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
+    domContainer = document.createElement('div');
+    document.body.appendChild(domContainer);
   });
 
   afterEach(() => {
-    document.body.removeChild(container);
+    document.body.removeChild(domContainer);
   });
 
   it('forceRender', () => {
     const divRef = React.createRef<any>();
 
-    const wrapper = mount(
+    const { unmount } = render(
       <PortalWrapper forceRender>
         {() => <div ref={divRef}>2333</div>}
       </PortalWrapper>,
@@ -31,13 +31,13 @@ describe('Portal', () => {
 
     expect(divRef.current).toBeTruthy();
 
-    wrapper.unmount();
+    unmount();
   });
 
   it('didUpdate', () => {
     const didUpdate = jest.fn();
 
-    const wrapper = mount(
+    const { rerender } = render(
       <Portal
         didUpdate={didUpdate}
         getContainer={() => document.createElement('div')}
@@ -48,7 +48,15 @@ describe('Portal', () => {
 
     expect(didUpdate).toHaveBeenCalledTimes(1);
 
-    wrapper.setProps({ justForceUpdate: true });
+    rerender(
+      <Portal
+        didUpdate={didUpdate}
+        getContainer={() => document.createElement('div')}
+        {...{ justForceUpdate: true }}
+      >
+        light
+      </Portal>,
+    );
     expect(didUpdate).toHaveBeenCalledTimes(2);
   });
 
@@ -58,7 +66,7 @@ describe('Portal', () => {
       div.id = 'bamboo-light';
       document.body.appendChild(div);
 
-      mount(
+      render(
         <PortalWrapper visible getContainer="#bamboo-light">
           {() => <div>2333</div>}
         </PortalWrapper>,
@@ -74,7 +82,7 @@ describe('Portal', () => {
     it('function', () => {
       const div = document.createElement('div');
 
-      mount(
+      render(
         <PortalWrapper visible getContainer={() => div}>
           {() => <div>2333</div>}
         </PortalWrapper>,
@@ -86,7 +94,7 @@ describe('Portal', () => {
     it('htmlElement', () => {
       const div = document.createElement('div');
 
-      mount(
+      render(
         <PortalWrapper visible getContainer={div}>
           {() => <div>2333</div>}
         </PortalWrapper>,
@@ -98,7 +106,7 @@ describe('Portal', () => {
     it('delay', () => {
       jest.useFakeTimers();
       const divRef = React.createRef<HTMLDivElement>();
-      const wrapper = mount(
+      render(
         <div>
           <PortalWrapper visible getContainer={() => divRef.current}>
             {() => <div />}
@@ -109,7 +117,6 @@ describe('Portal', () => {
 
       act(() => {
         jest.runAllTimers();
-        wrapper.update();
       });
 
       expect(divRef.current.childElementCount).toEqual(1);
@@ -121,15 +128,15 @@ describe('Portal', () => {
     it('start as 0', () => {
       expect(getOpenCount()).toEqual(0);
 
-      const wrapper = mount(
+      const { rerender, unmount } = render(
         <PortalWrapper visible={false}>{() => <div>2333</div>}</PortalWrapper>,
       );
       expect(getOpenCount()).toEqual(0);
 
-      wrapper.setProps({ visible: true });
+      rerender(<PortalWrapper visible>{() => <div>2333</div>}</PortalWrapper>);
       expect(getOpenCount()).toEqual(1);
 
-      wrapper.unmount();
+      unmount();
     });
 
     it('correct count', () => {
@@ -153,29 +160,33 @@ describe('Portal', () => {
 
       expect(getOpenCount()).toEqual(0);
 
-      const wrapper = mount(<Demo count={1} visible />);
+      const { rerender } = render(<Demo count={1} visible />);
       expect(getOpenCount()).toEqual(1);
 
-      wrapper.setProps({ count: 2 });
+      rerender(<Demo count={2} visible />);
       expect(getOpenCount()).toEqual(2);
 
-      wrapper.setProps({ count: 1 });
+      rerender(<Demo count={1} visible />);
       expect(getOpenCount()).toEqual(1);
 
-      wrapper.setProps({ visible: false });
+      rerender(<Demo count={1} visible={false} />);
       expect(getOpenCount()).toEqual(0);
     });
   });
 
   it('wrapperClassName', () => {
-    const wrapper = mount(
+    const { rerender } = render(
       <PortalWrapper visible wrapperClassName="bamboo">
         {() => <div />}
       </PortalWrapper>,
     );
-    expect((wrapper.instance() as any).container.className).toEqual('bamboo');
+    expect(document.body.querySelector('.bamboo')).toBeTruthy();
 
-    wrapper.setProps({ wrapperClassName: 'light' });
-    expect((wrapper.instance() as any).container.className).toEqual('light');
+    rerender(
+      <PortalWrapper visible wrapperClassName="light">
+        {() => <div />}
+      </PortalWrapper>,
+    );
+    expect(document.body.querySelector('.light')).toBeTruthy();
   });
 });
