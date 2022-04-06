@@ -1,6 +1,7 @@
 /* eslint-disable no-eval */
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { composeRef, supportRef, useComposeRef } from '../src/ref';
 
 describe('ref', () => {
@@ -30,7 +31,7 @@ describe('ref', () => {
 
       const ref1 = React.createRef();
       const ref2 = React.createRef();
-      mount(<Demo ref1={ref1} ref2={ref2} />);
+      render(<Demo ref1={ref1} ref2={ref2} />);
 
       expect(ref1.current).toBeTruthy();
       expect(ref1.current).toBe(ref2.current);
@@ -38,43 +39,58 @@ describe('ref', () => {
   });
 
   describe('supportRef', () => {
+    class Holder extends React.Component {
+      render() {
+        return this.props.children;
+      }
+    }
+
     it('function component', () => {
+      const holderRef = React.createRef();
+
       function FC() {
         return <div />;
       }
-      const wrapper = mount(
-        <div>
+
+      render(
+        <Holder ref={holderRef}>
           <FC />
-        </div>,
+        </Holder>,
       );
       expect(supportRef(FC)).toBeFalsy();
-      expect(supportRef(wrapper.props().children)).toBeFalsy();
+      expect(supportRef(holderRef.current.props.children)).toBeFalsy();
     });
 
     it('arrow function component', () => {
+      const holderRef = React.createRef();
+
       // Use eval since jest will convert arrow function to function
       const FC = eval('() => null');
-      const wrapper = mount(
-        <div>
+      render(
+        <Holder ref={holderRef}>
           <FC />
-        </div>,
+        </Holder>,
       );
       expect(supportRef(FC)).toBeFalsy();
-      expect(supportRef(wrapper.props().children)).toBeFalsy();
+      expect(supportRef(holderRef.current.props.children)).toBeFalsy();
     });
 
     it('forwardRef function component', () => {
+      const holderRef = React.createRef();
+
       const FRC = React.forwardRef(() => <div />);
-      const wrapper = mount(
-        <div>
+      render(
+        <Holder ref={holderRef}>
           <FRC />
-        </div>,
+        </Holder>,
       );
       expect(supportRef(FRC)).toBeTruthy();
-      expect(supportRef(wrapper.props().children)).toBeTruthy();
+      expect(supportRef(holderRef.current.props.children)).toBeTruthy();
     });
 
     it('class component', () => {
+      const holderRef = React.createRef();
+
       class CC extends React.Component {
         state = {};
 
@@ -82,37 +98,41 @@ describe('ref', () => {
           return null;
         }
       }
-      const wrapper = mount(
-        <div>
+      render(
+        <Holder ref={holderRef}>
           <CC />
-        </div>,
+        </Holder>,
       );
       expect(supportRef(CC)).toBeTruthy();
-      expect(supportRef(wrapper.props().children)).toBeTruthy();
+      expect(supportRef(holderRef.current.props.children)).toBeTruthy();
     });
 
     it('memo of function component', () => {
+      const holderRef = React.createRef();
+
       const FC = () => <div />;
       const MemoFC = React.memo(FC);
-      const wrapper = mount(
-        <div>
+      render(
+        <Holder ref={holderRef}>
           <MemoFC />
-        </div>,
+        </Holder>,
       );
       expect(supportRef(MemoFC)).toBeFalsy();
-      expect(supportRef(wrapper.props().children)).toBeFalsy();
+      expect(supportRef(holderRef.current.props.children)).toBeFalsy();
     });
 
     it('memo of forwardRef function component', () => {
+      const holderRef = React.createRef();
+
       const FRC = React.forwardRef(() => <div />);
       const MemoFC = React.memo(FRC);
-      const wrapper = mount(
-        <div>
+      render(
+        <Holder ref={holderRef}>
           <MemoFC />
-        </div>,
+        </Holder>,
       );
       expect(supportRef(MemoFC)).toBeTruthy();
-      expect(supportRef(wrapper.props().children)).toBeTruthy();
+      expect(supportRef(holderRef.current.props.children)).toBeTruthy();
     });
   });
 });

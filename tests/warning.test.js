@@ -1,5 +1,6 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import warning, { resetWarned, noteOnce } from '../src/warning';
 import unsafeLifecyclesPolyfill from '../src/unsafeLifecyclesPolyfill';
 
@@ -61,7 +62,7 @@ describe('warning', () => {
       }
     }
     const FixedWarningApp = unsafeLifecyclesPolyfill(App);
-    mount(<FixedWarningApp />);
+    render(<FixedWarningApp />);
     expect(warnSpy).not.toHaveBeenCalledWith(
       expect.stringContaining('componentWillReceiveProps has been renamed'),
     );
