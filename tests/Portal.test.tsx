@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { StrictMode, useEffect } from 'react';
 import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import PortalWrapper, { getOpenCount } from '../src/PortalWrapper';
@@ -188,5 +188,31 @@ describe('Portal', () => {
       </PortalWrapper>,
     );
     expect(document.body.querySelector('.light')).toBeTruthy();
+  });
+
+  it('should restore to original place in StrictMode', () => {
+    const parentContainer = document.createElement('div');
+    const domContainer = document.createElement('div');
+    parentContainer.appendChild(domContainer);
+    let mountCount = 0;
+    let unmountCount = 0;
+
+    const Demo = () => {
+      useEffect(() => {
+        mountCount += 1;
+        return () => {
+          unmountCount += 1;
+        };
+      }, []);
+
+      return <Portal getContainer={() => domContainer}>Contents</Portal>;
+    };
+
+    render(<Demo />, { wrapper: StrictMode });
+
+    expect(mountCount).toBe(2);
+    expect(unmountCount).toBe(1);
+    // portal should be attached to parent node
+    expect(parentContainer.textContent).toBe('Contents');
   });
 });
