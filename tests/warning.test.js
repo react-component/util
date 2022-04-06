@@ -1,6 +1,5 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import warning, { resetWarned, noteOnce } from '../src/warning';
 import unsafeLifecyclesPolyfill from '../src/unsafeLifecyclesPolyfill';
 

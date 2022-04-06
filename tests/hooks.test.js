@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import useMemo from '../src/hooks/useMemo';
 import useMergedState from '../src/hooks/useMergedState';
 import useLayoutEffect from '../src/hooks/useLayoutEffect';

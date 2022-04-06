@@ -1,6 +1,5 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import { act } from 'react-dom/test-utils';
 import PortalWrapper, { getOpenCount } from '../src/PortalWrapper';
 import Portal from '../src/Portal';

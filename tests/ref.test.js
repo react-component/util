@@ -1,7 +1,6 @@
 /* eslint-disable no-eval */
 import React from 'react';
 import { render } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import { composeRef, supportRef, useComposeRef } from '../src/ref';
 
 describe('ref', () => {
