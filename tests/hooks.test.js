@@ -92,6 +92,22 @@ describe('hooks', () => {
 
       expect(container.querySelector('div').textContent).toEqual('33');
     });
+
+    it('postState', () => {
+      const Demo = () => {
+        const [val] = useMergedState(1, { postState: v => v * 2 });
+
+        return <div>{val}</div>;
+      };
+
+      const { container } = render(
+        <React.StrictMode>
+          <Demo />
+        </React.StrictMode>,
+      );
+
+      expect(container.querySelector('div').textContent).toEqual('2');
+    });
   });
 
   describe('useLayoutEffect', () => {
