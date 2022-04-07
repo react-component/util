@@ -76,6 +76,38 @@ describe('hooks', () => {
       const { container } = render(<Test />);
       expect(container.firstChild.textContent).toEqual('1');
     });
+
+    it('React 18 should not reset to undefined', () => {
+      const Demo = () => {
+        const [val] = useMergedState(33, { value: undefined });
+
+        return <div>{val}</div>;
+      };
+
+      const { container } = render(
+        <React.StrictMode>
+          <Demo />
+        </React.StrictMode>,
+      );
+
+      expect(container.querySelector('div').textContent).toEqual('33');
+    });
+
+    it('postState', () => {
+      const Demo = () => {
+        const [val] = useMergedState(1, { postState: v => v * 2 });
+
+        return <div>{val}</div>;
+      };
+
+      const { container } = render(
+        <React.StrictMode>
+          <Demo />
+        </React.StrictMode>,
+      );
+
+      expect(container.querySelector('div').textContent).toEqual('2');
+    });
   });
 
   describe('useLayoutEffect', () => {

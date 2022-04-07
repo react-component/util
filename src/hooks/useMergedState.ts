@@ -5,7 +5,7 @@ import useState from './useState';
  * Similar to `useState` but will use props value if provided.
  * Note that internal use rc-util `useState` hook.
  */
-export default function useControlledState<T, R = T>(
+export default function useMergedState<T, R = T>(
   defaultStateValue: T | (() => T),
   option?: {
     defaultValue?: T | (() => T);
@@ -49,16 +49,13 @@ export default function useControlledState<T, R = T>(
   );
 
   // Effect of reset value to `undefined`
-  const firstRenderRef = React.useRef(true);
+  const prevValueRef = React.useRef(value);
   React.useEffect(() => {
-    if (firstRenderRef.current) {
-      firstRenderRef.current = false;
-      return;
-    }
-
-    if (value === undefined) {
+    if (value === undefined && value !== prevValueRef.current) {
       setInnerValue(value);
     }
+
+    prevValueRef.current = value;
   }, [value]);
 
   return [mergedValue as unknown as R, triggerChange];

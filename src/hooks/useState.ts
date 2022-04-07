@@ -16,7 +16,7 @@ export type SetState<T> = (
  * We do not make this auto is to avoid real memory leak.
  * Developer should confirm it's safe to ignore themselves.
  */
-export default function useState<T>(
+export default function useSafeState<T>(
   defaultValue?: T | (() => T),
 ): [T, SetState<T>] {
   const destroyRef = React.useRef(false);
