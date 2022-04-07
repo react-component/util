@@ -22,12 +22,13 @@ export default function useState<T>(
   const destroyRef = React.useRef(false);
   const [value, setValue] = React.useState(defaultValue);
 
-  React.useEffect(
-    () => () => {
+  React.useEffect(() => {
+    destroyRef.current = false;
+
+    return () => {
       destroyRef.current = true;
-    },
-    [],
-  );
+    };
+  }, []);
 
   function safeSetState(updater: Updater<T>, ignoreDestroy?: boolean) {
     if (ignoreDestroy && destroyRef.current) {
