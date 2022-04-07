@@ -137,10 +137,28 @@ describe('hooks', () => {
           [],
         );
 
-        return null;
+        return (
+          <button
+            onClick={() => {
+              setValue(93, true);
+            }}
+          >
+            {val}
+          </button>
+        );
       };
 
-      const { unmount } = render(<Demo />);
+      const { container, unmount } = render(
+        <React.StrictMode>
+          <Demo />
+        </React.StrictMode>,
+      );
+      expect(container.querySelector('button').textContent).toEqual('0');
+
+      // Update Value
+      fireEvent.click(container.querySelector('button'));
+      expect(container.querySelector('button').textContent).toEqual('93');
+
       unmount();
 
       setTimeout(() => {
