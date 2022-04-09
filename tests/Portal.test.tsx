@@ -1,6 +1,5 @@
 import React, { StrictMode, useEffect } from 'react';
-import { render } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
+import { act, render } from '@testing-library/react';
 import PortalWrapper, { getOpenCount } from '../src/PortalWrapper';
 import Portal from '../src/Portal';
 
@@ -46,7 +45,7 @@ describe('Portal', () => {
       </Portal>,
     );
 
-    expect(didUpdate).toHaveBeenCalledTimes(1);
+    expect(didUpdate).toHaveBeenCalledTimes(2);
 
     rerender(
       <Portal
@@ -57,7 +56,7 @@ describe('Portal', () => {
         light
       </Portal>,
     );
-    expect(didUpdate).toHaveBeenCalledTimes(2);
+    expect(didUpdate).toHaveBeenCalledTimes(3);
   });
 
   describe('getContainer', () => {
@@ -214,5 +213,25 @@ describe('Portal', () => {
     expect(unmountCount).toBe(1);
     // portal should be attached to parent node
     expect(parentContainer.textContent).toBe('Contents');
+  });
+
+  it('should have no side effects', () => {
+    const getContainer = jest.fn(() => {
+      const container = document.createElement('div');
+      domContainer.appendChild(container);
+      return container;
+    });
+
+    const { unmount } = render(
+      <Portal getContainer={getContainer}>Contents</Portal>,
+      {
+        wrapper: StrictMode,
+      },
+    );
+
+    expect(getContainer).toHaveBeenCalledTimes(2);
+    expect(domContainer.textContent).toBe('Contents');
+    unmount();
+    expect(domContainer.innerHTML).toBe('');
   });
 });
