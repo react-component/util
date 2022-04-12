@@ -22,11 +22,6 @@ try {
   const mainVersion = Number((version || '').split('.')[0]);
   if (mainVersion >= 18) {
     ({ createRoot } = ReactDOM as InternalReactDOM);
-
-    // const { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } =
-    //   ReactDOM as any;
-    // __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.usingClientEntryPoint =
-    //   true;
   }
 } catch (e) {
   // Do nothing;
