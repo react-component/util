@@ -1,19 +1,43 @@
 import type * as React from 'react';
-import {
-  version,
-  render as reactRender,
-  unmountComponentAtNode,
-} from 'react-dom';
+import * as ReactDOM from 'react-dom';
 import type { Root } from 'react-dom/client';
 
-let createRoot: (container: ContainerType) => Root;
+type CreateRoot = (container: ContainerType) => Root;
+
+type InternalReactDOM = typeof ReactDOM & {
+  __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED?: {
+    usingClientEntryPoint?: boolean;
+  };
+  createRoot?: CreateRoot;
+};
+
+const {
+  version,
+  render: reactRender,
+  unmountComponentAtNode,
+} = ReactDOM as InternalReactDOM;
+
+let createRoot: CreateRoot;
 try {
   const mainVersion = Number((version || '').split('.')[0]);
   if (mainVersion >= 18) {
-    ({ createRoot } = require('react-dom/client'));
+    ({ createRoot } = ReactDOM as InternalReactDOM);
   }
 } catch (e) {
   // Do nothing;
+}
+
+function toggleWarning(skip: boolean) {
+  const { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } =
+    ReactDOM as InternalReactDOM;
+
+  if (
+    __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED &&
+    typeof __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED === 'object'
+  ) {
+    __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.usingClientEntryPoint =
+      skip;
+  }
 }
 
 const MARK = '__rc_react_root__';
@@ -24,7 +48,10 @@ type ContainerType = (Element | DocumentFragment) & {
 };
 
 function modernRender(node: React.ReactElement, container: ContainerType) {
+  toggleWarning(true);
   const root = container[MARK] || createRoot(container);
+  toggleWarning(false);
+
   root.render(node);
 
   container[MARK] = root;

@@ -12,6 +12,8 @@ describe('React', () => {
   });
 
   it('render & unmount', async () => {
+    const errorSpy = jest.spyOn(console, 'error');
+
     const div = document.createElement('div');
     document.body.appendChild(div);
 
@@ -26,6 +28,8 @@ describe('React', () => {
       await unmount(div);
     });
     expect(div.querySelector('.bamboo')).toBeFalsy();
+
+    expect(errorSpy).not.toHaveBeenCalled();
   });
 
   it('React 17 render & unmount', async () => {
