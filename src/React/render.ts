@@ -1,16 +1,19 @@
 import type * as React from 'react';
-import {
-  version,
-  render as reactRender,
-  unmountComponentAtNode,
-} from 'react-dom';
+import * as ReactDOM from 'react-dom';
 import type { Root } from 'react-dom/client';
+
+const { version, render: reactRender, unmountComponentAtNode } = ReactDOM;
 
 let createRoot: (container: ContainerType) => Root;
 try {
   const mainVersion = Number((version || '').split('.')[0]);
   if (mainVersion >= 18) {
-    ({ createRoot } = require('react-dom/client'));
+    ({ createRoot } = ReactDOM as any);
+
+    const { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } =
+      ReactDOM as any;
+    __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.usingClientEntryPoint =
+      true;
   }
 } catch (e) {
   // Do nothing;
