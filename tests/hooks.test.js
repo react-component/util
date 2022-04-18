@@ -1,9 +1,25 @@
 import * as React from 'react';
+import { renderToString } from 'react-dom/server';
 import { render, fireEvent } from '@testing-library/react';
 import useMemo from '../src/hooks/useMemo';
 import useMergedState from '../src/hooks/useMergedState';
 import useLayoutEffect from '../src/hooks/useLayoutEffect';
 import useState from '../src/hooks/useState';
+import useId, { resetUuid } from '../src/hooks/useId';
+
+global.disableUseId = false;
+
+jest.mock('react', () => {
+  const react = jest.requireActual('react');
+
+  const clone = { ...react };
+
+  Object.defineProperty(clone, 'useId', {
+    get: () => (global.disableUseId ? undefined : react.useId),
+  });
+
+  return clone;
+});
 
 describe('hooks', () => {
   it('useMemo', () => {
@@ -225,6 +241,86 @@ describe('hooks', () => {
         expect(errorSpy).toHaveBeenCalled();
         done();
       }, 50);
+    });
+  });
+
+  describe('useId', () => {
+    const Demo = ({ id } = {}) => {
+      const mergedId = useId(id);
+      return <div id={mergedId} className="target" />;
+    };
+
+    function matchId(container, id) {
+      const ele = container.querySelector('.target');
+      return expect(ele.id).toEqual(id);
+    }
+
+    it('id passed', () => {
+      const { container } = render(<Demo id="bamboo" />);
+      matchId(container, 'bamboo');
+    });
+
+    it('test env', () => {
+      const { container } = render(<Demo />);
+      matchId(container, 'test-id');
+    });
+
+    it('react useId', () => {
+      const errorSpy = jest.spyOn(console, 'error');
+      const originEnv = process.env.NODE_ENV;
+      process.env.NODE_ENV = 'development';
+
+      // SSR
+      const content = renderToString(<Demo />);
+      expect(content).not.toContain('test-id');
+
+      // Hydrate
+      const holder = document.createElement('div');
+      holder.innerHTML = content;
+      const {} = render(<Demo />, {
+        hydrate: true,
+        container: holder,
+      });
+
+      expect(errorSpy).not.toHaveBeenCalled();
+
+      errorSpy.mockRestore();
+      process.env.NODE_ENV = originEnv;
+    });
+
+    it('fallback of React 17 or lower', () => {
+      const errorSpy = jest.spyOn(console, 'error');
+      const originEnv = process.env.NODE_ENV;
+      process.env.NODE_ENV = 'development';
+      global.disableUseId = true;
+
+      // SSR
+      const content = renderToString(
+        <React.StrictMode>
+          <Demo />
+        </React.StrictMode>,
+      );
+      expect(content).toContain('ssr-id');
+
+      // Hydrate
+      resetUuid();
+      const holder = document.createElement('div');
+      holder.innerHTML = content;
+      const { container } = render(
+        <React.StrictMode>
+          <Demo />
+        </React.StrictMode>,
+        {
+          hydrate: true,
+          container: holder,
+        },
+      );
+
+      matchId(container, 'rc_unique_1');
+
+      errorSpy.mockRestore();
+      process.env.NODE_ENV = originEnv;
+      global.disableUseId = false;
     });
   });
 });
