@@ -2,34 +2,32 @@ import type * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import type { Root } from 'react-dom/client';
 
-type CreateRoot = (container: ContainerType) => Root;
-
-type InternalReactDOM = typeof ReactDOM & {
+// Let compiler not to search module usage
+const fullClone = {
+  ...ReactDOM,
+} as typeof ReactDOM & {
   __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED?: {
     usingClientEntryPoint?: boolean;
   };
   createRoot?: CreateRoot;
 };
 
-const {
-  version,
-  render: reactRender,
-  unmountComponentAtNode,
-} = ReactDOM as InternalReactDOM;
+type CreateRoot = (container: ContainerType) => Root;
+
+const { version, render: reactRender, unmountComponentAtNode } = fullClone;
 
 let createRoot: CreateRoot;
 try {
   const mainVersion = Number((version || '').split('.')[0]);
   if (mainVersion >= 18) {
-    ({ createRoot } = ReactDOM as InternalReactDOM);
+    ({ createRoot } = fullClone);
   }
 } catch (e) {
   // Do nothing;
 }
 
 function toggleWarning(skip: boolean) {
-  const { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } =
-    ReactDOM as InternalReactDOM;
+  const { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } = fullClone;
 
   if (
     __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED &&
