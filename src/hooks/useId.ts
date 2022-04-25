@@ -1,5 +1,14 @@
 import * as React from 'react';
 
+function getUseId() {
+  // We need fully clone React function here to avoid webpack warning React 17 do not export `useId`
+  const fullClone = {
+    ...React,
+  };
+
+  return fullClone.useId;
+}
+
 let uuid = 0;
 
 /** @private Note only worked in develop env. Not work in production. */
@@ -13,11 +22,11 @@ export default function useId(id?: string) {
   // Inner id for accessibility usage. Only work in client side
   const [innerId, setInnerId] = React.useState<string>('ssr-id');
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const reactNativeId = React.useId?.();
+  const useOriginId = getUseId();
+  const reactNativeId = useOriginId?.();
 
   React.useEffect(() => {
-    if (!React.useId) {
+    if (!useOriginId) {
       const nextId = uuid;
       uuid += 1;
 
