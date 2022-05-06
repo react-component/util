@@ -1,42 +1,52 @@
-/* eslint-disable no-console */
-let warned: Record<string, boolean> = {};
+import noop from './noop';
 
-export function warning(valid: boolean, message: string) {
-  // Support uglify
-  if (process.env.NODE_ENV !== 'production' && !valid && console !== undefined) {
-    console.error(`Warning: ${message}`);
-  }
-}
+type Warning = (valid: boolean, message: string) => void;
+type Call = (method: Warning, valid: boolean, message: string) => void;
 
-export function note(valid: boolean, message: string) {
-  // Support uglify
-  if (process.env.NODE_ENV !== 'production' && !valid && console !== undefined) {
-    console.warn(`Note: ${message}`);
-  }
-}
+let warned: Record<string, boolean>;
 
-export function resetWarned() {
+export let warning: Warning = noop;
+export let note: Warning = noop;
+export let resetWarned = noop;
+export let call: Call = noop;
+export let warningOnce: Warning = noop;
+export let noteOnce: Warning = noop;
+
+if (process.env.NODE_ENV !== 'production') {
   warned = {};
-}
 
-export function call(
-  method: (valid: boolean, message: string) => void,
-  valid: boolean,
-  message: string,
-) {
-  if (!valid && !warned[message]) {
-    method(false, message);
-    warned[message] = true;
-  }
-}
+  warning = function (valid, message) {
+    if (!valid) {
+      // eslint-disable-next-line no-console
+      console.error(`Warning: ${message}`);
+    }
+  };
 
-export function warningOnce(valid: boolean, message: string) {
-  call(warning, valid, message);
-}
+  note = function (valid, message) {
+    if (!valid) {
+      // eslint-disable-next-line no-console
+      console.warn(`Note: ${message}`);
+    }
+  };
 
-export function noteOnce(valid: boolean, message: string) {
-  call(note, valid, message);
+  resetWarned = function () {
+    warned = {};
+  };
+
+  call = function (method, valid, message) {
+    if (!valid && !warned[message]) {
+      method(false, message);
+      warned[message] = true;
+    }
+  };
+
+  warningOnce = function (valid, message) {
+    call(warning, valid, message);
+  };
+
+  noteOnce = function (valid, message) {
+    call(note, valid, message);
+  };
 }
 
 export default warningOnce;
-/* eslint-enable */
