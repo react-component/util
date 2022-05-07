@@ -1,10 +1,8 @@
-import noop from './noop';
-
 type Warning = (valid: boolean, message: string) => void;
 type Call = (method: Warning, valid: boolean, message: string) => void;
 
 let warned: Record<string, boolean>;
-
+export function noop() {}
 export let warning: Warning = noop;
 export let note: Warning = noop;
 export let resetWarned = noop;
