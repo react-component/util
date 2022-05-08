@@ -96,8 +96,6 @@ describe('warning', () => {
 
       warningOnce(false, 'error message');
       expect(errorSpy).not.toHaveBeenCalled();
-
-      expect(errorSpy).toHaveBeenCalledTimes(0);
     });
 
     it('Test noteOnce, whether `true` or `false`, do not exec `console.warn`', () => {
@@ -108,8 +106,6 @@ describe('warning', () => {
 
       noteOnce(false, 'warn message');
       expect(warnSpy).not.toHaveBeenCalled();
-
-      expect(warnSpy).toHaveBeenCalledTimes(0);
     });
   });
 
