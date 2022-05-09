@@ -13,7 +13,7 @@ export default function addEventListenerWrap(target, eventType, cb, option) {
   return {
     remove: () => {
       if (target.removeEventListener) {
-        target.removeEventListener(eventType, callback);
+        target.removeEventListener(eventType, callback, option);
       }
     },
   };
