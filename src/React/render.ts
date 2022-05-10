@@ -38,19 +38,21 @@ function toggleWarning(skip: boolean) {
   }
 }
 
-const containerRoots = new Map<ContainerType, Root>();
+const MARK = '__rc_react_root__';
 
 // ========================== Render ==========================
-type ContainerType = Element | DocumentFragment;
+type ContainerType = (Element | DocumentFragment) & {
+  [MARK]?: Root;
+};
 
 function modernRender(node: React.ReactElement, container: ContainerType) {
   toggleWarning(true);
-  const root = containerRoots.get(container) || createRoot(container);
+  const root = container[MARK] || createRoot(container);
   toggleWarning(false);
 
   root.render(node);
 
-  containerRoots.set(container, root);
+  container[MARK] = root;
 }
 
 function legacyRender(node: React.ReactElement, container: ContainerType) {
@@ -77,8 +79,9 @@ export function render(node: React.ReactElement, container: ContainerType) {
 async function modernUnmount(container: ContainerType) {
   // Delay to unmount to avoid React 18 sync warning
   return Promise.resolve().then(() => {
-    containerRoots.get(container)?.unmount();
-    containerRoots.delete(container);
+    container[MARK]?.unmount();
+
+    delete container[MARK];
   });
 }
 
