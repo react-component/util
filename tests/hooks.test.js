@@ -124,6 +124,50 @@ describe('hooks', () => {
 
       expect(container.querySelector('div').textContent).toEqual('2');
     });
+
+    it('not trigger onChange if props change', () => {
+      const Demo = ({ value, onChange }) => {
+        const [mergedValue, setValue] = useMergedState(0, {
+          onChange,
+        });
+
+        return (
+          <>
+            <button
+              onClick={() => {
+                setValue(v => v + 1);
+              }}
+            >
+              {mergedValue}
+            </button>
+            <a
+              onClick={() => {
+                setValue(v => v + 1);
+                setValue(v => v + 1);
+              }}
+            />
+          </>
+        );
+      };
+
+      const onChange = jest.fn();
+      const { container } = render(<Demo onChange={onChange} />);
+
+      expect(container.querySelector('button').textContent).toEqual('0');
+      expect(onChange).not.toHaveBeenCalled();
+
+      // Click to change
+      fireEvent.click(container.querySelector('button'));
+      expect(container.querySelector('button').textContent).toEqual('1');
+      expect(onChange).toHaveBeenCalledWith(1, 0);
+      onChange.mockReset();
+
+      // Click to change twice in same time so should not trigger onChange twice
+      fireEvent.click(container.querySelector('a'));
+      expect(container.querySelector('button').textContent).toEqual('3');
+      expect(onChange).toHaveBeenCalledWith(3, 1);
+      onChange.mockReset();
+    });
   });
 
   describe('useLayoutEffect', () => {
