@@ -1,5 +1,12 @@
 import * as React from 'react';
+import useEvent from './useEvent';
+import useLayoutEffect from './useLayoutEffect';
 import useState from './useState';
+
+type Updater<T> = (
+  updater: T | ((origin: T) => T),
+  ignoreDestroy?: boolean,
+) => void;
 
 /**
  * Similar to `useState` but will use props value if provided.
@@ -13,7 +20,7 @@ export default function useMergedState<T, R = T>(
     onChange?: (value: T, prevValue: T) => void;
     postState?: (value: T) => T;
   },
-): [R, (value: T, ignoreDestroy?: boolean) => void] {
+): [R, Updater<T>] {
   const { defaultValue, value, onChange, postState } = option || {};
   const [innerValue, setInnerValue] = useState<T>(() => {
     if (value !== undefined) {
@@ -29,24 +36,29 @@ export default function useMergedState<T, R = T>(
       : defaultStateValue;
   });
 
-  let mergedValue = value !== undefined ? value : innerValue;
-  if (postState) {
-    mergedValue = postState(mergedValue);
-  }
+  const mergedValue = value !== undefined ? value : innerValue;
+  const postMergedValue = postState ? postState(mergedValue) : mergedValue;
 
   // setState
-  const onChangeRef = React.useRef(onChange);
-  onChangeRef.current = onChange;
+  const onChangeFn = useEvent(onChange);
 
-  const triggerChange = React.useCallback(
-    (newValue: T, ignoreDestroy?: boolean) => {
-      setInnerValue(newValue, ignoreDestroy);
-      if (mergedValue !== newValue && onChangeRef.current) {
-        onChangeRef.current(newValue, mergedValue);
-      }
-    },
-    [mergedValue, onChangeRef],
-  );
+  const [changePrevValue, setChangePrevValue] = React.useState<T>();
+
+  const triggerChange: Updater<T> = useEvent(updater => {
+    setChangePrevValue(mergedValue);
+    setInnerValue(prev => {
+      const nextValue =
+        typeof updater === 'function' ? (updater as any)(prev) : updater;
+      return nextValue;
+    });
+  });
+
+  // Effect to trigger onChange
+  useLayoutEffect(() => {
+    if (changePrevValue !== undefined && changePrevValue !== innerValue) {
+      onChangeFn(innerValue, changePrevValue);
+    }
+  }, [changePrevValue, innerValue, onChangeFn]);
 
   // Effect of reset value to `undefined`
   const prevValueRef = React.useRef(value);
@@ -58,5 +70,5 @@ export default function useMergedState<T, R = T>(
     prevValueRef.current = value;
   }, [value]);
 
-  return [mergedValue as unknown as R, triggerChange];
+  return [postMergedValue as unknown as R, triggerChange];
 }
