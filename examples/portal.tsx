@@ -8,10 +8,14 @@ export default () => {
   React.useEffect(() => {
     console.log('>>>', divRef.current);
   }, []);
+  
+  function getRef() {
+    return outerRef.current;
+  }
 
   return (
     <>
-      <PortalWrapper visible getContainer={() => outerRef.current}>
+      <PortalWrapper visible getContainer={getRef}>
         {() => <div ref={divRef}>2333</div>}
       </PortalWrapper>
       <div style={{ background: 'red', height: 20 }} ref={outerRef} />
