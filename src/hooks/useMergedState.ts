@@ -44,13 +44,13 @@ export default function useMergedState<T, R = T>(
 
   const [changePrevValue, setChangePrevValue] = React.useState<T>();
 
-  const triggerChange: Updater<T> = useEvent(updater => {
+  const triggerChange: Updater<T> = useEvent((updater, ignoreDestroy) => {
     setChangePrevValue(mergedValue);
     setInnerValue(prev => {
       const nextValue =
         typeof updater === 'function' ? (updater as any)(prev) : updater;
       return nextValue;
-    });
+    }, ignoreDestroy);
   });
 
   // Effect to trigger onChange
