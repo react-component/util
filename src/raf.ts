@@ -43,6 +43,6 @@ export default function wrapperRaf(callback: () => void, times = 1): number {
 
 wrapperRaf.cancel = (id: number) => {
   const realId = rafIds.get(id);
-  cleanup(realId);
+  cleanup(id);
   return caf(realId);
 };
