@@ -56,7 +56,7 @@ export default function useMergedState<T, R = T>(
   // Effect to trigger onChange
   useLayoutEffect(() => {
     if (changePrevValue !== undefined && changePrevValue !== innerValue) {
-      onChangeFn(innerValue, changePrevValue);
+      onChangeFn?.(innerValue, changePrevValue);
     }
   }, [changePrevValue, innerValue, onChangeFn]);
 
