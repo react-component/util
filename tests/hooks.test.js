@@ -67,10 +67,18 @@ describe('hooks', () => {
       expect(container.querySelector('input').value).toEqual('test');
     });
 
-    it('correct defaultValue', () => {
-      const { container } = render(<FC defaultValue="test" />);
+    describe('correct defaultValue', () => {
+      it('raw', () => {
+        const { container } = render(<FC defaultValue="test" />);
 
-      expect(container.querySelector('input').value).toEqual('test');
+        expect(container.querySelector('input').value).toEqual('test');
+      });
+
+      it('func', () => {
+        const { container } = render(<FC defaultValue={() => 'bamboo'} />);
+
+        expect(container.querySelector('input').value).toEqual('bamboo');
+      });
     });
 
     it('not rerender when setState as deps', () => {
@@ -182,7 +190,7 @@ describe('hooks', () => {
       const onChange = jest.fn();
 
       const Demo = ({ value }) => {
-        const [mergedValue, setMergedValue] = useMergedState(233, {
+        const [mergedValue, setMergedValue] = useMergedState(() => 233, {
           value,
           onChange,
         });
@@ -212,6 +220,36 @@ describe('hooks', () => {
       fireEvent.click(container.querySelector('span'));
       expect(container.textContent).toEqual('3');
       expect(onChange).toHaveBeenCalledWith(3, 1);
+    });
+
+    it('not trigger onChange if set same value', () => {
+      const onChange = jest.fn();
+
+      const Test = ({ value }) => {
+        const [mergedValue, setMergedValue] = useMergedState(undefined, {
+          value,
+          onChange,
+        });
+        return (
+          <span
+            onClick={() => {
+              setMergedValue(1);
+            }}
+            onMouseEnter={() => {
+              setMergedValue(2);
+            }}
+          >
+            {mergedValue}
+          </span>
+        );
+      };
+
+      const { container } = render(<Test value={1} />);
+      fireEvent.click(container.querySelector('span'));
+      expect(onChange).not.toHaveBeenCalled();
+
+      fireEvent.mouseEnter(container.querySelector('span'));
+      expect(onChange).toHaveBeenCalledWith(2, 1);
     });
   });
 
