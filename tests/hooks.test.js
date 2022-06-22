@@ -67,10 +67,18 @@ describe('hooks', () => {
       expect(container.querySelector('input').value).toEqual('test');
     });
 
-    it('correct defaultValue', () => {
-      const { container } = render(<FC defaultValue="test" />);
+    describe('correct defaultValue', () => {
+      it('raw', () => {
+        const { container } = render(<FC defaultValue="test" />);
 
-      expect(container.querySelector('input').value).toEqual('test');
+        expect(container.querySelector('input').value).toEqual('test');
+      });
+
+      it('func', () => {
+        const { container } = render(<FC defaultValue={() => 'bamboo'} />);
+
+        expect(container.querySelector('input').value).toEqual('bamboo');
+      });
     });
 
     it('not rerender when setState as deps', () => {
@@ -125,48 +133,123 @@ describe('hooks', () => {
       expect(container.querySelector('div').textContent).toEqual('2');
     });
 
-    it('not trigger onChange if props change', () => {
-      const Demo = ({ value, onChange }) => {
-        const [mergedValue, setValue] = useMergedState(0, {
+    describe('not trigger onChange if props change', () => {
+      function test(name, postWrapper = node => node) {
+        it(name, () => {
+          const Demo = ({ value, onChange }) => {
+            const [mergedValue, setValue] = useMergedState(0, {
+              onChange,
+            });
+
+            return (
+              <>
+                <button
+                  onClick={() => {
+                    setValue(v => v + 1);
+                  }}
+                >
+                  {mergedValue}
+                </button>
+                <a
+                  onClick={() => {
+                    setValue(v => v + 1);
+                    setValue(v => v + 1);
+                  }}
+                />
+              </>
+            );
+          };
+
+          const onChange = jest.fn();
+          const { container } = render(
+            postWrapper(<Demo onChange={onChange} />),
+          );
+
+          expect(container.querySelector('button').textContent).toEqual('0');
+          expect(onChange).not.toHaveBeenCalled();
+
+          // Click to change
+          fireEvent.click(container.querySelector('button'));
+          expect(container.querySelector('button').textContent).toEqual('1');
+          expect(onChange).toHaveBeenCalledWith(1, 0);
+          onChange.mockReset();
+
+          // Click to change twice in same time so should not trigger onChange twice
+          fireEvent.click(container.querySelector('a'));
+          expect(container.querySelector('button').textContent).toEqual('3');
+          expect(onChange).toHaveBeenCalledWith(3, 1);
+          onChange.mockReset();
+        });
+      }
+
+      test('raw');
+      test('strict', node => <React.StrictMode>{node}</React.StrictMode>);
+    });
+
+    it('uncontrolled to controlled', () => {
+      const onChange = jest.fn();
+
+      const Demo = ({ value }) => {
+        const [mergedValue, setMergedValue] = useMergedState(() => 233, {
+          value,
           onChange,
         });
 
         return (
-          <>
-            <button
-              onClick={() => {
-                setValue(v => v + 1);
-              }}
-            >
-              {mergedValue}
-            </button>
-            <a
-              onClick={() => {
-                setValue(v => v + 1);
-                setValue(v => v + 1);
-              }}
-            />
-          </>
+          <span
+            onClick={() => {
+              setMergedValue(v => v + 1);
+              setMergedValue(v => v + 1);
+            }}
+          >
+            {mergedValue}
+          </span>
         );
       };
 
-      const onChange = jest.fn();
-      const { container } = render(<Demo onChange={onChange} />);
-
-      expect(container.querySelector('button').textContent).toEqual('0');
+      const { container, rerender } = render(<Demo />);
+      expect(container.textContent).toEqual('233');
       expect(onChange).not.toHaveBeenCalled();
 
-      // Click to change
-      fireEvent.click(container.querySelector('button'));
-      expect(container.querySelector('button').textContent).toEqual('1');
-      expect(onChange).toHaveBeenCalledWith(1, 0);
-      onChange.mockReset();
+      // Update value
+      rerender(<Demo value={1} />);
+      expect(container.textContent).toEqual('1');
+      expect(onChange).not.toHaveBeenCalled();
 
-      // Click to change twice in same time so should not trigger onChange twice
-      fireEvent.click(container.querySelector('a'));
-      expect(container.querySelector('button').textContent).toEqual('3');
+      // Click update
+      fireEvent.click(container.querySelector('span'));
+      expect(container.textContent).toEqual('3');
       expect(onChange).toHaveBeenCalledWith(3, 1);
-      onChange.mockReset();
+    });
+
+    it('not trigger onChange if set same value', () => {
+      const onChange = jest.fn();
+
+      const Test = ({ value }) => {
+        const [mergedValue, setMergedValue] = useMergedState(undefined, {
+          value,
+          onChange,
+        });
+        return (
+          <span
+            onClick={() => {
+              setMergedValue(1);
+            }}
+            onMouseEnter={() => {
+              setMergedValue(2);
+            }}
+          >
+            {mergedValue}
+          </span>
+        );
+      };
+
+      const { container } = render(<Test value={1} />);
+      fireEvent.click(container.querySelector('span'));
+      expect(onChange).not.toHaveBeenCalled();
+
+      fireEvent.mouseEnter(container.querySelector('span'));
+      expect(onChange).toHaveBeenCalledWith(2, 1);
     });
   });
 
