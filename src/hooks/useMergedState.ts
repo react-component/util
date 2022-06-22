@@ -80,9 +80,11 @@ export default function useMergedState<T, R = T>(
   }, [value]);
 
   // ====================== Update ======================
+  const changeEventPrevRef = React.useRef<T>();
+
   const triggerChange: Updater<T> = useEvent((updater, ignoreDestroy) => {
     setMergedValue(prev => {
-      const [prevValue] = prev;
+      const [prevValue, prevSource, prevPrevValue] = prev;
 
       const nextValue: T =
         typeof updater === 'function' ? (updater as any)(prevValue) : updater;
@@ -92,7 +94,14 @@ export default function useMergedState<T, R = T>(
         return prev;
       }
 
-      return [nextValue, Source.INNER, prevValue];
+      // Use prev prev value if is in a batch update to avoid missing data
+      const overridePrevValue =
+        prevSource === Source.INNER &&
+        changeEventPrevRef.current !== prevPrevValue
+          ? prevPrevValue
+          : prevValue;
+
+      return [nextValue, Source.INNER, overridePrevValue];
     }, ignoreDestroy);
   });
 
@@ -102,7 +111,8 @@ export default function useMergedState<T, R = T>(
   useLayoutEffect(() => {
     const [current, source, prev] = mergedValue;
     if (current !== prev && source === Source.INNER) {
-      onChangeFn?.(current, prev);
+      onChangeFn(current, prev);
+      changeEventPrevRef.current = prev;
     }
   }, [mergedValue]);
 

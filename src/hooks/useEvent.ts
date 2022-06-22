@@ -9,5 +9,5 @@ export default function useEvent<T extends Function>(callback: T): T {
     [],
   );
 
-  return callback ? memoFn : undefined;
+  return memoFn;
 }

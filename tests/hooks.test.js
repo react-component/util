@@ -165,7 +165,7 @@ describe('hooks', () => {
       // Click to change twice in same time so should not trigger onChange twice
       fireEvent.click(container.querySelector('a'));
       expect(container.querySelector('button').textContent).toEqual('3');
-      expect(onChange).toHaveBeenCalledWith(3, 2);
+      expect(onChange).toHaveBeenCalledWith(3, 1);
       onChange.mockReset();
     });
   });
