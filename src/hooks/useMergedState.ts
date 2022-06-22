@@ -8,6 +8,28 @@ type Updater<T> = (
   ignoreDestroy?: boolean,
 ) => void;
 
+enum Source {
+  INNER,
+  PROP,
+}
+
+type ValueRecord<T> = [T, Source, T];
+
+const useUpdateEffect: typeof React.useEffect = (callback, deps) => {
+  const [firstMount, setFirstMount] = React.useState(true);
+
+  useLayoutEffect(() => {
+    if (!firstMount) {
+      return callback();
+    }
+  }, deps);
+
+  // We tell react that first mount has passed
+  useLayoutEffect(() => {
+    setFirstMount(false);
+  }, []);
+};
+
 /**
  * Similar to `useState` but will use props value if provided.
  * Note that internal use rc-util `useState` hook.
@@ -22,53 +44,67 @@ export default function useMergedState<T, R = T>(
   },
 ): [R, Updater<T>] {
   const { defaultValue, value, onChange, postState } = option || {};
-  const [innerValue, setInnerValue] = useState<T>(() => {
+
+  // ======================= Init =======================
+  const [mergedValue, setMergedValue] = useState<ValueRecord<T>>(() => {
+    let finalValue: T = undefined;
+    let source: Source;
+
     if (value !== undefined) {
-      return value;
+      finalValue = value;
+      source = Source.PROP;
+    } else if (defaultValue !== undefined) {
+      finalValue =
+        typeof defaultValue === 'function'
+          ? (defaultValue as any)()
+          : defaultValue;
+      source = Source.PROP;
+    } else {
+      finalValue =
+        typeof defaultStateValue === 'function'
+          ? (defaultStateValue as any)()
+          : defaultStateValue;
+      source = Source.INNER;
     }
-    if (defaultValue !== undefined) {
-      return typeof defaultValue === 'function'
-        ? (defaultValue as any)()
-        : defaultValue;
-    }
-    return typeof defaultStateValue === 'function'
-      ? (defaultStateValue as any)()
-      : defaultStateValue;
+
+    return [finalValue, source, finalValue];
   });
 
-  const mergedValue = value !== undefined ? value : innerValue;
-  const postMergedValue = postState ? postState(mergedValue) : mergedValue;
+  const postMergedValue = postState
+    ? postState(mergedValue[0])
+    : mergedValue[0];
 
-  // setState
-  const onChangeFn = useEvent(onChange);
+  // ======================= Sync =======================
+  useUpdateEffect(() => {
+    setMergedValue(([prevValue]) => [value, Source.PROP, prevValue]);
+  }, [value]);
 
-  const [changePrevValue, setChangePrevValue] = useState<T>();
-
+  // ====================== Update ======================
   const triggerChange: Updater<T> = useEvent((updater, ignoreDestroy) => {
-    setChangePrevValue(mergedValue, true);
-    setInnerValue(prev => {
-      const nextValue =
-        typeof updater === 'function' ? (updater as any)(prev) : updater;
-      return nextValue;
+    setMergedValue(prev => {
+      const [prevValue] = prev;
+
+      const nextValue: T =
+        typeof updater === 'function' ? (updater as any)(prevValue) : updater;
+
+      // Do nothing if value not change
+      if (nextValue === prevValue) {
+        return prev;
+      }
+
+      return [nextValue, Source.INNER, prevValue];
     }, ignoreDestroy);
   });
 
-  // Effect to trigger onChange
+  // ====================== Change ======================
+  const onChangeFn = useEvent(onChange);
+
   useLayoutEffect(() => {
-    if (changePrevValue !== undefined && changePrevValue !== innerValue) {
-      onChangeFn?.(innerValue, changePrevValue);
+    const [current, source, prev] = mergedValue;
+    if (current !== prev && source === Source.INNER) {
+      onChangeFn?.(current, prev);
     }
-  }, [changePrevValue, innerValue, onChangeFn]);
-
-  // Effect of reset value to `undefined`
-  const prevValueRef = React.useRef(value);
-  React.useEffect(() => {
-    if (value === undefined && value !== prevValueRef.current) {
-      setInnerValue(value);
-    }
-
-    prevValueRef.current = value;
-  }, [value]);
+  }, [mergedValue]);
 
   return [postMergedValue as unknown as R, triggerChange];
 }
