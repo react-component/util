@@ -281,6 +281,19 @@ describe('hooks', () => {
 
       expect(container.textContent).toBe('1');
     });
+
+    it('render once', () => {
+      let count = 0;
+
+      const Demo = () => {
+        const [] = useMergedState();
+        count += 1;
+        return null;
+      };
+
+      render(<Demo />);
+      expect(count).toBe(1);
+    });
   });
 
   describe('useLayoutEffect', () => {
