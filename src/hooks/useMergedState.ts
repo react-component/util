@@ -16,17 +16,20 @@ enum Source {
 type ValueRecord<T> = [T, Source, T];
 
 const useUpdateEffect: typeof React.useEffect = (callback, deps) => {
-  const [firstMount, setFirstMount] = React.useState(true);
+  const firstMountRef = React.useRef(true);
 
   useLayoutEffect(() => {
-    if (!firstMount) {
+    if (!firstMountRef.current) {
       return callback();
     }
   }, deps);
 
   // We tell react that first mount has passed
   useLayoutEffect(() => {
-    setFirstMount(false);
+    firstMountRef.current = false;
+    return () => {
+      firstMountRef.current = true;
+    };
   }, []);
 };
 
