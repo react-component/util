@@ -251,6 +251,31 @@ describe('hooks', () => {
       fireEvent.mouseEnter(container.querySelector('span'));
       expect(onChange).toHaveBeenCalledWith(2, 1);
     });
+
+    it('should alway use option value', () => {
+      const onChange = jest.fn();
+
+      const Test = ({ value }) => {
+        const [mergedValue, setMergedValue] = useMergedState(undefined, {
+          value,
+          onChange,
+        });
+        return (
+          <span
+            onClick={() => {
+              setMergedValue(12);
+            }}
+          >
+            {mergedValue}
+          </span>
+        );
+      };
+
+      const { container } = render(<Test value={1} />);
+      fireEvent.click(container.querySelector('span'));
+
+      expect(container.textContent).toBe('1');
+    });
   });
 
   describe('useLayoutEffect', () => {
