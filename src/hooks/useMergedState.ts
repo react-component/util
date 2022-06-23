@@ -30,6 +30,11 @@ const useUpdateEffect: typeof React.useEffect = (callback, deps) => {
   }, []);
 };
 
+/** We only think `undefined` is empty */
+function hasValue(value: any) {
+  return value !== undefined;
+}
+
 /**
  * Similar to `useState` but will use props value if provided.
  * Note that internal use rc-util `useState` hook.
@@ -50,10 +55,10 @@ export default function useMergedState<T, R = T>(
     let finalValue: T = undefined;
     let source: Source;
 
-    if (value !== undefined) {
+    if (hasValue(value)) {
       finalValue = value;
       source = Source.PROP;
-    } else if (defaultValue !== undefined) {
+    } else if (hasValue(defaultValue)) {
       finalValue =
         typeof defaultValue === 'function'
           ? (defaultValue as any)()
@@ -70,9 +75,8 @@ export default function useMergedState<T, R = T>(
     return [finalValue, source, finalValue];
   });
 
-  const postMergedValue = postState
-    ? postState(mergedValue[0])
-    : mergedValue[0];
+  const chosenValue = hasValue(value) ? value : mergedValue[0];
+  const postMergedValue = postState ? postState(chosenValue) : chosenValue;
 
   // ======================= Sync =======================
   useUpdateEffect(() => {

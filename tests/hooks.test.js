@@ -201,6 +201,9 @@ describe('hooks', () => {
               setMergedValue(v => v + 1);
               setMergedValue(v => v + 1);
             }}
+            onMouseEnter={() => {
+              setMergedValue(1);
+            }}
           >
             {mergedValue}
           </span>
@@ -217,6 +220,8 @@ describe('hooks', () => {
       expect(onChange).not.toHaveBeenCalled();
 
       // Click update
+      rerender(<Demo value={undefined} />);
+      fireEvent.mouseEnter(container.querySelector('span'));
       fireEvent.click(container.querySelector('span'));
       expect(container.textContent).toEqual('3');
       expect(onChange).toHaveBeenCalledWith(3, 1);
@@ -250,6 +255,31 @@ describe('hooks', () => {
 
       fireEvent.mouseEnter(container.querySelector('span'));
       expect(onChange).toHaveBeenCalledWith(2, 1);
+    });
+
+    it('should alway use option value', () => {
+      const onChange = jest.fn();
+
+      const Test = ({ value }) => {
+        const [mergedValue, setMergedValue] = useMergedState(undefined, {
+          value,
+          onChange,
+        });
+        return (
+          <span
+            onClick={() => {
+              setMergedValue(12);
+            }}
+          >
+            {mergedValue}
+          </span>
+        );
+      };
+
+      const { container } = render(<Test value={1} />);
+      fireEvent.click(container.querySelector('span'));
+
+      expect(container.textContent).toBe('1');
     });
   });
 
