@@ -201,6 +201,9 @@ describe('hooks', () => {
               setMergedValue(v => v + 1);
               setMergedValue(v => v + 1);
             }}
+            onMouseEnter={() => {
+              setMergedValue(1);
+            }}
           >
             {mergedValue}
           </span>
@@ -217,6 +220,8 @@ describe('hooks', () => {
       expect(onChange).not.toHaveBeenCalled();
 
       // Click update
+      rerender(<Demo value={undefined} />);
+      fireEvent.mouseEnter(container.querySelector('span'));
       fireEvent.click(container.querySelector('span'));
       expect(container.textContent).toEqual('3');
       expect(onChange).toHaveBeenCalledWith(3, 1);

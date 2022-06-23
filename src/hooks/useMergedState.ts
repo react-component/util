@@ -70,9 +70,8 @@ export default function useMergedState<T, R = T>(
     return [finalValue, source, finalValue];
   });
 
-  const postMergedValue = postState
-    ? postState(mergedValue[0])
-    : mergedValue[0];
+  const chosenValue = value ?? mergedValue[0];
+  const postMergedValue = postState ? postState(chosenValue) : chosenValue;
 
   // ======================= Sync =======================
   useUpdateEffect(() => {
