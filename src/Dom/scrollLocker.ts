@@ -78,9 +78,7 @@ export default class ScrollLocker {
         window.innerWidth - document.documentElement.clientWidth > 0) ||
       container.scrollHeight > container.clientHeight
     ) {
-      if (getComputedStyle(container).overflow !== 'hidden') {
         scrollBarSize = getScrollBarSize();
-      }
     }
 
     const containerClassName = container.className;
