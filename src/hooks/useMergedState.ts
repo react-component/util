@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useEvent from './useEvent';
-import useLayoutEffect from './useLayoutEffect';
+import useLayoutEffect, { useLayoutUpdateEffect } from './useLayoutEffect';
 import useState from './useState';
 
 type Updater<T> = (
@@ -14,24 +14,6 @@ enum Source {
 }
 
 type ValueRecord<T> = [T, Source, T];
-
-const useUpdateEffect: typeof React.useEffect = (callback, deps) => {
-  const firstMountRef = React.useRef(true);
-
-  useLayoutEffect(() => {
-    if (!firstMountRef.current) {
-      return callback();
-    }
-  }, deps);
-
-  // We tell react that first mount has passed
-  useLayoutEffect(() => {
-    firstMountRef.current = false;
-    return () => {
-      firstMountRef.current = true;
-    };
-  }, []);
-};
 
 /** We only think `undefined` is empty */
 function hasValue(value: any) {
@@ -82,7 +64,7 @@ export default function useMergedState<T, R = T>(
   const postMergedValue = postState ? postState(chosenValue) : chosenValue;
 
   // ======================= Sync =======================
-  useUpdateEffect(() => {
+  useLayoutUpdateEffect(() => {
     setMergedValue(([prevValue]) => [value, Source.PROP, prevValue]);
   }, [value]);
 
