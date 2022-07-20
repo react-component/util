@@ -10,3 +10,24 @@ const useLayoutEffect =
     : React.useEffect;
 
 export default useLayoutEffect;
+
+export const useLayoutUpdateEffect: typeof React.useEffect = (
+  callback,
+  deps,
+) => {
+  const firstMountRef = React.useRef(true);
+
+  useLayoutEffect(() => {
+    if (!firstMountRef.current) {
+      return callback();
+    }
+  }, deps);
+
+  // We tell react that first mount has passed
+  useLayoutEffect(() => {
+    firstMountRef.current = false;
+    return () => {
+      firstMountRef.current = true;
+    };
+  }, []);
+};
