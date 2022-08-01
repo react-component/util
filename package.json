@@ -40,7 +40,7 @@
     "coveralls": "^3.1.0",
     "create-react-class": "^15.6.3",
     "cross-env": "^7.0.2",
-    "eslint": "^6.6.0",
+    "eslint": "^8.21.0",
     "father": "^2.14.0",
     "np": "^6.2.3",
     "react": "^18.0.0",
