@@ -11,7 +11,7 @@ function composeProps<T extends Record<string, any>>(
   Object.keys(patchProps).forEach(key => {
     const func = patchProps[key];
     if (typeof func === 'function') {
-      composedProps[key] = (...args) => {
+      composedProps[key] = (...args: any[]) => {
         func(...args);
         return originProps[key]?.(...args);
       };

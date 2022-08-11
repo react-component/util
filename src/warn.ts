@@ -1,5 +1,5 @@
 /** @deprecated Use `warning` instead. This will be removed in next major version */
-export default function warn(msg) {
+export default function warn(msg: string) {
   if (process.env.NODE_ENV !== 'production') {
     if (typeof console !== 'undefined' && console.warn) {
       console.warn(msg);

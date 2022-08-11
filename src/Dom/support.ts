@@ -1,22 +1,24 @@
 import canUseDOM from './canUseDom';
+
 const animationEndEventNames = {
   WebkitAnimation: 'webkitAnimationEnd',
   OAnimation: 'oAnimationEnd',
   animation: 'animationend',
 };
+
 const transitionEventNames = {
   WebkitTransition: 'webkitTransitionEnd',
   OTransition: 'oTransitionEnd',
   transition: 'transitionend',
 };
 
-function supportEnd(names) {
+function supportEnd(
+  names: typeof animationEndEventNames | typeof transitionEventNames,
+) {
   const el = document.createElement('div');
   for (const name in names) {
     if (names.hasOwnProperty(name) && el.style[name] !== undefined) {
-      return {
-        end: names[name],
-      };
+      return { end: names[name] };
     }
   }
   return false;

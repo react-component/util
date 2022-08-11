@@ -1,12 +1,12 @@
-export function hasClass(node, className) {
+export function hasClass(node: Element, className: string): boolean {
   if (node.classList) {
     return node.classList.contains(className);
   }
   const originClass = node.className;
-  return ` ${originClass} `.indexOf(` ${className} `) > -1;
+  return ` ${originClass} `.includes(` ${className} `);
 }
 
-export function addClass(node, className) {
+export function addClass(node: Element, className: string): void {
   if (node.classList) {
     node.classList.add(className);
   } else {
@@ -16,7 +16,7 @@ export function addClass(node, className) {
   }
 }
 
-export function removeClass(node, className) {
+export function removeClass(node: Element, className: string): void {
   if (node.classList) {
     node.classList.remove(className);
   } else {

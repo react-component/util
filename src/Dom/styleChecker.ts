@@ -10,7 +10,7 @@ const isStyleNameSupport = (styleName: string | string[]): boolean => {
   return false;
 };
 
-const isStyleValueSupport = (styleName: string, value: any) => {
+const isStyleValueSupport = (styleName: string, value: any): boolean => {
   if (!isStyleNameSupport(styleName)) {
     return false;
   }
