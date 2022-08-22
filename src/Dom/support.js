@@ -23,3 +23,6 @@ function supportEnd(names) {
   }
   return false;
 }
+
+export const animation = canUseDOM() && supportEnd(animationEndEventNames);
+export const transition = canUseDOM() && supportEnd(transitionEventNames);
