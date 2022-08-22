@@ -2,23 +2,29 @@
 
 function createArray() {
   const arr = [];
-  (arr as any).__proto__ = new Array();
-  (arr as any).__proto__.format = function toString() {
-    return this.map(obj => ({ ...obj, path: obj.path.join(' > ') }));
+  arr.__proto__ = new Array();
+  arr.__proto__.format = function toString() {
+    return this.map(obj => ({
+      ...obj,
+      path: obj.path.join(' > '),
+    }));
   };
-  (arr as any).__proto__.toString = function toString() {
+  arr.__proto__.toString = function toString() {
     return JSON.stringify(this.format(), null, 2);
   };
   return arr;
 }
 
-export default function diff<
-  O1 = Record<PropertyKey, any>,
-  O2 = Record<PropertyKey, any>,
->(obj1: O1, obj2: O2, depth = 10, path = [], diffList = createArray()): any[] {
+export default function diff(
+  obj1,
+  obj2,
+  depth = 10,
+  path = [],
+  diffList = createArray(),
+) {
   if (depth <= 0) return diffList;
 
-  const keys = new Set<string>([...Object.keys(obj1), ...Object.keys(obj2)]);
+  const keys = new Set([...Object.keys(obj1), ...Object.keys(obj2)]);
   keys.forEach(key => {
     const value1 = obj1[key];
     const value2 = obj2[key];
@@ -31,7 +37,11 @@ export default function diff<
 
     // Diff type
     if (type1 !== type2) {
-      diffList.push({ path: path.concat(key), value1, value2 });
+      diffList.push({
+        path: path.concat(key),
+        value1,
+        value2,
+      });
       return;
     }
 
@@ -47,7 +57,11 @@ export default function diff<
     }
 
     // Rest
-    diffList.push({ path: path.concat(key), value1, value2 });
+    diffList.push({
+      path: path.concat(key),
+      value1,
+      value2,
+    });
   });
 
   return diffList;

@@ -6,7 +6,7 @@
  *
  * @returns {function|null}
  */
-export default function createChainedFunction(): Function | null {
+export default function createChainedFunction() {
   const args = [].slice.call(arguments, 0);
   if (args.length === 1) {
     return args[0];

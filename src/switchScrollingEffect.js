@@ -11,7 +11,7 @@ function isBodyOverflowing() {
 
 let cacheStyle = {};
 
-const switchScrollingEffect = (close?: boolean) => {
+export default close => {
   if (!isBodyOverflowing() && !close) {
     return;
   }
@@ -46,5 +46,3 @@ const switchScrollingEffect = (close?: boolean) => {
     }
   }
 };
-
-export default switchScrollingEffect;

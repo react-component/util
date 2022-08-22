@@ -1,24 +1,17 @@
 /* eslint-disable no-nested-ternary */
 const PIXEL_PATTERN = /margin|padding|width|height|max|min|offset/;
 
-const removePixel = {
-  left: true,
-  top: true,
-};
+const removePixel = { left: true, top: true };
 
-const floatMap = {
-  cssFloat: 1,
-  styleFloat: 1,
-  float: 1,
-};
+const floatMap = { cssFloat: 1, styleFloat: 1, float: 1 };
 
-function getComputedStyle(node: HTMLElement) {
+function getComputedStyle(node) {
   return node.nodeType === 1
     ? node.ownerDocument.defaultView.getComputedStyle(node, null)
     : {};
 }
 
-function getStyleValue(node: HTMLElement, type: string, value: string) {
+function getStyleValue(node, type, value) {
   type = type.toLowerCase();
   if (value === 'auto') {
     if (type === 'height') {
@@ -34,7 +27,7 @@ function getStyleValue(node: HTMLElement, type: string, value: string) {
   return removePixel[type] ? parseFloat(value) || 0 : value;
 }
 
-export function get(node: HTMLElement, name: string) {
+export function get(node, name) {
   const length = arguments.length;
   const style = getComputedStyle(node);
 
@@ -49,7 +42,7 @@ export function get(node: HTMLElement, name: string) {
     : getStyleValue(node, name, style[name] || node.style[name]);
 }
 
-export function set(node: HTMLElement, name: string, value: string) {
+export function set(node, name, value) {
   const length = arguments.length;
   name = floatMap[name]
     ? 'cssFloat' in node.style
@@ -63,7 +56,7 @@ export function set(node: HTMLElement, name: string, value: string) {
     node.style[name] = value; // Number
     return value;
   }
-  for (const x in name as any) {
+  for (const x in name) {
     if (name.hasOwnProperty(x)) {
       set(node, x, name[x]);
     }
@@ -71,14 +64,14 @@ export function set(node: HTMLElement, name: string, value: string) {
   return getComputedStyle(node);
 }
 
-export function getOuterWidth(el: HTMLElement): number {
+export function getOuterWidth(el) {
   if (el === document.body) {
     return document.documentElement.clientWidth;
   }
   return el.offsetWidth;
 }
 
-export function getOuterHeight(el: HTMLElement): number {
+export function getOuterHeight(el) {
   if (el === document.body) {
     return window.innerHeight || document.documentElement.clientHeight;
   }
@@ -117,7 +110,7 @@ export function getScroll() {
   };
 }
 
-export function getOffset(node: HTMLElement | Element) {
+export function getOffset(node) {
   const box = node.getBoundingClientRect();
   const docElem = document.documentElement;
 

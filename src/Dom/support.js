@@ -12,17 +12,14 @@ const transitionEventNames = {
   transition: 'transitionend',
 };
 
-function supportEnd(
-  names: typeof animationEndEventNames | typeof transitionEventNames,
-) {
+function supportEnd(names) {
   const el = document.createElement('div');
   for (const name in names) {
     if (names.hasOwnProperty(name) && el.style[name] !== undefined) {
-      return { end: names[name] };
+      return {
+        end: names[name],
+      };
     }
   }
   return false;
 }
-
-export const animation = canUseDOM() && supportEnd(animationEndEventNames);
-export const transition = canUseDOM() && supportEnd(transitionEventNames);

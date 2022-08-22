@@ -1,10 +1,10 @@
 import React from 'react';
 
-function mirror<T = any>(o: T): T {
+function mirror(o) {
   return o;
 }
 
-export default function mapSelf<C>(children: C | ReadonlyArray<C>) {
+export default function mapSelf(children) {
   // return ReactFragment
   return React.Children.map(children, mirror);
 }
