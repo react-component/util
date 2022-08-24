@@ -2,7 +2,7 @@
 
 function createArray() {
   const arr = [];
-  arr.__proto__ = new Array();
+  arr.__proto__ = new Array;
   arr.__proto__.format = function toString() {
     return this.map(obj => ({
       ...obj,
@@ -15,17 +15,11 @@ function createArray() {
   return arr;
 }
 
-export default function diff(
-  obj1,
-  obj2,
-  depth = 10,
-  path = [],
-  diffList = createArray(),
-) {
+export default function diff(obj1, obj2, depth = 10, path = [], diffList = createArray()) {
   if (depth <= 0) return diffList;
 
   const keys = new Set([...Object.keys(obj1), ...Object.keys(obj2)]);
-  keys.forEach(key => {
+  keys.forEach((key) => {
     const value1 = obj1[key];
     const value2 = obj2[key];
 

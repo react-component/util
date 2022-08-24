@@ -1,14 +1,19 @@
 /* eslint-disable no-nested-ternary */
 const PIXEL_PATTERN = /margin|padding|width|height|max|min|offset/;
 
-const removePixel = { left: true, top: true };
-
-const floatMap = { cssFloat: 1, styleFloat: 1, float: 1 };
+const removePixel = {
+  left: true,
+  top: true,
+};
+const floatMap = {
+  cssFloat: 1,
+  styleFloat: 1,
+  float: 1,
+};
 
 function getComputedStyle(node) {
-  return node.nodeType === 1
-    ? node.ownerDocument.defaultView.getComputedStyle(node, null)
-    : {};
+  return node.nodeType === 1 ?
+    node.ownerDocument.defaultView.getComputedStyle(node, null) : {};
 }
 
 function getStyleValue(node, type, value) {
@@ -24,31 +29,21 @@ function getStyleValue(node, type, value) {
   if (!(type in removePixel)) {
     removePixel[type] = PIXEL_PATTERN.test(type);
   }
-  return removePixel[type] ? parseFloat(value) || 0 : value;
+  return removePixel[type] ? (parseFloat(value) || 0) : value;
 }
 
 export function get(node, name) {
   const length = arguments.length;
   const style = getComputedStyle(node);
 
-  name = floatMap[name]
-    ? 'cssFloat' in node.style
-      ? 'cssFloat'
-      : 'styleFloat'
-    : name;
+  name = floatMap[name] ? 'cssFloat' in node.style ? 'cssFloat' : 'styleFloat' : name;
 
-  return length === 1
-    ? style
-    : getStyleValue(node, name, style[name] || node.style[name]);
+  return (length === 1) ? style : getStyleValue(node, name, style[name] || node.style[name]);
 }
 
 export function set(node, name, value) {
   const length = arguments.length;
-  name = floatMap[name]
-    ? 'cssFloat' in node.style
-      ? 'cssFloat'
-      : 'styleFloat'
-    : name;
+  name = floatMap[name] ? 'cssFloat' in node.style ? 'cssFloat' : 'styleFloat' : name;
   if (length === 3) {
     if (typeof value === 'number' && PIXEL_PATTERN.test(name)) {
       value = `${value}px`;
@@ -79,34 +74,28 @@ export function getOuterHeight(el) {
 }
 
 export function getDocSize() {
-  const width = Math.max(
-    document.documentElement.scrollWidth,
-    document.body.scrollWidth,
-  );
-  const height = Math.max(
-    document.documentElement.scrollHeight,
-    document.body.scrollHeight,
-  );
+  const width = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);
+  const height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
 
-  return { width, height };
+  return {
+    width,
+    height,
+  };
 }
 
 export function getClientSize() {
   const width = document.documentElement.clientWidth;
   const height = window.innerHeight || document.documentElement.clientHeight;
-  return { width, height };
+  return {
+    width,
+    height,
+  };
 }
 
 export function getScroll() {
   return {
-    scrollLeft: Math.max(
-      document.documentElement.scrollLeft,
-      document.body.scrollLeft,
-    ),
-    scrollTop: Math.max(
-      document.documentElement.scrollTop,
-      document.body.scrollTop,
-    ),
+    scrollLeft: Math.max(document.documentElement.scrollLeft, document.body.scrollLeft),
+    scrollTop: Math.max(document.documentElement.scrollTop, document.body.scrollTop),
   };
 }
 
@@ -116,13 +105,9 @@ export function getOffset(node) {
 
   // < ie8 不支持 win.pageXOffset, 则使用 docElem.scrollLeft
   return {
-    left:
-      box.left +
-      (window.pageXOffset || docElem.scrollLeft) -
+    left: box.left + (window.pageXOffset || docElem.scrollLeft) -
       (docElem.clientLeft || document.body.clientLeft || 0),
-    top:
-      box.top +
-      (window.pageYOffset || docElem.scrollTop) -
+    top: box.top + (window.pageYOffset || docElem.scrollTop) -
       (docElem.clientTop || document.body.clientTop || 0),
   };
 }
