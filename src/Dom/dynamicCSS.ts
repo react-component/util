@@ -1,19 +1,19 @@
 import canUseDom from './canUseDom';
 
-const MARK_KEY = `rc-util-key` as any;
-
-function getMark({ mark }: Options = {}) {
-  if (mark) {
-    return mark.startsWith('data-') ? mark : `data-${mark}`;
-  }
-  return MARK_KEY;
-}
+const MARK_KEY = `rc-util-key`;
 
 interface Options {
   attachTo?: Element;
   csp?: { nonce?: string };
   prepend?: boolean;
   mark?: string;
+}
+
+function getMark({ mark }: Options = {}) {
+  if (mark) {
+    return mark.startsWith('data-') ? mark : `data-${mark}`;
+  }
+  return MARK_KEY;
 }
 
 function getContainer(option: Options) {
@@ -65,7 +65,6 @@ function findExistNode(key: string, option: Options = {}) {
 
 export function removeCSS(key: string, option: Options = {}) {
   const existNode = findExistNode(key, option);
-
   existNode?.parentNode?.removeChild(existNode);
 }
 

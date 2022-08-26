@@ -1,5 +1,15 @@
 import isVisible from './isVisible';
 
+type DisabledElement =
+  | HTMLLinkElement
+  | HTMLInputElement
+  | HTMLFieldSetElement
+  | HTMLButtonElement
+  | HTMLOptGroupElement
+  | HTMLOptionElement
+  | HTMLSelectElement
+  | HTMLTextAreaElement;
+
 function focusable(node: HTMLElement, includePositive = false): boolean {
   if (isVisible(node)) {
     const nodeName = node.nodeName.toLowerCase();
@@ -24,7 +34,7 @@ function focusable(node: HTMLElement, includePositive = false): boolean {
     }
 
     // Block focusable if disabled
-    if (isFocusableElement && (node as any).disabled) {
+    if (isFocusableElement && (node as DisabledElement).disabled) {
       tabIndex = null;
     }
 
@@ -37,13 +47,13 @@ function focusable(node: HTMLElement, includePositive = false): boolean {
 }
 
 export function getFocusNodeList(node: HTMLElement, includePositive = false) {
-  const res = [...node.querySelectorAll('*')].filter(child => {
-    return focusable(child as HTMLElement, includePositive);
+  const res = [...node.querySelectorAll<HTMLElement>('*')].filter(child => {
+    return focusable(child, includePositive);
   });
   if (focusable(node, includePositive)) {
     res.unshift(node);
   }
-  return res as HTMLElement[];
+  return res;
 }
 
 let lastFocusElement = null;

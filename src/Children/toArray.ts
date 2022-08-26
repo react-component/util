@@ -11,7 +11,7 @@ export default function toArray(
 ): React.ReactElement[] {
   let ret: React.ReactElement[] = [];
 
-  React.Children.forEach(children, (child: any) => {
+  React.Children.forEach(children, (child: any | any[]) => {
     if ((child === undefined || child === null) && !option.keepEmpty) {
       return;
     }

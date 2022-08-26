@@ -5,6 +5,8 @@ export interface scrollLockOptions {
   container: HTMLElement;
 }
 
+let uuid = 0;
+
 interface Ilocks {
   target: typeof uuid;
   options: scrollLockOptions;
@@ -16,8 +18,6 @@ const scrollingEffectClassNameReg = new RegExp(
   `${scrollingEffectClassName}`,
   'g',
 );
-
-let uuid = 0;
 
 // https://github.com/ant-design/ant-design/issues/19340
 // https://github.com/ant-design/ant-design/issues/19332
@@ -92,14 +92,15 @@ export default class ScrollLocker {
         container,
         setStyle(
           {
-            width: scrollBarSize !== 0 ? `calc(100% - ${scrollBarSize}px)` : undefined,
+            width:
+              scrollBarSize !== 0
+                ? `calc(100% - ${scrollBarSize}px)`
+                : undefined,
             overflow: 'hidden',
             overflowX: 'hidden',
             overflowY: 'hidden',
           },
-          {
-            element: container,
-          },
+          { element: container },
         ),
       );
     }
