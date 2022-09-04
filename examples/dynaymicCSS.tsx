@@ -1,5 +1,14 @@
 import React from 'react';
 import { updateCSS, removeCSS } from '../src/Dom/dynamicCSS';
+import type { Prepend } from '../src/Dom/dynamicCSS';
+
+function injectStyle(id: number, prepend?: Prepend) {
+  const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+
+  updateCSS(`body { background: #${randomColor} }`, `style-${id}`, {
+    prepend,
+  });
+}
 
 export default () => {
   const [id, setId] = React.useState(0);
@@ -16,17 +25,23 @@ export default () => {
   }, []);
 
   return (
-    <button
-      onClick={() => {
-        const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    <>
+      <button
+        onClick={() => {
+          injectStyle(id, 'queue');
+          setId(id + 1);
+        }}
+      >
+        Prepend Queue: {id}
+      </button>
 
-        updateCSS(`body { background: #${randomColor} }`, `style-${id}`, {
-          prepend: 'queue',
-        });
-        setId(id + 1);
-      }}
-    >
-      Inject: {id}
-    </button>
+      <button
+        onClick={() => {
+          injectStyle(-1);
+        }}
+      >
+        Append
+      </button>
+    </>
   );
 };

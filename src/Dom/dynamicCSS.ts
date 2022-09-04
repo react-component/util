@@ -1,14 +1,17 @@
 import canUseDom from './canUseDom';
 
-const UNIQUE_MARK = '_rc_util';
+const APPEND_ORDER = '_rc_util_order';
 const MARK_KEY = `rc-util-key`;
 
 const containerCache = new Map<Element, Node & ParentNode>();
 
+export type Prepend = boolean | 'queue';
+export type AppendType = 'prependQueue' | 'append' | 'prepend';
+
 interface Options {
   attachTo?: Element;
   csp?: { nonce?: string };
-  prepend?: boolean | 'queue';
+  prepend?: Prepend;
   mark?: string;
 }
 
@@ -28,6 +31,14 @@ function getContainer(option: Options) {
   return head || document.body;
 }
 
+function getOrder(prepend?: Prepend): AppendType {
+  if (prepend === 'queue') {
+    return 'prependQueue';
+  }
+
+  return prepend ? 'prepend' : 'append';
+}
+
 /**
  * Find style which inject by rc-util
  */
@@ -35,7 +46,7 @@ function findStyles(container: Element) {
   return Array.from(
     (containerCache.get(container) || container).children,
   ).filter(
-    node => node.tagName === 'STYLE' && node[UNIQUE_MARK],
+    node => node.tagName === 'STYLE' && node[APPEND_ORDER],
   ) as HTMLStyleElement[];
 }
 
@@ -47,7 +58,7 @@ export function injectCSS(css: string, option: Options = {}) {
   const { csp, prepend } = option;
 
   const styleNode = document.createElement('style');
-  styleNode[UNIQUE_MARK] = true;
+  styleNode[APPEND_ORDER] = getOrder(prepend);
 
   if (csp?.nonce) {
     styleNode.nonce = csp?.nonce;
@@ -60,7 +71,9 @@ export function injectCSS(css: string, option: Options = {}) {
   if (prepend && container.prepend) {
     // If is queue `prepend`, it will prepend first style and then append rest style
     if (prepend === 'queue') {
-      const existStyle = findStyles(container);
+      const existStyle = findStyles(container).filter(
+        node => node[APPEND_ORDER] === 'prependQueue',
+      );
       if (existStyle.length) {
         container.insertBefore(
           styleNode,
