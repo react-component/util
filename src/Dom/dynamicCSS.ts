@@ -71,8 +71,8 @@ export function injectCSS(css: string, option: Options = {}) {
   if (prepend && container.prepend) {
     // If is queue `prepend`, it will prepend first style and then append rest style
     if (prepend === 'queue') {
-      const existStyle = findStyles(container).filter(
-        node => node[APPEND_ORDER] === 'prependQueue',
+      const existStyle = findStyles(container).filter(node =>
+        ['prepend', 'prependQueue'].includes(node[APPEND_ORDER]),
       );
       if (existStyle.length) {
         container.insertBefore(
