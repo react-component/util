@@ -1,11 +1,14 @@
 import canUseDom from './canUseDom';
 
+const UNIQUE_MARK = '_rc_util';
 const MARK_KEY = `rc-util-key`;
+
+const containerCache = new Map<Element, Node & ParentNode>();
 
 interface Options {
   attachTo?: Element;
   csp?: { nonce?: string };
-  prepend?: boolean;
+  prepend?: boolean | 'queue';
   mark?: string;
 }
 
@@ -25,24 +28,52 @@ function getContainer(option: Options) {
   return head || document.body;
 }
 
+/**
+ * Find style which inject by rc-util
+ */
+function findStyles(container: Element) {
+  return Array.from(
+    (containerCache.get(container) || container).children,
+  ).filter(
+    node => node.tagName === 'STYLE' && node[UNIQUE_MARK],
+  ) as HTMLStyleElement[];
+}
+
 export function injectCSS(css: string, option: Options = {}) {
   if (!canUseDom()) {
     return null;
   }
 
+  const { csp, prepend } = option;
+
   const styleNode = document.createElement('style');
-  if (option.csp?.nonce) {
-    styleNode.nonce = option.csp?.nonce;
+  styleNode[UNIQUE_MARK] = true;
+
+  if (csp?.nonce) {
+    styleNode.nonce = csp?.nonce;
   }
   styleNode.innerHTML = css;
 
   const container = getContainer(option);
   const { firstChild } = container;
 
-  if (option.prepend && container.prepend) {
+  if (prepend && container.prepend) {
+    // If is queue `prepend`, it will prepend first style and then append rest style
+    if (prepend === 'queue') {
+      const existStyle = findStyles(container);
+      if (existStyle.length) {
+        container.insertBefore(
+          styleNode,
+          existStyle[existStyle.length - 1].nextSibling,
+        );
+
+        return styleNode;
+      }
+    }
+
     // Use `prepend` first
     container.prepend(styleNode);
-  } else if (option.prepend && firstChild) {
+  } else if (prepend && firstChild) {
     // Fallback to `insertBefore` like IE not support `prepend`
     container.insertBefore(styleNode, firstChild);
   } else {
@@ -52,15 +83,12 @@ export function injectCSS(css: string, option: Options = {}) {
   return styleNode;
 }
 
-const containerCache = new Map<Element, Node & ParentNode>();
-
 function findExistNode(key: string, option: Options = {}) {
   const container = getContainer(option);
 
-  return Array.from(containerCache.get(container).children).find(
-    node =>
-      node.tagName === 'STYLE' && node.getAttribute(getMark(option)) === key,
-  ) as HTMLStyleElement;
+  return findStyles(container).find(
+    node => node.getAttribute(getMark(option)) === key,
+  );
 }
 
 export function removeCSS(key: string, option: Options = {}) {
