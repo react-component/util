@@ -7,6 +7,5 @@
     "declaration": true,
     "skipLibCheck": true,
     "esModuleInterop": true
-  },
-  "include": ["src"]
+  }
 }
