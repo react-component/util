@@ -45,9 +45,7 @@ function getOrder(prepend?: Prepend): AppendType {
 function findStyles(container: Element) {
   return Array.from(
     (containerCache.get(container) || container).children,
-  ).filter(
-    node => node.tagName === 'STYLE' && node.hasAttribute(APPEND_ORDER),
-  ) as HTMLStyleElement[];
+  ).filter(node => node.tagName === 'STYLE') as HTMLStyleElement[];
 }
 
 export function injectCSS(css: string, option: Options = {}) {
