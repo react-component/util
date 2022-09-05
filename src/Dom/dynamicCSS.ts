@@ -1,11 +1,17 @@
 import canUseDom from './canUseDom';
 
+const APPEND_ORDER = '_rc_util_order';
 const MARK_KEY = `rc-util-key`;
+
+const containerCache = new Map<Element, Node & ParentNode>();
+
+export type Prepend = boolean | 'queue';
+export type AppendType = 'prependQueue' | 'append' | 'prepend';
 
 interface Options {
   attachTo?: Element;
   csp?: { nonce?: string };
-  prepend?: boolean;
+  prepend?: Prepend;
   mark?: string;
 }
 
@@ -25,25 +31,60 @@ function getContainer(option: Options) {
   return head || document.body;
 }
 
+function getOrder(prepend?: Prepend): AppendType {
+  if (prepend === 'queue') {
+    return 'prependQueue';
+  }
+
+  return prepend ? 'prepend' : 'append';
+}
+
+/**
+ * Find style which inject by rc-util
+ */
+function findStyles(container: Element) {
+  return Array.from(
+    (containerCache.get(container) || container).children,
+  ).filter(
+    node => node.tagName === 'STYLE' && node[APPEND_ORDER],
+  ) as HTMLStyleElement[];
+}
+
 export function injectCSS(css: string, option: Options = {}) {
   if (!canUseDom()) {
     return null;
   }
 
+  const { csp, prepend } = option;
+
   const styleNode = document.createElement('style');
-  if (option.csp?.nonce) {
-    styleNode.nonce = option.csp?.nonce;
+  styleNode[APPEND_ORDER] = getOrder(prepend);
+
+  if (csp?.nonce) {
+    styleNode.nonce = csp?.nonce;
   }
   styleNode.innerHTML = css;
 
   const container = getContainer(option);
   const { firstChild } = container;
 
-  if (option.prepend && container.prepend) {
-    // Use `prepend` first
-    container.prepend(styleNode);
-  } else if (option.prepend && firstChild) {
-    // Fallback to `insertBefore` like IE not support `prepend`
+  if (prepend) {
+    // If is queue `prepend`, it will prepend first style and then append rest style
+    if (prepend === 'queue') {
+      const existStyle = findStyles(container).filter(node =>
+        ['prepend', 'prependQueue'].includes(node[APPEND_ORDER]),
+      );
+      if (existStyle.length) {
+        container.insertBefore(
+          styleNode,
+          existStyle[existStyle.length - 1].nextSibling,
+        );
+
+        return styleNode;
+      }
+    }
+
+    // Use `insertBefore` as `prepend`
     container.insertBefore(styleNode, firstChild);
   } else {
     container.appendChild(styleNode);
@@ -52,15 +93,12 @@ export function injectCSS(css: string, option: Options = {}) {
   return styleNode;
 }
 
-const containerCache = new Map<Element, Node & ParentNode>();
-
 function findExistNode(key: string, option: Options = {}) {
   const container = getContainer(option);
 
-  return Array.from(containerCache.get(container).children).find(
-    node =>
-      node.tagName === 'STYLE' && node.getAttribute(getMark(option)) === key,
-  ) as HTMLStyleElement;
+  return findStyles(container).find(
+    node => node.getAttribute(getMark(option)) === key,
+  );
 }
 
 export function removeCSS(key: string, option: Options = {}) {

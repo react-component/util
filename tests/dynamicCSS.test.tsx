@@ -54,6 +54,33 @@ describe('dynamicCSS', () => {
 
         head.prepend = originPrepend;
       });
+
+      it('prepend with queue', () => {
+        const head = document.querySelector('head');
+
+        const styles = [
+          injectCSS(TEST_STYLE, { prepend: 'queue' }),
+          injectCSS(TEST_STYLE, { prepend: 'queue' }),
+        ];
+
+        const styleNodes = Array.from(head.querySelectorAll('style'));
+        expect(styleNodes).toHaveLength(2);
+
+        for (let i = 0; i < styleNodes.length; i += 1) {
+          expect(styles[i]).toBe(styleNodes[i]);
+        }
+
+        // Should not after append
+        const appendStyle = injectCSS(TEST_STYLE);
+        const prependStyle = injectCSS(TEST_STYLE, { prepend: 'queue' });
+        const nextStyleNodes = Array.from(head.querySelectorAll('style'));
+
+        expect(nextStyleNodes).toHaveLength(4);
+        expect(nextStyleNodes[0]).toBe(styles[0]);
+        expect(nextStyleNodes[1]).toBe(styles[1]);
+        expect(nextStyleNodes[2]).toBe(prependStyle);
+        expect(nextStyleNodes[3]).toBe(appendStyle);
+      });
     });
   });
 
