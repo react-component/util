@@ -68,7 +68,7 @@ export function injectCSS(css: string, option: Options = {}) {
   const container = getContainer(option);
   const { firstChild } = container;
 
-  if (prepend && container.prepend) {
+  if (prepend) {
     // If is queue `prepend`, it will prepend first style and then append rest style
     if (prepend === 'queue') {
       const existStyle = findStyles(container).filter(node =>
@@ -85,9 +85,6 @@ export function injectCSS(css: string, option: Options = {}) {
     }
 
     // Use `prepend` first
-    container.prepend(styleNode);
-  } else if (prepend && firstChild) {
-    // Fallback to `insertBefore` like IE not support `prepend`
     container.insertBefore(styleNode, firstChild);
   } else {
     container.appendChild(styleNode);
