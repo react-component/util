@@ -84,7 +84,7 @@ export function injectCSS(css: string, option: Options = {}) {
       }
     }
 
-    // Use `prepend` first
+    // Use `insertBefore` as `prepend`
     container.insertBefore(styleNode, firstChild);
   } else {
     container.appendChild(styleNode);
