@@ -6,6 +6,7 @@
     "jsx": "preserve",
     "declaration": true,
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "typeRoots": ["./typings", "./node_modules/@types"]
   }
 }
