@@ -1,6 +1,6 @@
 import canUseDom from './canUseDom';
 
-const APPEND_ORDER = '_rc_util_order';
+const APPEND_ORDER = 'data-rc-order';
 const MARK_KEY = `rc-util-key`;
 
 const containerCache = new Map<Element, Node & ParentNode>();
@@ -46,7 +46,7 @@ function findStyles(container: Element) {
   return Array.from(
     (containerCache.get(container) || container).children,
   ).filter(
-    node => node.tagName === 'STYLE' && node[APPEND_ORDER],
+    node => node.tagName === 'STYLE' && node.hasAttribute(APPEND_ORDER),
   ) as HTMLStyleElement[];
 }
 
@@ -58,7 +58,7 @@ export function injectCSS(css: string, option: Options = {}) {
   const { csp, prepend } = option;
 
   const styleNode = document.createElement('style');
-  styleNode[APPEND_ORDER] = getOrder(prepend);
+  styleNode.setAttribute(APPEND_ORDER, getOrder(prepend));
 
   if (csp?.nonce) {
     styleNode.nonce = csp?.nonce;
@@ -72,7 +72,7 @@ export function injectCSS(css: string, option: Options = {}) {
     // If is queue `prepend`, it will prepend first style and then append rest style
     if (prepend === 'queue') {
       const existStyle = findStyles(container).filter(node =>
-        ['prepend', 'prependQueue'].includes(node[APPEND_ORDER]),
+        ['prepend', 'prependQueue'].includes(node.getAttribute(APPEND_ORDER)),
       );
       if (existStyle.length) {
         container.insertBefore(
