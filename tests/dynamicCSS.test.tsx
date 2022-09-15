@@ -168,4 +168,38 @@ describe('dynamicCSS', () => {
       });
     });
   });
+
+  describe('qiankun', () => {
+    let originAppendChild: typeof document.head.appendChild;
+    let targetContainer: HTMLElement;
+
+    beforeAll(() => {
+      originAppendChild = document.head.appendChild;
+      document.head.appendChild = ele => targetContainer.appendChild(ele);
+    });
+
+    afterAll(() => {
+      document.head.appendChild = originAppendChild;
+    });
+
+    it('updateCSS', () => {
+      targetContainer = document.createElement('div');
+      document.body.appendChild(targetContainer);
+
+      // First insert
+      const firstStyle = updateCSS('body { color: red; }', 'qiankun');
+      expect(document.head.contains(firstStyle)).toBeFalsy();
+      expect(targetContainer.contains(firstStyle)).toBeTruthy();
+
+      // Mock qiankun uninstall & reinstall
+      document.body.removeChild(targetContainer);
+      targetContainer = document.createElement('div');
+      document.body.appendChild(targetContainer);
+
+      // Second insert
+      const SecondStyle = updateCSS('body { color: red; }', 'qiankun');
+      expect(document.head.contains(SecondStyle)).toBeFalsy();
+      expect(targetContainer.contains(SecondStyle)).toBeTruthy();
+    });
+  });
 });
