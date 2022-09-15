@@ -104,16 +104,26 @@ export function removeCSS(key: string, option: Options = {}) {
   existNode?.parentNode?.removeChild(existNode);
 }
 
-export function updateCSS(css: string, key: string, option: Options = {}) {
-  const container = getContainer(option);
+/**
+ * qiankun will inject `appendChild` to insert into other
+ */
+function syncRealContainer(container: Element, option: Options) {
+  const cachedRealContainer = containerCache.get(container);
 
-  // Get real parent
-  if (!containerCache.has(container)) {
+  // Find real container when not cached or cached container removed
+  if (!cachedRealContainer || !document.contains(cachedRealContainer)) {
     const placeholderStyle = injectCSS('', option);
     const { parentNode } = placeholderStyle;
     containerCache.set(container, parentNode);
     parentNode.removeChild(placeholderStyle);
   }
+}
+
+export function updateCSS(css: string, key: string, option: Options = {}) {
+  const container = getContainer(option);
+
+  // Sync real parent
+  syncRealContainer(container, option);
 
   const existNode = findExistNode(key, option);
 
