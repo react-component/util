@@ -1,4 +1,5 @@
 import canUseDom from './canUseDom';
+import contains from './contains';
 
 const APPEND_ORDER = 'data-rc-order';
 const MARK_KEY = `rc-util-key`;
@@ -111,7 +112,7 @@ function syncRealContainer(container: Element, option: Options) {
   const cachedRealContainer = containerCache.get(container);
 
   // Find real container when not cached or cached container removed
-  if (!cachedRealContainer || !document.contains(cachedRealContainer)) {
+  if (!cachedRealContainer || !contains(document, cachedRealContainer)) {
     const placeholderStyle = injectCSS('', option);
     const { parentNode } = placeholderStyle;
     containerCache.set(container, parentNode);
