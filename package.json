@@ -22,11 +22,11 @@
   "scripts": {
     "compile": "father build",
     "coverage": "father test --coverage && cat ./coverage/lcov.info | coveralls",
-    "docs:build": "npm run compile && dumi build",
+    "docs:build": "dumi build",
     "lint": "eslint src/ --ext .tsx,.ts & eslint tests/ --ext .js",
     "now-build": "npm run docs:build",
     "prepublishOnly": "npm run compile && np --yolo --no-publish",
-    "start": "npm run compile && dumi dev",
+    "start": "dumi dev",
     "test": "father test"
   },
   "dependencies": {
