@@ -1,6 +1,6 @@
 import React from 'react';
-import { updateCSS, removeCSS } from '../src/Dom/dynamicCSS';
-import type { Prepend } from '../src/Dom/dynamicCSS';
+import { updateCSS, removeCSS } from '../../src/Dom/dynamicCSS';
+import type { Prepend } from '../../src/Dom/dynamicCSS';
 
 function injectStyle(id: number, prepend?: Prepend) {
   const randomColor = Math.floor(Math.random() * 16777215).toString(16);

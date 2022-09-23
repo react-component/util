@@ -3,7 +3,7 @@
 import React from 'react';
 import getScrollBarSize, {
   getTargetScrollBarSize,
-} from '../src/getScrollBarSize';
+} from '../../src/getScrollBarSize';
 
 export default () => {
   const divRef = React.useRef<HTMLDivElement>();
