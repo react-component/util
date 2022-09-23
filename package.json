@@ -26,7 +26,7 @@
     "lint": "eslint src/ --ext .tsx,.ts & eslint tests/ --ext .js",
     "now-build": "npm run docs:build",
     "prepublishOnly": "npm run compile && np --yolo --no-publish",
-    "start": "dumi dev",
+    "start": "npm run compile & dumi dev",
     "test": "father test"
   },
   "dependencies": {
