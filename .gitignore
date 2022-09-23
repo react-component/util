@@ -28,3 +28,9 @@ yarn.lock
 /es/
 package-lock.json
 .doc
+
+# umi
+.umi
+.umi-production
+.umi-test
+.env.local

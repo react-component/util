@@ -32,7 +32,7 @@ Common Utils For React Component.
 
 Create a function which will call all the functions with it's arguments from left to right.
 
-```jsx
+```jsx|pure
 import createChainedFunction from 'rc-util/lib/createChainedFunction';
 ```
 
@@ -42,7 +42,7 @@ import createChainedFunction from 'rc-util/lib/createChainedFunction';
 
 Log an error message to warn developers that `prop` is deprecated.
 
-```jsx
+```jsx|pure
 import deprecated from 'rc-util/lib/deprecated';
 ```
 
@@ -52,7 +52,7 @@ import deprecated from 'rc-util/lib/deprecated';
 
 To generate a mixin which will render specific component into specific container automatically.
 
-```jsx
+```jsx|pure
 import getContainerRenderMixin from 'rc-util/lib/getContainerRenderMixin';
 ```
 
@@ -71,7 +71,7 @@ Fields in `config` and their meanings.
 
 Render children to the specific container;
 
-```jsx
+```jsx|pure
 import Portal from 'rc-util/lib/Portal';
 ```
 
@@ -88,7 +88,7 @@ Props:
 
 Get the width of scrollbar.
 
-```jsx
+```jsx|pure
 import getScrollBarSize from 'rc-util/lib/getScrollBarSize';
 ```
 
@@ -98,7 +98,7 @@ import getScrollBarSize from 'rc-util/lib/getScrollBarSize';
 
 To generate a global unique id across current application.
 
-```jsx
+```jsx|pure
 import guid from 'rc-util/lib/guid';
 ```
 
@@ -108,7 +108,7 @@ import guid from 'rc-util/lib/guid';
 
 Pick valid HTML attributes and events from props.
 
-```jsx
+```jsx|pure
 import pickAttrs from 'rc-util/lib/pickAttrs';
 ```
 
@@ -118,7 +118,7 @@ import pickAttrs from 'rc-util/lib/pickAttrs';
 
 A shallow wrapper of `console.warn`.
 
-```jsx
+```jsx|pure
 import warn from 'rc-util/lib/warn';
 ```
 
@@ -128,7 +128,7 @@ import warn from 'rc-util/lib/warn';
 
 A shallow wrapper of [warning](https://github.com/BerkeleyTrue/warning), but only warning once for the same message.
 
-```jsx
+```jsx|pure
 import warning, { noteOnce } from 'rc-util/lib/warning';
 
 warning(false, '[antd Component] test hello world');
@@ -147,7 +147,7 @@ A collection of functions to operate React elements' children.
 
 Return a shallow copy of children.
 
-```jsx
+```jsx|pure
 import mapSelf from 'rc-util/lib/Children/mapSelf';
 ```
 
@@ -157,7 +157,7 @@ import mapSelf from 'rc-util/lib/Children/mapSelf';
 
 Convert children into an array.
 
-```jsx
+```jsx|pure
 import toArray from 'rc-util/lib/Children/toArray';
 ```
 
@@ -171,7 +171,7 @@ A collection of functions to operate DOM elements.
 
 A shallow wrapper of [add-dom-event-listener](https://github.com/yiminghe/add-dom-event-listener).
 
-```jsx
+```jsx|pure
 import addEventlistener from 'rc-util/lib/Dom/addEventlistener';
 ```
 
@@ -181,7 +181,7 @@ import addEventlistener from 'rc-util/lib/Dom/addEventlistener';
 
 Check if DOM is available.
 
-```jsx
+```jsx|pure
 import canUseDom from 'rc-util/lib/Dom/canUseDom';
 ```
 
@@ -193,7 +193,7 @@ A collection of functions to operate DOM nodes' class name.
 - `addClass(node: HTMLElement, className: string): void`
 - `removeClass(node: HTMLElement, className: string): void`
 
-```jsx
+```jsx|pure
 import cssClass from 'rc-util/lib/Dom/class;
 ```
 
@@ -203,7 +203,7 @@ import cssClass from 'rc-util/lib/Dom/class;
 
 Check if node is equal to root or in the subtree of root.
 
-```jsx
+```jsx|pure
 import contains from 'rc-util/lib/Dom/contains';
 ```
 
@@ -220,7 +220,7 @@ A collection of functions to get or set css styles.
 - `getScroll(): { scrollLeft: number, scrollTop: number }`
 - `getOffset(node: HTMLElement): { left: number, top: number }`
 
-```jsx
+```jsx|pure
 import css from 'rc-util/lib/Dom/css';
 ```
 
@@ -234,7 +234,7 @@ A collection of functions to operate focus status of DOM node.
 - `getFocusNodeList(node: HTMLElement): HTMLElement[]` get a list of focusable nodes from the subtree of node.
 - `limitTabRange(node: HTMLElement, e: Event): void`
 
-```jsx
+```jsx|pure
 import focus from 'rc-util/lib/Dom/focus';
 ```
 
@@ -244,7 +244,7 @@ import focus from 'rc-util/lib/Dom/focus';
 
 A flag to tell whether current environment supports `animationend` or `transitionend`.
 
-```jsx
+```jsx|pure
 import support from 'rc-util/lib/Dom/support';
 ```
 
@@ -254,7 +254,7 @@ import support from 'rc-util/lib/Dom/support';
 
 Enum of KeyCode, please check the [definition](https://github.com/react-component/util/blob/master/src/KeyCode.ts) of it.
 
-```jsx
+```jsx|pure
 import KeyCode from 'rc-util/lib/KeyCode';
 ```
 
