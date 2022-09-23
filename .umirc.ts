@@ -14,4 +14,7 @@ export default defineConfig({
       }
     `,
   ],
+  alias: {
+    'rc-util/es': process.cwd() + '/src',
+  },
 });
