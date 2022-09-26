@@ -48,7 +48,7 @@
     "create-react-class": "^15.6.3",
     "cross-env": "^7.0.2",
     "dumi": "^1.1.4",
-    "eslint": "^6.6.0",
+    "eslint": "^8.24.0",
     "father": "^2.29.9",
     "glob": "^7.1.6",
     "np": "^6.2.3",
