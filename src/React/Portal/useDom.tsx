@@ -12,7 +12,6 @@ const EMPTY_LIST = [];
 export default function useDom(render: boolean): [HTMLDivElement, QueueCreate] {
   const [ele] = React.useState(() => {
     const defaultEle = document.createElement('div');
-    defaultEle.id = 'default';
     return defaultEle;
   });
 
@@ -23,7 +22,7 @@ export default function useDom(render: boolean): [HTMLDivElement, QueueCreate] {
   const mergedQueueCreate =
     queueCreate ||
     ((appendFn: VoidFunction) => {
-      setQueue(origin => [...origin, appendFn]);
+      setQueue(origin => [appendFn, ...origin]);
     });
 
   // =========================== DOM ===========================
