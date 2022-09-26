@@ -38,7 +38,7 @@ export interface PickConfig {
 /**
  * Picker props from exist props with filter
  * @param props Passed props
- * @param ariaOnly boolean | { aria?: boolean; data?: boolean; attr?: boolean; } filter config
+ * @param ariaOnly boolean | { aria?: boolean; data?: boolean; attr?: boolean; } filter config. Default will pick all
  */
 export default function pickAttrs(
   props: object,
