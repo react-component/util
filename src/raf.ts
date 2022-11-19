@@ -2,8 +2,9 @@ let raf = (callback: FrameRequestCallback) => +setTimeout(callback, 16);
 let caf = (num: number) => clearTimeout(num);
 
 if (typeof window !== 'undefined' && 'requestAnimationFrame' in window) {
-  raf = (callback: FrameRequestCallback) => requestAnimationFrame(callback);
-  caf = (handle: number) => cancelAnimationFrame(handle);
+  raf = (callback: FrameRequestCallback) =>
+    window.requestAnimationFrame(callback);
+  caf = (handle: number) => window.cancelAnimationFrame(handle);
 }
 
 let rafUUID = 0;
