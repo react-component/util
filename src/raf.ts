@@ -1,6 +1,4 @@
-const INTERVAL = 1000 / 60;
-
-let raf = (callback: FrameRequestCallback) => setTimeout(callback, INTERVAL);
+let raf = (callback: FrameRequestCallback) => +setTimeout(callback, 16);
 let caf = (num: number) => clearTimeout(num);
 
 if (typeof window !== 'undefined' && 'requestAnimationFrame' in window) {
