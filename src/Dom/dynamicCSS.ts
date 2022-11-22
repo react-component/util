@@ -102,7 +102,10 @@ function findExistNode(key: string, option: Options = {}) {
 
 export function removeCSS(key: string, option: Options = {}) {
   const existNode = findExistNode(key, option);
-  existNode?.parentNode?.removeChild(existNode);
+  if (existNode) {
+    const container = getContainer(option);
+    container.removeChild(existNode);
+  }
 }
 
 /**
