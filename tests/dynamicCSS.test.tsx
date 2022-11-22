@@ -171,15 +171,19 @@ describe('dynamicCSS', () => {
 
   describe('qiankun', () => {
     let originAppendChild: typeof document.head.appendChild;
+    let originRemoveChild: typeof document.head.removeChild;
     let targetContainer: HTMLElement;
 
     beforeAll(() => {
       originAppendChild = document.head.appendChild;
+      originRemoveChild = document.head.removeChild;
       document.head.appendChild = ele => targetContainer.appendChild(ele);
+      document.head.removeChild = ele => targetContainer.removeChild(ele);
     });
 
     afterAll(() => {
       document.head.appendChild = originAppendChild;
+      document.head.removeChild = originRemoveChild;
     });
 
     it('updateCSS', () => {
@@ -191,7 +195,12 @@ describe('dynamicCSS', () => {
       expect(document.head.contains(firstStyle)).toBeFalsy();
       expect(targetContainer.contains(firstStyle)).toBeTruthy();
 
-      // Mock qiankun uninstall & reinstall
+      // Mock qiankun uninstall
+      removeCSS('qiankun');
+      expect(document.head.contains(firstStyle)).toBeFalsy();
+      expect(targetContainer.contains(firstStyle)).toBeFalsy();
+
+      // Mock qiankun reinstall
       document.body.removeChild(targetContainer);
       targetContainer = document.createElement('div');
       document.body.appendChild(targetContainer);
