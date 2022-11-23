@@ -1,5 +1,10 @@
 /* eslint-disable no-eval */
-import { injectCSS, updateCSS, removeCSS } from '../src/Dom/dynamicCSS';
+import {
+  injectCSS,
+  updateCSS,
+  removeCSS,
+  clearContainerCache,
+} from '../src/Dom/dynamicCSS';
 
 const TEST_STYLE = '.bamboo { context: "light" }';
 
@@ -175,6 +180,7 @@ describe('dynamicCSS', () => {
     let targetContainer: HTMLElement;
 
     beforeAll(() => {
+      clearContainerCache();
       originAppendChild = document.head.appendChild;
       originRemoveChild = document.head.removeChild;
       document.head.appendChild = ele => targetContainer.appendChild(ele);
