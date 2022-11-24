@@ -102,7 +102,10 @@ function findExistNode(key: string, option: Options = {}) {
 
 export function removeCSS(key: string, option: Options = {}) {
   const existNode = findExistNode(key, option);
-  existNode?.parentNode?.removeChild(existNode);
+  if (existNode) {
+    const container = getContainer(option);
+    container.removeChild(existNode);
+  }
 }
 
 /**
@@ -116,8 +119,15 @@ function syncRealContainer(container: Element, option: Options) {
     const placeholderStyle = injectCSS('', option);
     const { parentNode } = placeholderStyle;
     containerCache.set(container, parentNode);
-    parentNode.removeChild(placeholderStyle);
+    container.removeChild(placeholderStyle);
   }
+}
+
+/**
+ * manually clear container cache to avoid global cache in unit testes
+ */
+export function clearContainerCache() {
+  containerCache.clear();
 }
 
 export function updateCSS(css: string, key: string, option: Options = {}) {
