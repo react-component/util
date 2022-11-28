@@ -4,13 +4,14 @@ import contains from './contains';
 const APPEND_ORDER = 'data-rc-order';
 const MARK_KEY = `rc-util-key`;
 
-const containerCache = new Map<Element, Node & ParentNode>();
+const containerCache = new Map<ContainerType, Node & ParentNode>();
 
+export type ContainerType = Element | ShadowRoot;
 export type Prepend = boolean | 'queue';
 export type AppendType = 'prependQueue' | 'append' | 'prepend';
 
 interface Options {
-  attachTo?: Element;
+  attachTo?: ContainerType;
   csp?: { nonce?: string };
   prepend?: Prepend;
   mark?: string;
@@ -43,7 +44,7 @@ function getOrder(prepend?: Prepend): AppendType {
 /**
  * Find style which inject by rc-util
  */
-function findStyles(container: Element) {
+function findStyles(container: ContainerType) {
   return Array.from(
     (containerCache.get(container) || container).children,
   ).filter(node => node.tagName === 'STYLE') as HTMLStyleElement[];
@@ -111,7 +112,7 @@ export function removeCSS(key: string, option: Options = {}) {
 /**
  * qiankun will inject `appendChild` to insert into other
  */
-function syncRealContainer(container: Element, option: Options) {
+function syncRealContainer(container: ContainerType, option: Options) {
   const cachedRealContainer = containerCache.get(container);
 
   // Find real container when not cached or cached container removed
