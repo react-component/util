@@ -47,7 +47,7 @@
     "coveralls": "^3.1.0",
     "create-react-class": "^15.6.3",
     "cross-env": "^7.0.2",
-    "dumi": "^1.1.4",
+    "dumi": "^2.0.9",
     "eslint": "^6.6.0",
     "father": "^2.29.9",
     "glob": "^7.1.6",
