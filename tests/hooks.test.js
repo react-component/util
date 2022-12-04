@@ -49,12 +49,15 @@ describe('hooks', () => {
     const FC = ({ value, defaultValue }) => {
       const [val, setVal] = useMergedState(null, { value, defaultValue });
       return (
-        <input
-          value={val}
-          onChange={e => {
-            setVal(e.target.value);
-          }}
-        />
+        <>
+          <input
+            value={val}
+            onChange={e => {
+              setVal(e.target.value);
+            }}
+          />
+          <span className="txt">{val}</span>
+        </>
       );
     };
 
@@ -62,9 +65,11 @@ describe('hooks', () => {
       const { container, rerender } = render(<FC value="test" />);
 
       expect(container.querySelector('input').value).toEqual('test');
+      expect(container.querySelector('.txt').textContent).toEqual('test');
 
       rerender(<FC value={undefined} />);
       expect(container.querySelector('input').value).toEqual('test');
+      expect(container.querySelector('.txt').textContent).toEqual('');
     });
 
     describe('correct defaultValue', () => {

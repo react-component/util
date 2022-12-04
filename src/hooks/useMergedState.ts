@@ -58,6 +58,13 @@ export default function useMergedState<T, R = T>(
     }
   }, [prevValue]);
 
+  // Sync value back to `undefined` when it from control to un-control
+  useLayoutUpdateEffect(() => {
+    if (!hasValue(value)) {
+      setInnerValue(value);
+    }
+  }, [value]);
+
   // ====================== Update ======================
   const triggerChange: Updater<T> = useEvent((updater, ignoreDestroy) => {
     setInnerValue(updater, ignoreDestroy);
