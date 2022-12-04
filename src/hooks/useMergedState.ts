@@ -1,19 +1,12 @@
 import * as React from 'react';
 import useEvent from './useEvent';
-import useLayoutEffect, { useLayoutUpdateEffect } from './useLayoutEffect';
+import { useLayoutUpdateEffect } from './useLayoutEffect';
 import useState from './useState';
 
 type Updater<T> = (
   updater: T | ((origin: T) => T),
   ignoreDestroy?: boolean,
 ) => void;
-
-enum Source {
-  INNER,
-  PROP,
-}
-
-type ValueRecord<T> = [T, Source, T];
 
 /** We only think `undefined` is empty */
 function hasValue(value: any) {
@@ -36,74 +29,40 @@ export default function useMergedState<T, R = T>(
   const { defaultValue, value, onChange, postState } = option || {};
 
   // ======================= Init =======================
-  const [mergedValue, setMergedValue] = useState<ValueRecord<T>>(() => {
-    let finalValue: T = undefined;
-    let source: Source;
-
+  const [innerValue, setInnerValue] = useState<T>(() => {
     if (hasValue(value)) {
-      finalValue = value;
-      source = Source.PROP;
+      return value;
     } else if (hasValue(defaultValue)) {
-      finalValue =
-        typeof defaultValue === 'function'
-          ? (defaultValue as any)()
-          : defaultValue;
-      source = Source.PROP;
+      return typeof defaultValue === 'function'
+        ? (defaultValue as any)()
+        : defaultValue;
     } else {
-      finalValue =
-        typeof defaultStateValue === 'function'
-          ? (defaultStateValue as any)()
-          : defaultStateValue;
-      source = Source.INNER;
+      return typeof defaultStateValue === 'function'
+        ? (defaultStateValue as any)()
+        : defaultStateValue;
     }
-
-    return [finalValue, source, finalValue];
   });
 
-  const chosenValue = hasValue(value) ? value : mergedValue[0];
-  const postMergedValue = postState ? postState(chosenValue) : chosenValue;
-
-  // ======================= Sync =======================
-  useLayoutUpdateEffect(() => {
-    setMergedValue(([prevValue]) => [value, Source.PROP, prevValue]);
-  }, [value]);
-
-  // ====================== Update ======================
-  const changeEventPrevRef = React.useRef<T>();
-
-  const triggerChange: Updater<T> = useEvent((updater, ignoreDestroy) => {
-    setMergedValue(prev => {
-      const [prevValue, prevSource, prevPrevValue] = prev;
-
-      const nextValue: T =
-        typeof updater === 'function' ? (updater as any)(prevValue) : updater;
-
-      // Do nothing if value not change
-      if (nextValue === prevValue) {
-        return prev;
-      }
-
-      // Use prev prev value if is in a batch update to avoid missing data
-      const overridePrevValue =
-        prevSource === Source.INNER &&
-        changeEventPrevRef.current !== prevPrevValue
-          ? prevPrevValue
-          : prevValue;
-
-      return [nextValue, Source.INNER, overridePrevValue];
-    }, ignoreDestroy);
-  });
+  const mergedValue = value !== undefined ? value : innerValue;
+  const postMergedValue = postState ? postState(mergedValue) : mergedValue;
 
   // ====================== Change ======================
   const onChangeFn = useEvent(onChange);
 
-  useLayoutEffect(() => {
-    const [current, source, prev] = mergedValue;
-    if (current !== prev && source === Source.INNER) {
-      onChangeFn(current, prev);
-      changeEventPrevRef.current = prev;
+  const [prevValue, setPrevValue] = React.useState<[T]>([mergedValue]);
+
+  useLayoutUpdateEffect(() => {
+    const prev = prevValue[0];
+    if (innerValue !== prev) {
+      onChangeFn(innerValue, prev);
     }
-  }, [mergedValue]);
+  }, [prevValue]);
+
+  // ====================== Update ======================
+  const triggerChange: Updater<T> = useEvent((updater, ignoreDestroy) => {
+    setInnerValue(updater, ignoreDestroy);
+    setPrevValue([mergedValue]);
+  });
 
   return [postMergedValue as unknown as R, triggerChange];
 }
