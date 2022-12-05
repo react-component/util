@@ -1,4 +1,3 @@
-import * as React from 'react';
 import useEvent from './useEvent';
 import { useLayoutUpdateEffect } from './useLayoutEffect';
 import useState from './useState';
@@ -49,7 +48,7 @@ export default function useMergedState<T, R = T>(
   // ====================== Change ======================
   const onChangeFn = useEvent(onChange);
 
-  const [prevValue, setPrevValue] = React.useState<[T]>([mergedValue]);
+  const [prevValue, setPrevValue] = useState<[T]>([mergedValue]);
 
   useLayoutUpdateEffect(() => {
     const prev = prevValue[0];
@@ -68,7 +67,7 @@ export default function useMergedState<T, R = T>(
   // ====================== Update ======================
   const triggerChange: Updater<T> = useEvent((updater, ignoreDestroy) => {
     setInnerValue(updater, ignoreDestroy);
-    setPrevValue([mergedValue]);
+    setPrevValue([mergedValue], ignoreDestroy);
   });
 
   return [postMergedValue as unknown as R, triggerChange];
