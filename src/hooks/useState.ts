@@ -31,7 +31,7 @@ export default function useSafeState<T>(
   }, []);
 
   function safeSetState(updater: Updater<T>, ignoreDestroy?: boolean) {
-    if (ignoreDestroy && destroyRef.current) {
+    if (!ignoreDestroy && destroyRef.current) {
       return;
     }
 
