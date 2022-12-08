@@ -527,6 +527,7 @@ describe('hooks', () => {
       } else {
         expect(fn).not.toHaveBeenCalled();
       }
+      unmount();
     });
   });
 });
