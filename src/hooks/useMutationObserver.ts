@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const useMutationObserver = () => {
   const instance = useRef<MutationObserver>();
@@ -12,7 +12,7 @@ const useMutationObserver = () => {
   };
 
   const createObserver = (target: Node, callback: MutationCallback) => {
-    if (MutationObserver) {
+    if ('MutationObserver' in window) {
       destroyObserver();
       instance.current = new MutationObserver(callback);
       instance.current.observe(target, {
