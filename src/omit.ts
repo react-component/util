@@ -5,7 +5,7 @@ function omit<T extends object, K extends keyof T>(
   const clone = { ...obj };
   if (Array.isArray(fields)) {
     fields.forEach(key => {
-      delete clone[key as keyof T];
+      delete clone[key];
     });
   }
   return clone;
