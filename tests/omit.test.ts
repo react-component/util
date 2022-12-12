@@ -10,4 +10,9 @@ describe('omit', () => {
     const ret = omit({ bamboo: 1 }, null);
     expect(ret).toEqual({ bamboo: 1 });
   });
+
+  it('readonly array', () => {
+    const ret = omit({ keep: 1, ignore: 2 }, ['ignore'] as const);
+    expect(ret).toEqual({ keep: 1 });
+  });
 });
