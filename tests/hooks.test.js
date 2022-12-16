@@ -5,7 +5,6 @@ import useMemo from '../src/hooks/useMemo';
 import useMergedState from '../src/hooks/useMergedState';
 import useLayoutEffect from '../src/hooks/useLayoutEffect';
 import useState from '../src/hooks/useState';
-import useMutationObserver from '../src/hooks/useMutationObserver';
 import useId, { resetUuid } from '../src/hooks/useId';
 
 global.disableUseId = false;
@@ -498,36 +497,6 @@ describe('hooks', () => {
       errorSpy.mockRestore();
       process.env.NODE_ENV = originEnv;
       global.disableUseId = false;
-    });
-    it('useMutationObserver', () => {
-      const fn = jest.fn();
-      const Demo = () => {
-        const ref = React.useRef(null);
-        const [size, setSize] = useState(0);
-        const { createObserver, destroyObserver } = useMutationObserver();
-        React.useEffect(() => {
-          createObserver(ref.current, fn);
-          return destroyObserver;
-          // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, []);
-        return (
-          <div
-            ref={ref}
-            style={{ width: size }}
-            onClick={() => setSize(s => s + 10)}
-          >
-            text
-          </div>
-        );
-      };
-      const { container, unmount } = render(<Demo />);
-      fireEvent.click(container.querySelector('div'));
-      if ('MutationObserver' in window) {
-        expect(fn).toHaveBeenCalled();
-      } else {
-        expect(fn).not.toHaveBeenCalled();
-      }
-      unmount();
     });
   });
 });
