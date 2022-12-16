@@ -40,9 +40,14 @@ describe('isEqual', () => {
   });
 
   it('should not equal 4', () => {
+    const valueIsEqual = isEqual({ a: 1, b: { c: 2 } }, { a: 1, b: null });
+    expect(valueIsEqual).toBe(false);
+  });
+
+  it('should not equal 5', () => {
     const valueIsEqual = isEqual(
       { a: 1, b: { c: 2 } },
-      { a: 1, b: null},
+      { a: 1, b: { c: 2 }, c: 1 },
     );
     expect(valueIsEqual).toBe(false);
   });
