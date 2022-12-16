@@ -23,6 +23,14 @@ describe('isEqual', () => {
     expect(valueIsEqual).toBe(false);
   });
 
+  it('should not equal 2', () => {
+    const valueIsEqual = isEqual(
+      { a: 1, c: [2, 3], b: 2 },
+      { a: 1, c: [1, 2], b: 'x' },
+    );
+    expect(valueIsEqual).toBe(false);
+  });
+
   it('should throw error', () => {
     obj.obj = obj;
     const obj2 = { a: 1, b: 2, c: [1, 2], obj: null };
