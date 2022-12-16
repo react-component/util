@@ -9,7 +9,7 @@ describe('isEqual', () => {
     expect(valueIsEqual).toBe(true);
   });
 
-  const obj = { a: 1, b: 2, c: [1, 2] };
+  const obj = { a: 1, b: 2, c: [1, 2], obj: null };
   it('should equal 2', () => {
     const valueIsEqual = isEqual(obj, obj);
     expect(valueIsEqual).toBe(true);
@@ -21,5 +21,15 @@ describe('isEqual', () => {
       { a: 1, b: 'x', c: [1, 2] },
     );
     expect(valueIsEqual).toBe(false);
+  });
+
+  it('should throw error', () => {
+    obj.obj = obj;
+    const obj2 = { a: 1, b: 2, c: [1, 2], obj: null };
+    try {
+      isEqual(obj, obj2);
+    } catch (error) {
+      expect(error.message).toBe('There may be circular references');
+    }
   });
 });
