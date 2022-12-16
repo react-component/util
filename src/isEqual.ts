@@ -23,28 +23,18 @@ function isEqual(obj1: any, obj2: any): boolean {
       }
       return true;
     }
-    if (typeof a === 'object' && a !== null && b !== null) {
-      if (!(typeof b === 'object')) {
-        return false;
-      }
+    if (a && b && typeof a === 'object' && typeof b === 'object') {
       const keys = Object.keys(a);
       if (keys.length !== Object.keys(b).length) {
         return false;
       }
-      for (const key in a) {
-        if (!deepEqual(a[key], b[key])) {
-          return false;
-        }
-      }
-      return true;
+      return keys.every(key => deepEqual(a[key], b[key]));
     }
     // other
     return false;
   }
 
-  const equal = deepEqual(obj1, obj2);
-  refSet.clear();
-  return equal;
+  return deepEqual(obj1, obj2);
 }
 
 export default isEqual;
