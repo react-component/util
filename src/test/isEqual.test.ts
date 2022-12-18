@@ -55,11 +55,13 @@ describe('isEqual', () => {
   it('should throw error', () => {
     obj.obj = obj;
     const obj2 = { a: 1, b: 2, c: [1, 2], obj: null };
-    try {
-      const valueIsEqual = isEqual(obj, obj2);
-      expect(valueIsEqual).toBe(true);
-    } catch (error) {
-      expect(error.message).toBe('There may be circular references');
-    }
+    // try {
+    //   const valueIsEqual = isEqual(obj, obj2);
+    //   expect(valueIsEqual).toBe(true);
+    // } catch (error) {
+    //   expect(error.message).toBe('There may be circular references');
+    // }
+    const valueIsEqual = isEqual(obj, obj2);
+    expect(valueIsEqual).toBe(false);
   });
 });
