@@ -10,7 +10,6 @@ function isEqual(obj1: any, obj2: any): boolean {
     const circular = refSet.has(a);
     warning(!circular, 'There may be circular references');
     if (circular) {
-      // throw new Error('There may be circular references');
       return false;
     }
     if (a === b) {

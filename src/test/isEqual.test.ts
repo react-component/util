@@ -1,6 +1,13 @@
 import isEqual from '../isEqual';
+import warning from '../warning';
 
 describe('isEqual', () => {
+  let spy: jest.SpyInstance;
+
+  beforeAll(() => {
+    spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
   it('should equal', () => {
     const valueIsEqual = isEqual(
       { a: 1, b: 2, c: [1, 2] },
@@ -61,6 +68,9 @@ describe('isEqual', () => {
     // } catch (error) {
     //   expect(error.message).toBe('There may be circular references');
     // }
+    warning(true, 'error');
+    expect(spy).toHaveBeenCalled();
+
     const valueIsEqual = isEqual(obj, obj2);
     expect(valueIsEqual).toBe(false);
   });
