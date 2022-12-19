@@ -52,7 +52,7 @@ describe('isEqual', () => {
     expect(valueIsEqual).toBe(false);
   });
 
-  it('should throw error', () => {
+  it('should not equal 6', () => {
     obj.obj = obj;
     const obj2 = { a: 1, b: 2, c: [1, 2], obj: null };
     // try {
