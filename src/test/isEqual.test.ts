@@ -33,6 +33,15 @@ describe('isEqual', () => {
     expect(valueIsEqual).toBe(true);
   });
 
+  it('should not equal shallow', () => {
+    const valueIsEqual = isEqual(
+      { a: 1, b: 2, c: 3 },
+      { a: 1, b: 2, c: 4 },
+      true,
+    );
+    expect(valueIsEqual).toBe(true);
+  });
+
   const obj = { a: 1, b: 2, c: [1, 2], obj: null };
   it('should equal 2', () => {
     const valueIsEqual = isEqual(obj, obj);
