@@ -39,7 +39,16 @@ describe('isEqual', () => {
       { a: 1, b: 2, c: 4 },
       true,
     );
-    expect(valueIsEqual).toBe(true);
+    expect(valueIsEqual).toBe(false);
+  });
+
+  it('should not equal shallow 2', () => {
+    const valueIsEqual = isEqual(
+      { a: 1, b: 2, c: [2, 3] },
+      { a: 1, b: 2, c: [2, 3] },
+      true,
+    );
+    expect(valueIsEqual).toBe(false);
   });
 
   const obj = { a: 1, b: 2, c: [1, 2], obj: null };
