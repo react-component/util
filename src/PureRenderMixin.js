@@ -13,8 +13,7 @@ const isEqual = require('shallowequal');
 
 function shallowCompare(instance, nextProps, nextState) {
   return (
-    !isEqual(instance.props, nextProps, true) ||
-    !isEqual(instance.state, nextState, true)
+    !isEqual(instance.props, nextProps) || !isEqual(instance.state, nextState)
   );
 }
 
