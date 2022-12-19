@@ -9,7 +9,7 @@
  * @providesModule ReactComponentWithPureRenderMixin
  */
 
-const isEqual = require('../lib/isEqual').default;
+const isEqual = require('../lib/isEqual.js').default;
 
 function shallowCompare(instance, nextProps, nextState) {
   return (
