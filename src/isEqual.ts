@@ -8,7 +8,7 @@ function isEqual(obj1: any, obj2: any): boolean {
   const refSet = new Set<any>();
   function deepEqual(a: any, b: any): boolean {
     const circular = refSet.has(a);
-    warning(!circular, 'There may be circular references');
+    warning(!circular, 'Warning: There may be circular references');
     if (circular) {
       return false;
     }

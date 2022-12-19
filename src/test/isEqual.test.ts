@@ -2,10 +2,18 @@ import isEqual from '../isEqual';
 import warning from '../warning';
 
 describe('isEqual', () => {
-  let spy: jest.SpyInstance;
+  let errorSpy: jest.SpyInstance;
 
   beforeAll(() => {
-    spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    errorSpy.mockReset();
+  });
+
+  afterAll(() => {
+    errorSpy.mockRestore();
   });
 
   it('should equal', () => {
@@ -69,7 +77,9 @@ describe('isEqual', () => {
     //   expect(error.message).toBe('There may be circular references');
     // }
     warning(false, 'error');
-    expect(spy).toHaveBeenCalled();
+    expect(errorSpy).toHaveBeenCalledWith(
+      'Warning: There may be circular references',
+    );
 
     const valueIsEqual = isEqual(obj, obj2);
     expect(valueIsEqual).toBe(false);
