@@ -77,9 +77,7 @@ describe('isEqual', () => {
     //   expect(error.message).toBe('There may be circular references');
     // }
     warning(false, 'error');
-    expect(errorSpy).toHaveBeenCalledWith(
-      'Warning: There may be circular references',
-    );
+    expect(errorSpy).toHaveBeenCalledWith('error');
 
     const valueIsEqual = isEqual(obj, obj2);
     expect(valueIsEqual).toBe(false);
