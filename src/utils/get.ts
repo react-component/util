@@ -1,4 +1,7 @@
-export default function get(entity: any, path: (string | number)[]) {
+export default function get(
+  entity: any,
+  path: (string | number)[] | readonly (string | number)[],
+) {
   let current = entity;
 
   for (let i = 0; i < path.length; i += 1) {

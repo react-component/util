@@ -9,10 +9,13 @@
  * @providesModule ReactComponentWithPureRenderMixin
  */
 
-const shallowEqual = require('shallowequal');
+import isEqual from './isEqual';
 
 function shallowCompare(instance, nextProps, nextState) {
-  return !shallowEqual(instance.props, nextProps) || !shallowEqual(instance.state, nextState);
+  return (
+    !isEqual(instance.props, nextProps, true) ||
+    !isEqual(instance.state, nextState, true)
+  );
 }
 
 /**
@@ -47,4 +50,4 @@ const ReactComponentWithPureRenderMixin = {
   },
 };
 
-module.exports = ReactComponentWithPureRenderMixin;
+export default ReactComponentWithPureRenderMixin;
