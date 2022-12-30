@@ -1,8 +1,13 @@
 import ReactDOM from 'react-dom';
 
-export default function addEventListenerWrap(target, eventType, cb, option) {
+function addEventListenerWrap<K extends keyof ElementEventMap>(
+  target: Element | Window | Document,
+  eventType: K,
+  cb: EventListener,
+  option?: boolean | EventListenerOptions,
+) {
   /* eslint camelcase: 2 */
-  const callback = ReactDOM.unstable_batchedUpdates
+  const callback: EventListener = ReactDOM.unstable_batchedUpdates
     ? function run(e) {
         ReactDOM.unstable_batchedUpdates(cb, e);
       }
@@ -11,10 +16,12 @@ export default function addEventListenerWrap(target, eventType, cb, option) {
     target.addEventListener(eventType, callback, option);
   }
   return {
-    remove: () => {
+    remove() {
       if (target.removeEventListener) {
         target.removeEventListener(eventType, callback, option);
       }
     },
   };
 }
+
+export default addEventListenerWrap;
