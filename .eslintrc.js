@@ -1,4 +1,4 @@
-const config = {
+module.exports = {
   extends: [require.resolve('@umijs/fabric/dist/eslint')],
   rules: {
     'react/no-did-update-set-state': 0,
@@ -6,5 +6,3 @@ const config = {
     'import/no-extraneous-dependencies': 0,
   },
 };
-
-module.exports = config;
