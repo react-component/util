@@ -35,7 +35,6 @@
   },
   "devDependencies": {
     "@rc-component/father-plugin": "^1.0.1",
-    "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.0.0",
     "@types/jest": "^25.2.3",
     "@types/react": "^18.0.0",
