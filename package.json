@@ -22,9 +22,8 @@
   "scripts": {
     "compile": "father build",
     "coverage": "npm test -- --coverage",
-    "docs:build": "dumi build",
+    "build": "dumi build",
     "lint": "eslint src/ --ext .tsx,.ts & eslint tests/ --ext .js",
-    "now-build": "npm run docs:build",
     "prepublishOnly": "npm run compile && np --yolo --no-publish",
     "start": "dumi dev",
     "test": "rc-test"
