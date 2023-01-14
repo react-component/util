@@ -1,6 +1,5 @@
 // more config: https://d.umijs.org/config
 import { defineConfig } from 'dumi';
-import path from 'path';
 
 const basePath = process.env.GITHUB_ACTIONS ? '/util/' : '/';
 const publicPath = process.env.GITHUB_ACTIONS ? '/util/' : '/';
