@@ -10,7 +10,7 @@ describe('ScrollLocker', () => {
   let scrollLocker: ScrollLocker;
 
   const effectStyle =
-    'overflow: hidden; overflow-x: hidden; overflow-y: hidden;';
+    'width: calc(100% - 20px); overflow: hidden; overflow-x: hidden; overflow-y: hidden;';
 
   // jsdom can not capture calc
   const initialStyle = '';

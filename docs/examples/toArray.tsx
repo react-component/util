@@ -1,5 +1,5 @@
 import React from 'react';
-import toArray, { type Option } from '../../src/Children/toArray';
+import toArray, { type Option } from 'rc-util/es/Children/toArray';
 
 const initialState = {
   'no-children': false,
@@ -25,14 +25,14 @@ const DemoBox = React.memo(({ children, name }: { children?: any, name: Action }
   return (
     <React.Fragment key={name}>
       <label style={{ display: 'inline-block', width: 180 }}>
-        <input type="checkbox" checked={show} onChange={e => setShow(prev => !prev)} />
+        <input type="checkbox" checked={show} onChange={() => setShow(prev => !prev)} />
         {name}
       </label>
       <label>
         <input
           type="checkbox"
           checked={keepEmpty}
-          onChange={e => setkeepEmpty(prev => !prev)}
+          onChange={() => setkeepEmpty(prev => !prev)}
           disabled={!show}
         />
         keepEmpty={keepEmpty ? 'true' : 'false'}

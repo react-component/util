@@ -6,6 +6,12 @@
     "jsx": "preserve",
     "declaration": true,
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "@@/*": ["src/.dumi/*"],
+      "rc-util": ["src/index.tsx"],
+      "rc-util/es/*": ["src/*"]
+    }
   }
 }
