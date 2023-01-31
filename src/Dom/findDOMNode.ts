@@ -11,7 +11,7 @@ export default function findDOMNode<T = Element | Text>(
     return node as unknown as T;
   }
 
-  if (React.isValidElement(node)) {
+  if (node instanceof React.Component) {
     return ReactDOM.findDOMNode(node) as unknown as T;
   }
 
