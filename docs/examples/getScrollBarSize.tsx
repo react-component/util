@@ -1,9 +1,7 @@
-/* eslint-disable react/no-danger */
-
 import React from 'react';
 import getScrollBarSize, {
   getTargetScrollBarSize,
-} from '../../src/getScrollBarSize';
+} from 'rc-util/es/getScrollBarSize';
 
 export default () => {
   const divRef = React.useRef<HTMLDivElement>();
