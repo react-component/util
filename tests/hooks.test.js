@@ -1,11 +1,12 @@
+import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { renderToString } from 'react-dom/server';
-import { render, fireEvent } from '@testing-library/react';
+import useId, { resetUuid } from '../src/hooks/useId';
+import useLayoutEffect from '../src/hooks/useLayoutEffect';
 import useMemo from '../src/hooks/useMemo';
 import useMergedState from '../src/hooks/useMergedState';
-import useLayoutEffect from '../src/hooks/useLayoutEffect';
+import useMobile from '../src/hooks/useMobile';
 import useState from '../src/hooks/useState';
-import useId, { resetUuid } from '../src/hooks/useId';
 
 global.disableUseId = false;
 
@@ -496,6 +497,26 @@ describe('hooks', () => {
       errorSpy.mockRestore();
       process.env.NODE_ENV = originEnv;
       global.disableUseId = false;
+    });
+  });
+
+  describe('useMobile', () => {
+    it('should work', () => {
+      const Demo = () => {
+        const isMobile = useMobile();
+        return <div>{isMobile ? 'mobile' : 'pc'}</div>;
+      };
+
+      const { container } = render(<Demo />);
+      expect(container.textContent).toBe('pc');
+
+      const navigatorSpy = jest
+        .spyOn(navigator, 'userAgent', 'get')
+        .mockImplementation(() => 'Android');
+      const { container: container2 } = render(<Demo />);
+      expect(container2.textContent).toBe('mobile');
+
+      navigatorSpy.mockRestore();
     });
   });
 });
