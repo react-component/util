@@ -3,20 +3,20 @@ export default (element: HTMLElement | SVGGraphicsElement): boolean => {
     return false;
   }
 
-  if (element instanceof HTMLElement && element.offsetParent) {
+  if ((element as HTMLElement).offsetParent) {
     return true;
   }
 
-  if (element instanceof SVGGraphicsElement && element.getBBox) {
-    const { width, height } = element.getBBox();
-    if (width || height) {
+  if ((element as SVGGraphicsElement).getBBox) {
+    const box = (element as SVGGraphicsElement).getBBox();
+    if (box.width || box.height) {
       return true;
     }
   }
 
-  if (element instanceof HTMLElement && element.getBoundingClientRect) {
-    const { width, height } = element.getBoundingClientRect();
-    if (width || height) {
+  if ((element as HTMLElement).getBoundingClientRect) {
+    const box = (element as HTMLElement).getBoundingClientRect();
+    if (box.width || box.height) {
       return true;
     }
   }
