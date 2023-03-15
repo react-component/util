@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
-import findDOMNode from '../src/Dom/findDOMNode';
+import findDOMNode, { isDOM } from '../src/Dom/findDOMNode';
 
 describe('findDOMNode', () => {
   it('base work', () => {
@@ -59,5 +59,19 @@ describe('findDOMNode', () => {
   it('support svg', () => {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     expect(findDOMNode(svg)).toBe(svg);
+  });
+
+  it('isDOM type', () => {
+    const svg: any = document.createElementNS(
+      'http://www.w3.org/2000/svg',
+      'svg',
+    );
+
+    // This `getBoundingClientRect` is used for ts type check
+    if (isDOM(svg) && svg.getBoundingClientRect()) {
+      expect(true).toBeTruthy();
+    } else {
+      expect(true).toBeFalsy();
+    }
   });
 });
