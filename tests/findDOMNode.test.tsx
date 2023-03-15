@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { render } from '@testing-library/react';
+import * as React from 'react';
 import findDOMNode from '../src/Dom/findDOMNode';
 
 describe('findDOMNode', () => {
@@ -54,5 +54,10 @@ describe('findDOMNode', () => {
 
     expect(errSpy).toHaveBeenCalled();
     errSpy.mockRestore();
+  });
+
+  it('support svg', () => {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    expect(findDOMNode(svg)).toBe(svg);
   });
 });
