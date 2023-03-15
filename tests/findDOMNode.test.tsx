@@ -67,7 +67,7 @@ describe('findDOMNode', () => {
       'svg',
     );
 
-    // This `getBoundingClientRect` is used for ts type check
+    // This `getBoundingClientRect` is used for ts type check.
     if (isDOM(svg) && svg.getBoundingClientRect()) {
       expect(true).toBeTruthy();
     } else {
