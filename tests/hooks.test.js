@@ -518,5 +518,18 @@ describe('hooks', () => {
 
       navigatorSpy.mockRestore();
     });
+
+    it('should not warn useLayoutEffect in SSR', () => {
+      const errorSpy = jest.spyOn(console, 'error');
+      const Demo = () => {
+        useMobile();
+        return null;
+      };
+      renderToString(<Demo />);
+      expect(errorSpy).not.toHaveBeenCalledWith(
+        expect.stringContaining('useLayoutEffect'),
+        expect.anything(),
+      );
+    });
   });
 });
