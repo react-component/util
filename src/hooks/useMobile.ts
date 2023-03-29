@@ -1,5 +1,6 @@
-import { useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import isMobile from '../isMobile';
+import useLayoutEffect from './useLayoutEffect';
 
 /**
  * Hook to detect if the user is on a mobile device
