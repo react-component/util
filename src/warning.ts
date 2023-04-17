@@ -2,8 +2,8 @@
 let warned: Record<string, boolean> = {};
 
 export type preMessageFn = (
-  type: 'warning' | 'note',
   message: string,
+  type: 'warning' | 'note',
 ) => string | null | undefined | number;
 
 const preWarningFns: preMessageFn[] = [];
@@ -24,7 +24,7 @@ export function warning(valid: boolean, message: string) {
     console !== undefined
   ) {
     const finalMessage = preWarningFns.reduce(
-      (msg, preMessageFn) => preMessageFn('warning', msg ?? ''),
+      (msg, preMessageFn) => preMessageFn(msg ?? '', 'warning'),
       message,
     );
 
@@ -42,12 +42,12 @@ export function note(valid: boolean, message: string) {
     console !== undefined
   ) {
     const finalMessage = preWarningFns.reduce(
-      (msg, preMessageFn) => preMessageFn('note', msg ?? ''),
+      (msg, preMessageFn) => preMessageFn(msg ?? '', 'note'),
       message,
     );
 
     if (finalMessage) {
-      console.warn(`Note: ${message}`);
+      console.warn(`Note: ${finalMessage}`);
     }
   }
 }
@@ -75,7 +75,7 @@ export function noteOnce(valid: boolean, message: string) {
   call(note, valid, message);
 }
 
-warningOnce.preMessageFn = preMessage;
+warningOnce.preMessage = preMessage;
 warningOnce.resetWarned = resetWarned;
 warningOnce.noteOnce = noteOnce;
 
