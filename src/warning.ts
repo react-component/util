@@ -1,17 +1,54 @@
 /* eslint-disable no-console */
 let warned: Record<string, boolean> = {};
 
+export type preMessageFn = (
+  type: 'warning' | 'note',
+  message: string,
+) => string | null | undefined | number;
+
+const preWarningFns: preMessageFn[] = [];
+
+/**
+ * Pre warning enable you to parse content before console.error.
+ * Modify to null will prevent warning.
+ */
+export const preMessage = (fn: preMessageFn) => {
+  preWarningFns.push(fn);
+};
+
 export function warning(valid: boolean, message: string) {
   // Support uglify
-  if (process.env.NODE_ENV !== 'production' && !valid && console !== undefined) {
-    console.error(`Warning: ${message}`);
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    !valid &&
+    console !== undefined
+  ) {
+    const finalMessage = preWarningFns.reduce(
+      (msg, preMessageFn) => preMessageFn('warning', msg ?? ''),
+      message,
+    );
+
+    if (finalMessage) {
+      console.error(`Warning: ${finalMessage}`);
+    }
   }
 }
 
 export function note(valid: boolean, message: string) {
   // Support uglify
-  if (process.env.NODE_ENV !== 'production' && !valid && console !== undefined) {
-    console.warn(`Note: ${message}`);
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    !valid &&
+    console !== undefined
+  ) {
+    const finalMessage = preWarningFns.reduce(
+      (msg, preMessageFn) => preMessageFn('note', msg ?? ''),
+      message,
+    );
+
+    if (finalMessage) {
+      console.warn(`Note: ${message}`);
+    }
   }
 }
 
