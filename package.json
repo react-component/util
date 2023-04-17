@@ -15,6 +15,8 @@
     "url": "git@github.com:react-component/util.git"
   },
   "license": "MIT",
+  "main": "./lib/index",
+  "module": "./es/index",
   "files": [
     "lib",
     "es"
