@@ -1,7 +1,9 @@
-import React from 'react';
 import { render } from '@testing-library/react';
-import warning, { resetWarned, noteOnce } from '../src/warning';
+import React from 'react';
+import { warning } from '../src';
 import unsafeLifecyclesPolyfill from '../src/unsafeLifecyclesPolyfill';
+
+const { resetWarned, noteOnce } = warning;
 
 describe('warning', () => {
   beforeEach(() => {

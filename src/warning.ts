@@ -75,5 +75,9 @@ export function noteOnce(valid: boolean, message: string) {
   call(note, valid, message);
 }
 
+warningOnce.preMessageFn = preMessage;
+warningOnce.resetWarned = resetWarned;
+warningOnce.noteOnce = noteOnce;
+
 export default warningOnce;
 /* eslint-enable */
