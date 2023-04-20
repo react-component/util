@@ -1,2 +1,8 @@
-## getScrollBarSize
-<code src="../examples/getScrollBarSize.tsx">
+---
+title: getScrollBarSize
+nav:
+  title: Demo
+  path: /demo
+---
+
+<code src="../examples/getScrollBarSize.tsx"></code>

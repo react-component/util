@@ -1,7 +1,9 @@
-import React from 'react';
 import { render } from '@testing-library/react';
-import warning, { resetWarned, noteOnce } from '../src/warning';
+import React from 'react';
+import { warning } from '../src';
 import unsafeLifecyclesPolyfill from '../src/unsafeLifecyclesPolyfill';
+
+const { resetWarned, noteOnce } = warning;
 
 describe('warning', () => {
   beforeEach(() => {
@@ -66,5 +68,32 @@ describe('warning', () => {
       expect.stringContaining('componentWillReceiveProps has been renamed'),
     );
     warnSpy.mockRestore();
+  });
+
+  describe('preMessage', () => {
+    it('modify message', () => {
+      const errSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+      warning.preMessage((msg, type) => {
+        if (type === 'warning') {
+          return `WW-${msg}`;
+        }
+        if (type === 'note') {
+          return `NN-${msg}`;
+        }
+
+        return null;
+      });
+
+      warning(false, 'warn');
+      warning.noteOnce(false, 'note');
+
+      expect(errSpy).toHaveBeenCalledWith('Warning: WW-warn');
+      expect(warnSpy).toHaveBeenCalledWith('Note: NN-note');
+
+      errSpy.mockRestore();
+      warnSpy.mockRestore();
+    });
   });
 });

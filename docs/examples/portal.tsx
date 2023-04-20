@@ -1,5 +1,5 @@
 import React from 'react';
-import PortalWrapper from '../../src/PortalWrapper';
+import PortalWrapper from 'rc-util/es/PortalWrapper';
 
 export default () => {
   const divRef = React.useRef();

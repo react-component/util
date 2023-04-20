@@ -1,5 +1,5 @@
 import React from 'react';
-import { isStyleSupport } from '../../src/Dom/styleChecker';
+import { isStyleSupport } from 'rc-util/es/Dom/styleChecker';
 
 export default () => {
   const supportFlex = isStyleSupport('flex');
