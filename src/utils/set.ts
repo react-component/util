@@ -76,14 +76,20 @@ export function merge<T extends object>(...sources: T[]) {
     function internalMerge(path: Path) {
       const value = get(src, path);
 
-      if (isObject(value) || Array.isArray(value)) {
+      const isArr = Array.isArray(value);
+
+      if (isArr || isObject(value)) {
         // Only add not loop obj
         if (!loopSet.has(value)) {
           loopSet.add(value);
 
-          // Init container if not exist
           const originValue = get(clone, path);
-          if (!originValue || typeof originValue !== 'object') {
+
+          if (isArr) {
+            // Array will always be override
+            clone = set(clone, path, []);
+          } else if (!originValue || typeof originValue !== 'object') {
+            // Init container if not exist
             clone = set(clone, path, createEmpty(value));
           }
 
