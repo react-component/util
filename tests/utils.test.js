@@ -179,6 +179,14 @@ describe('utils', () => {
           },
         });
       });
+
+      it('different type', () => {
+        const merged = merge({ selector: 'K1' }, { selector: ['K1', 'K2'] });
+
+        expect(merged).toEqual({
+          selector: ['K1', 'K2'],
+        });
+      });
     });
   });
 
