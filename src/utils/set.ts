@@ -1,8 +1,10 @@
 import get from './get';
 
+export type Path = (string | number)[];
+
 function internalSet<Entity = any, Output = Entity, Value = any>(
   entity: Entity,
-  paths: (string | number)[],
+  paths: Path,
   value: Value,
   removeIfUndefined: boolean,
 ): Output {
@@ -48,4 +50,53 @@ export default function set<Entity = any, Output = Entity, Value = any>(
   }
 
   return internalSet(entity, paths, value, removeIfUndefined);
+}
+
+function isObject(obj: any) {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    Object.getPrototypeOf(obj) === Object.prototype
+  );
+}
+
+function createEmpty<T>(source: T) {
+  return (Array.isArray(source) ? [] : {}) as T;
+}
+
+/**
+ * Merge objects which will create
+ */
+export function merge<T extends object>(...sources: T[]) {
+  let clone = createEmpty(sources[0]);
+
+  const loopSet = new Set<object>();
+
+  sources.forEach(src => {
+    function internalMerge(path: Path) {
+      const value = get(src, path);
+
+      if (isObject(value) || Array.isArray(value)) {
+        // Only add not loop obj
+        if (!loopSet.has(value)) {
+          loopSet.add(value);
+
+          // Init container if not exist
+          if (!get(clone, path)) {
+            clone = set(clone, path, createEmpty(value));
+          }
+
+          Object.keys(value).forEach(key => {
+            internalMerge([...path, key]);
+          });
+        }
+      } else {
+        clone = set(clone, path, value);
+      }
+    }
+
+    internalMerge([]);
+  });
+
+  return clone;
 }

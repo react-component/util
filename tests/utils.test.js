@@ -1,6 +1,6 @@
-import get from '../src/utils/get';
-import set from '../src/utils/set';
 import pickAttrs from '../src/pickAttrs';
+import get from '../src/utils/get';
+import set, { merge } from '../src/utils/set';
 
 describe('utils', () => {
   it('get', () => {
@@ -95,6 +95,90 @@ describe('utils', () => {
       );
       expect(longTgt).toEqual({ lv1: { lv2: { lv3: {} } } });
       expect('lv4' in longTgt.lv1.lv2.lv3).toBeFalsy();
+    });
+
+    describe('merge', () => {
+      it('basic', () => {
+        const merged = merge({}, { a: 1 }, { b: 2 });
+
+        expect(merged).toEqual({
+          a: 1,
+          b: 2,
+        });
+      });
+
+      it('array', () => {
+        const merged = merge([], [{ a: 1 }], [{ b: 2 }]);
+
+        expect(merged).toEqual([
+          {
+            a: 1,
+            b: 2,
+          },
+        ]);
+      });
+
+      it('not cover', () => {
+        const merged = merge(
+          [],
+          [{ a: { e: 8 }, b: 2 }],
+          [{ a: { f: 9 }, c: 3 }],
+        );
+
+        expect(merged).toEqual([
+          {
+            a: {
+              e: 8,
+              f: 9,
+            },
+            b: 2,
+            c: 3,
+          },
+        ]);
+      });
+
+      it('DayObject', () => {
+        const now = new Date();
+
+        const merged = merge(
+          { a: 123 },
+          { b: 234 },
+          {
+            now,
+          },
+        );
+
+        expect(merged).toEqual({
+          a: 123,
+          b: 234,
+          now,
+        });
+
+        expect(merged.now).toBe(now);
+      });
+
+      it('empty object', () => {
+        const merged = merge({}, { a: {} });
+        expect(merged).toEqual({ a: {} });
+      });
+
+      it('no dead-loop', () => {
+        const looper = {
+          a: 1,
+          b: {
+            c: 3,
+          },
+        };
+        looper.b.looper = looper;
+
+        const merged = merge(looper);
+        expect(merged).toEqual({
+          a: 1,
+          b: {
+            c: 3,
+          },
+        });
+      });
     });
   });
 
