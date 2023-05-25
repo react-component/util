@@ -82,7 +82,8 @@ export function merge<T extends object>(...sources: T[]) {
           loopSet.add(value);
 
           // Init container if not exist
-          if (!get(clone, path)) {
+          const originValue = get(clone, path);
+          if (!originValue || typeof originValue !== 'object') {
             clone = set(clone, path, createEmpty(value));
           }
 
