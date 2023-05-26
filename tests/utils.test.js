@@ -107,26 +107,31 @@ describe('utils', () => {
         });
       });
 
-      it('array', () => {
+      it('array is replacement', () => {
         const merged = merge([], [{ a: 1 }], [{ b: 2 }]);
 
         expect(merged).toEqual([
           {
-            a: 1,
             b: 2,
           },
         ]);
       });
 
+      it('array is replacement - sub field', () => {
+        const merged = merge({ a: 1, users: [1, 2] }, { users: [] });
+
+        expect(merged).toEqual({ a: 1, users: [] });
+      });
+
       it('not cover', () => {
         const merged = merge(
-          [],
-          [{ a: { e: 8 }, b: 2 }],
-          [{ a: { f: 9 }, c: 3 }],
+          {},
+          { _: { a: { e: 8 }, b: 2 } },
+          { _: { a: { f: 9 }, c: 3 } },
         );
 
-        expect(merged).toEqual([
-          {
+        expect(merged).toEqual({
+          _: {
             a: {
               e: 8,
               f: 9,
@@ -134,7 +139,7 @@ describe('utils', () => {
             b: 2,
             c: 3,
           },
-        ]);
+        });
       });
 
       it('DayObject', () => {
