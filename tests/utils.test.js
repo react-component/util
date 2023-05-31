@@ -192,6 +192,24 @@ describe('utils', () => {
           selector: ['K1', 'K2'],
         });
       });
+
+      it('shallow copy', () => {
+        const ori = {
+          list: [{ a: 1 }, { a: 2 }],
+        };
+
+        const cloneList = [...ori.list];
+        cloneList[0] = {
+          ...cloneList[0],
+          b: 3,
+        };
+
+        const merged = merge(ori, { list: cloneList });
+
+        expect(merged).toEqual({
+          list: [{ a: 1, b: 3 }, { a: 2 }],
+        });
+      });
     });
   });
 
