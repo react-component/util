@@ -70,9 +70,9 @@ function createEmpty<T>(source: T) {
 export function merge<T extends object>(...sources: T[]) {
   let clone = createEmpty(sources[0]);
 
-  const loopSet = new Set<object>();
-
   sources.forEach(src => {
+    const loopSet = new Set<object>();
+
     function internalMerge(path: Path) {
       const value = get(src, path);
 
