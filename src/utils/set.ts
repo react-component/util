@@ -84,6 +84,7 @@ export function merge<T extends object>(...sources: T[]) {
           loopSet.add(value);
 
           const originValue = get(clone, path);
+          console.log('>>>', clone, path, originValue);
 
           if (isArr) {
             // Array will always be override
