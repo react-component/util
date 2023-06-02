@@ -355,6 +355,7 @@ describe('hooks', () => {
             forceUpdate(1);
           } else {
             expect(firstMount).toBeFalsy();
+            forceUpdate(2);
           }
 
           timesRef.current += 1;
@@ -364,7 +365,7 @@ describe('hooks', () => {
       };
 
       const { container } = render(<Demo />);
-      expect(container.querySelector('p').textContent).toEqual(1);
+      expect(container.querySelector('p').textContent).toEqual('2');
     });
   });
 
