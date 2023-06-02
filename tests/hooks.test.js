@@ -343,6 +343,30 @@ describe('hooks', () => {
       expect(errorSpy).not.toHaveBeenCalled();
       errorSpy.mockRestore();
     });
+
+    it('can get mount state', () => {
+      const Demo = () => {
+        const timesRef = React.useRef(0);
+        const [, forceUpdate] = React.useState(0);
+
+        useLayoutEffect(firstMount => {
+          if (timesRef.current === 0) {
+            expect(firstMount).toBeTruthy();
+            forceUpdate(1);
+          } else {
+            expect(firstMount).toBeFalsy();
+            forceUpdate(2);
+          }
+
+          timesRef.current += 1;
+        });
+
+        return <p>{timesRef.current}</p>;
+      };
+
+      const { container } = render(<Demo />);
+      expect(container.querySelector('p').textContent).toEqual('2');
+    });
   });
 
   describe('useState', () => {
