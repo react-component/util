@@ -210,6 +210,21 @@ describe('utils', () => {
           list: [{ a: 1, b: 3 }, { a: 2 }],
         });
       });
+
+      it('skip class object', () => {
+        class User {
+          constructor(name, age) {
+            this.name = name;
+            this.age = age;
+          }
+        }
+
+        const user = new User('little', 2);
+
+        const merged = merge({}, { user }, {});
+
+        expect(merged.user).toBe(user);
+      });
     });
   });
 
