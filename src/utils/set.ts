@@ -71,9 +71,9 @@ export function merge<T extends object>(...sources: T[]) {
   let clone = createEmpty(sources[0]);
 
   sources.forEach(src => {
-    const loopSet = new Set<object>();
+    function internalMerge(path: Path, parentLoopSet?: Set<object>) {
+      const loopSet = new Set(parentLoopSet);
 
-    function internalMerge(path: Path) {
       const value = get(src, path);
 
       const isArr = Array.isArray(value);
@@ -94,7 +94,7 @@ export function merge<T extends object>(...sources: T[]) {
           }
 
           Object.keys(value).forEach(key => {
-            internalMerge([...path, key]);
+            internalMerge([...path, key], loopSet);
           });
         }
       } else {
