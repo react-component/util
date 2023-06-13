@@ -225,6 +225,17 @@ describe('utils', () => {
 
         expect(merged.user).toBe(user);
       });
+
+      it('ref object', () => {
+        const obj = { bamboo: 1 };
+
+        const merged = merge({}, { a: obj, b: obj }, {});
+
+        expect(merged).toEqual({
+          a: obj,
+          b: obj,
+        });
+      });
     });
   });
 
