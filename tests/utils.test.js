@@ -1,6 +1,6 @@
-import get from '../src/utils/get';
-import set from '../src/utils/set';
 import pickAttrs from '../src/pickAttrs';
+import get from '../src/utils/get';
+import set, { merge } from '../src/utils/set';
 
 describe('utils', () => {
   it('get', () => {
@@ -95,6 +95,147 @@ describe('utils', () => {
       );
       expect(longTgt).toEqual({ lv1: { lv2: { lv3: {} } } });
       expect('lv4' in longTgt.lv1.lv2.lv3).toBeFalsy();
+    });
+
+    describe('merge', () => {
+      it('basic', () => {
+        const merged = merge({}, { a: 1 }, { b: 2 });
+
+        expect(merged).toEqual({
+          a: 1,
+          b: 2,
+        });
+      });
+
+      it('array is replacement', () => {
+        const merged = merge([], [{ a: 1 }], [{ b: 2 }]);
+
+        expect(merged).toEqual([
+          {
+            b: 2,
+          },
+        ]);
+      });
+
+      it('array is replacement - sub field', () => {
+        const merged = merge({ a: 1, users: [1, 2] }, { users: [] });
+
+        expect(merged).toEqual({ a: 1, users: [] });
+      });
+
+      it('not cover', () => {
+        const merged = merge(
+          {},
+          { _: { a: { e: 8 }, b: 2 } },
+          { _: { a: { f: 9 }, c: 3 } },
+        );
+
+        expect(merged).toEqual({
+          _: {
+            a: {
+              e: 8,
+              f: 9,
+            },
+            b: 2,
+            c: 3,
+          },
+        });
+      });
+
+      it('DayObject', () => {
+        const now = new Date();
+
+        const merged = merge(
+          { a: 123 },
+          { b: 234 },
+          {
+            now,
+          },
+        );
+
+        expect(merged).toEqual({
+          a: 123,
+          b: 234,
+          now,
+        });
+
+        expect(merged.now).toBe(now);
+      });
+
+      it('empty object', () => {
+        const merged = merge({}, { a: {} });
+        expect(merged).toEqual({ a: {} });
+      });
+
+      it('no dead-loop', () => {
+        const looper = {
+          a: 1,
+          b: {
+            c: 3,
+          },
+        };
+        looper.b.looper = looper;
+
+        const merged = merge(looper);
+        expect(merged).toEqual({
+          a: 1,
+          b: {
+            c: 3,
+          },
+        });
+      });
+
+      it('different type', () => {
+        const merged = merge({ selector: 'K1' }, { selector: ['K1', 'K2'] });
+
+        expect(merged).toEqual({
+          selector: ['K1', 'K2'],
+        });
+      });
+
+      it('shallow copy', () => {
+        const ori = {
+          list: [{ a: 1 }, { a: 2 }],
+        };
+
+        const cloneList = [...ori.list];
+        cloneList[0] = {
+          ...cloneList[0],
+          b: 3,
+        };
+
+        const merged = merge(ori, { list: cloneList });
+
+        expect(merged).toEqual({
+          list: [{ a: 1, b: 3 }, { a: 2 }],
+        });
+      });
+
+      it('skip class object', () => {
+        class User {
+          constructor(name, age) {
+            this.name = name;
+            this.age = age;
+          }
+        }
+
+        const user = new User('little', 2);
+
+        const merged = merge({}, { user }, {});
+
+        expect(merged.user).toBe(user);
+      });
+
+      it('ref object', () => {
+        const obj = { bamboo: 1 };
+
+        const merged = merge({}, { a: obj, b: obj }, {});
+
+        expect(merged).toEqual({
+          a: obj,
+          b: obj,
+        });
+      });
     });
   });
 

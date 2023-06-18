@@ -7,12 +7,12 @@ export default function addEventListenerWrap(target, eventType, cb, option) {
         ReactDOM.unstable_batchedUpdates(cb, e);
       }
     : cb;
-  if (target.addEventListener) {
+  if (target?.addEventListener) {
     target.addEventListener(eventType, callback, option);
   }
   return {
     remove: () => {
-      if (target.removeEventListener) {
+      if (target?.removeEventListener) {
         target.removeEventListener(eventType, callback, option);
       }
     },
