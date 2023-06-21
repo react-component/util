@@ -236,6 +236,16 @@ describe('utils', () => {
           b: obj,
         });
       });
+
+      it('support Symbol', () => {
+        const symbol = Symbol();
+
+        const merged = merge({}, { [symbol]: 1 });
+
+        expect(merged).toEqual({
+          [symbol]: 1,
+        });
+      });
     });
   });
 

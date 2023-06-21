@@ -1,6 +1,6 @@
 import get from './get';
 
-export type Path = (string | number)[];
+export type Path = (string | number | symbol)[];
 
 function internalSet<Entity = any, Output = Entity, Value = any>(
   entity: Entity,
@@ -35,7 +35,7 @@ function internalSet<Entity = any, Output = Entity, Value = any>(
 
 export default function set<Entity = any, Output = Entity, Value = any>(
   entity: Entity,
-  paths: (string | number)[],
+  paths: Path,
   value: Value,
   removeIfUndefined: boolean = false,
 ): Output {
@@ -63,6 +63,8 @@ function isObject(obj: any) {
 function createEmpty<T>(source: T) {
   return (Array.isArray(source) ? [] : {}) as T;
 }
+
+const keys = typeof Reflect === 'undefined' ? Object.keys : Reflect.ownKeys;
 
 /**
  * Merge objects which will create
@@ -93,7 +95,7 @@ export function merge<T extends object>(...sources: T[]) {
             clone = set(clone, path, createEmpty(value));
           }
 
-          Object.keys(value).forEach(key => {
+          keys(value).forEach(key => {
             internalMerge([...path, key], loopSet);
           });
         }
