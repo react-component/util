@@ -75,9 +75,11 @@ export function injectCSS(css: string, option: Options = {}) {
         ['prepend', 'prependQueue'].includes(node.getAttribute(APPEND_ORDER)),
       );
       if (existStyle.length) {
-        container.insertBefore(
+        const lastStyle = existStyle[existStyle.length - 1].nextSibling;
+
+        lastStyle?.parentNode?.insertBefore(
           styleNode,
-          existStyle[existStyle.length - 1].nextSibling,
+          lastStyle,
         );
 
         return styleNode;
