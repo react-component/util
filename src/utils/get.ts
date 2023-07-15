@@ -1,6 +1,6 @@
 export default function get(
   entity: any,
-  path: (string | number)[] | readonly (string | number)[],
+  path: (string | number | symbol)[] | readonly (string | number | symbol)[],
 ) {
   let current = entity;
 
