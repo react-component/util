@@ -46,7 +46,7 @@ function getOrder(prepend?: Prepend): AppendType {
  */
 function findStyles(container: ContainerType) {
   return Array.from(
-    (containerCache.get(container) || container).children,
+    (containerCache.get(container) || container)?.children ?? [],
   ).filter(node => node.tagName === 'STYLE') as HTMLStyleElement[];
 }
 
@@ -66,7 +66,7 @@ export function injectCSS(css: string, option: Options = {}) {
   styleNode.innerHTML = css;
 
   const container = getContainer(option);
-  const { firstChild } = container;
+  const firstChild = container?.firstChild;
 
   if (prepend) {
     // If is queue `prepend`, it will prepend first style and then append rest style
@@ -85,7 +85,9 @@ export function injectCSS(css: string, option: Options = {}) {
     }
 
     // Use `insertBefore` as `prepend`
-    container.insertBefore(styleNode, firstChild);
+    if (firstChild) {
+      container.insertBefore(styleNode, firstChild);
+    }
   } else {
     container.appendChild(styleNode);
   }
