@@ -192,6 +192,60 @@ describe('utils', () => {
           selector: ['K1', 'K2'],
         });
       });
+
+      it('shallow copy', () => {
+        const ori = {
+          list: [{ a: 1 }, { a: 2 }],
+        };
+
+        const cloneList = [...ori.list];
+        cloneList[0] = {
+          ...cloneList[0],
+          b: 3,
+        };
+
+        const merged = merge(ori, { list: cloneList });
+
+        expect(merged).toEqual({
+          list: [{ a: 1, b: 3 }, { a: 2 }],
+        });
+      });
+
+      it('skip class object', () => {
+        class User {
+          constructor(name, age) {
+            this.name = name;
+            this.age = age;
+          }
+        }
+
+        const user = new User('little', 2);
+
+        const merged = merge({}, { user }, {});
+
+        expect(merged.user).toBe(user);
+      });
+
+      it('ref object', () => {
+        const obj = { bamboo: 1 };
+
+        const merged = merge({}, { a: obj, b: obj }, {});
+
+        expect(merged).toEqual({
+          a: obj,
+          b: obj,
+        });
+      });
+
+      it('support Symbol', () => {
+        const symbol = Symbol();
+
+        const merged = merge({}, { [symbol]: 1 });
+
+        expect(merged).toEqual({
+          [symbol]: 1,
+        });
+      });
     });
   });
 
