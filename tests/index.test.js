@@ -1,4 +1,4 @@
-/* eslint-disable react/prefer-es6-class, react/no-render-return-value */
+/* eslint-disable react/prefer-es6-class, react/no-render-return-value, react/no-deprecated */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import createReactClass from 'create-react-class';

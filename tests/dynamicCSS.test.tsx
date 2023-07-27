@@ -1,9 +1,9 @@
 /* eslint-disable no-eval */
 import {
-  injectCSS,
-  updateCSS,
-  removeCSS,
   clearContainerCache,
+  injectCSS,
+  removeCSS,
+  updateCSS,
 } from '../src/Dom/dynamicCSS';
 
 const TEST_STYLE = '.bamboo { context: "light" }';
@@ -85,6 +85,24 @@ describe('dynamicCSS', () => {
         expect(nextStyleNodes[1]).toBe(styles[1]);
         expect(nextStyleNodes[2]).toBe(prependStyle);
         expect(nextStyleNodes[3]).toBe(appendStyle);
+      });
+
+      it('prepend with queue and priority', () => {
+        const style2 = injectCSS(TEST_STYLE, { prepend: 'queue', priority: 2 });
+        const style1 = injectCSS(TEST_STYLE, { prepend: 'queue', priority: 1 });
+        const style0 = injectCSS(TEST_STYLE, { prepend: 'queue', priority: 0 });
+        const style = injectCSS(TEST_STYLE, { prepend: 'queue' });
+        const stylePrepend = injectCSS(TEST_STYLE, { prepend: true });
+
+        const head = document.querySelector('head');
+        const styleNodes = Array.from(head.querySelectorAll('style'));
+        expect(styleNodes).toHaveLength(5);
+
+        const styles = [stylePrepend, style0, style, style1, style2];
+
+        for (let i = 0; i < styleNodes.length; i += 1) {
+          expect(styles[i]).toBe(styleNodes[i]);
+        }
       });
     });
   });
