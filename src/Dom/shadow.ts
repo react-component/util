@@ -6,7 +6,7 @@ function getRoot(ele: Node) {
  * Check if is in shadowRoot
  */
 export function inShadow(ele: Node) {
-  return getRoot(ele) !== ele?.ownerDocument;
+  return getRoot(ele) instanceof ShadowRoot;
 }
 
 /**
