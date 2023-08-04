@@ -19,5 +19,10 @@ describe('shadow', () => {
 
       expect(getShadowRoot(button)).toBeNull();
     });
+
+    it('should return null if dom is not appended', () => {
+      const button = document.createElement('button');
+      expect(getShadowRoot(button)).toBeNull();
+    });
   });
 });
