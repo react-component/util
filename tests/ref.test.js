@@ -1,6 +1,7 @@
 /* eslint-disable no-eval */
+import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { render } from '@testing-library/react';
+import useEvent from '../src/hooks/useEvent';
 import { composeRef, supportRef, useComposeRef } from '../src/ref';
 
 describe('ref', () => {
@@ -34,6 +35,37 @@ describe('ref', () => {
 
       expect(ref1.current).toBeTruthy();
       expect(ref1.current).toBe(ref2.current);
+    });
+
+    it('useComposeRef not changed', () => {
+      let count = 0;
+
+      const Demo = () => {
+        const [, forceUpdate] = React.useState({});
+
+        const ref1 = React.useRef();
+        const ref2 = React.useRef();
+        const refFn = useEvent(() => {
+          count += 1;
+        });
+        const mergedRef = useComposeRef(ref1, ref2, refFn);
+        return (
+          <button ref={mergedRef} onClick={() => forceUpdate({})}>
+            Update
+          </button>
+        );
+      };
+
+      const { container, unmount } = render(<Demo />);
+      expect(count).toEqual(1);
+
+      for (let i = 0; i < 10; i += 1) {
+        fireEvent.click(container.querySelector('button'));
+        expect(count).toEqual(1);
+      }
+
+      unmount();
+      expect(count).toEqual(2);
     });
   });
 
