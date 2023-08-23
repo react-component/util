@@ -1,8 +1,13 @@
 /* eslint-disable no-eval */
 import { fireEvent, render } from '@testing-library/react';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import useEvent from '../src/hooks/useEvent';
-import { composeRef, supportRef, useComposeRef } from '../src/ref';
+import {
+  composeRef,
+  supportNodeRef,
+  supportRef,
+  useComposeRef,
+} from '../src/ref';
 
 describe('ref', () => {
   describe('composeRef', () => {
@@ -12,7 +17,7 @@ describe('ref', () => {
 
       const mergedRef = composeRef(refFunc1, refFunc2);
       const testRefObj = {};
-      mergedRef(testRefObj);
+      (mergedRef as any)(testRefObj);
       expect(refFunc1).toHaveBeenCalledWith(testRefObj);
       expect(refFunc2).toHaveBeenCalledWith(testRefObj);
     });
@@ -25,7 +30,7 @@ describe('ref', () => {
 
     it('useComposeRef', () => {
       const Demo = ({ ref1, ref2 }) => {
-        const mergedRef = useComposeRef(ref1, ref2);
+        const mergedRef = useComposeRef<HTMLDivElement>(ref1, ref2);
         return <div ref={mergedRef} />;
       };
 
@@ -70,14 +75,14 @@ describe('ref', () => {
   });
 
   describe('supportRef', () => {
-    class Holder extends React.Component {
+    class Holder extends React.Component<{ children: ReactNode }> {
       render() {
         return this.props.children;
       }
     }
 
     it('function component', () => {
-      const holderRef = React.createRef();
+      const holderRef = React.createRef<Holder>();
 
       function FC() {
         return <div />;
@@ -93,7 +98,7 @@ describe('ref', () => {
     });
 
     it('arrow function component', () => {
-      const holderRef = React.createRef();
+      const holderRef = React.createRef<Holder>();
 
       // Use eval since jest will convert arrow function to function
       const FC = eval('() => null');
@@ -107,7 +112,7 @@ describe('ref', () => {
     });
 
     it('forwardRef function component', () => {
-      const holderRef = React.createRef();
+      const holderRef = React.createRef<Holder>();
 
       const FRC = React.forwardRef(() => <div />);
       render(
@@ -120,7 +125,7 @@ describe('ref', () => {
     });
 
     it('class component', () => {
-      const holderRef = React.createRef();
+      const holderRef = React.createRef<Holder>();
 
       class CC extends React.Component {
         state = {};
@@ -139,7 +144,7 @@ describe('ref', () => {
     });
 
     it('memo of function component', () => {
-      const holderRef = React.createRef();
+      const holderRef = React.createRef<Holder>();
 
       const FC = () => <div />;
       const MemoFC = React.memo(FC);
@@ -153,7 +158,7 @@ describe('ref', () => {
     });
 
     it('memo of forwardRef function component', () => {
-      const holderRef = React.createRef();
+      const holderRef = React.createRef<Holder>();
 
       const FRC = React.forwardRef(() => <div />);
       const MemoFC = React.memo(FRC);
@@ -164,6 +169,22 @@ describe('ref', () => {
       );
       expect(supportRef(MemoFC)).toBeTruthy();
       expect(supportRef(holderRef.current.props.children)).toBeTruthy();
+    });
+  });
+
+  describe('nodeSupportRef', () => {
+    it('invalid element but valid ReactNode', () => {
+      expect(supportNodeRef(true)).toBeFalsy();
+      expect(supportNodeRef('div')).toBeFalsy();
+      expect(supportNodeRef(123)).toBeFalsy();
+      expect(supportNodeRef(<></>)).toBeFalsy();
+    });
+
+    it('FC', () => {
+      const FC = () => <div />;
+      const RefFC = React.forwardRef(FC);
+      expect(supportNodeRef(<FC />)).toBeFalsy();
+      expect(supportNodeRef(<RefFC />)).toBeTruthy();
     });
   });
 });
