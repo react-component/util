@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import type * as React from 'react';
-import { isMemo } from 'react-is';
+import { isValidElement, ReactNode } from 'react';
+import { isFragment, isMemo } from 'react-is';
 import useMemo from './hooks/useMemo';
 
 export function fillRef<T>(ref: React.Ref<T>, node: T) {
@@ -55,5 +56,17 @@ export function supportRef(nodeOrComponent: any): boolean {
   }
 
   return true;
+}
+
+export function supportNodeRef(node: ReactNode): boolean {
+  if (!isValidElement(node)) {
+    return false;
+  }
+
+  if (isFragment(node)) {
+    return false;
+  }
+
+  return supportRef(node);
 }
 /* eslint-enable */
