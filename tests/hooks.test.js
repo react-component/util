@@ -27,7 +27,6 @@ describe('hooks', () => {
     const FC = ({ open, data }) => {
       const memoData = useMemo(
         () => data,
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [open, data],
         (prev, next) => next[0] && prev[1] !== next[1],
       );
