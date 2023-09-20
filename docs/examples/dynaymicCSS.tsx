@@ -1,12 +1,13 @@
-import React from 'react';
-import { updateCSS, removeCSS } from 'rc-util/es/Dom/dynamicCSS';
 import type { Prepend } from 'rc-util/es/Dom/dynamicCSS';
+import { removeCSS, updateCSS } from 'rc-util/es/Dom/dynamicCSS';
+import React from 'react';
 
-function injectStyle(id: number, prepend?: Prepend) {
+function injectStyle(id: number, prepend?: Prepend, priority?: number) {
   const randomColor = Math.floor(Math.random() * 16777215).toString(16);
 
   updateCSS(`body { background: #${randomColor} }`, `style-${id}`, {
     prepend,
+    priority,
   });
 }
 
@@ -33,6 +34,15 @@ export default () => {
         }}
       >
         Prepend Queue: {id}
+      </button>
+
+      <button
+        onClick={() => {
+          injectStyle(id, 'queue', -1);
+          setId(id + 1);
+        }}
+      >
+        Prepend Queue Priority: {id}
       </button>
 
       <button
