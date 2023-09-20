@@ -37,7 +37,11 @@ export function useComposeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
   );
 }
 
-export function supportRef(nodeOrComponent: any): boolean {
+interface WithRef {
+  ref: React.Ref<any>;
+}
+
+export function supportRef(nodeOrComponent: any): nodeOrComponent is WithRef {
   const type = isMemo(nodeOrComponent)
     ? nodeOrComponent.type.type
     : nodeOrComponent.type;
