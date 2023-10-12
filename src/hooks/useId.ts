@@ -18,32 +18,47 @@ export function resetUuid() {
   }
 }
 
-export default function useId(id?: string) {
-  // Inner id for accessibility usage. Only work in client side
-  const [innerId, setInnerId] = React.useState<string>('ssr-id');
+const useOriginId = getUseId();
 
-  const useOriginId = getUseId();
-  const reactNativeId = useOriginId?.();
+export default useOriginId
+  ? // Use React `useId`
+    function useId(id?: string) {
+      const reactId = useOriginId();
 
-  React.useEffect(() => {
-    if (!useOriginId) {
-      const nextId = uuid;
-      uuid += 1;
+      // Developer passed id is single source of truth
+      if (id) {
+        return id;
+      }
 
-      setInnerId(`rc_unique_${nextId}`);
+      // Test env always return mock id
+      if (process.env.NODE_ENV === 'test') {
+        return 'test-id';
+      }
+
+      return reactId;
     }
-  }, []);
+  : // Use compatible of `useId`
+    function useCompatId(id?: string) {
+      // Inner id for accessibility usage. Only work in client side
+      const [innerId, setInnerId] = React.useState<string>('ssr-id');
 
-  // Developer passed id is single source of truth
-  if (id) {
-    return id;
-  }
+      React.useEffect(() => {
+        const nextId = uuid;
+        uuid += 1;
 
-  // Test env always return mock id
-  if (process.env.NODE_ENV === 'test') {
-    return 'test-id';
-  }
+        setInnerId(`rc_unique_${nextId}`);
+      }, []);
 
-  // Return react native id or inner id
-  return reactNativeId || innerId;
-}
+      // Developer passed id is single source of truth
+      if (id) {
+        return id;
+      }
+
+      // Test env always return mock id
+      if (process.env.NODE_ENV === 'test') {
+        return 'test-id';
+      }
+
+      // Return react native id or inner id
+      return innerId;
+    };
