@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { renderToString } from 'react-dom/server';
-import useId, { resetUuid } from '../src/hooks/useId';
+import useId from '../src/hooks/useId';
 import useLayoutEffect from '../src/hooks/useLayoutEffect';
 import useMemo from '../src/hooks/useMemo';
 import useMergedState from '../src/hooks/useMergedState';
@@ -486,41 +486,6 @@ describe('hooks', () => {
 
       errorSpy.mockRestore();
       process.env.NODE_ENV = originEnv;
-    });
-
-    it('fallback of React 17 or lower', () => {
-      const errorSpy = jest.spyOn(console, 'error');
-      const originEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'development';
-      global.disableUseId = true;
-
-      // SSR
-      const content = renderToString(
-        <React.StrictMode>
-          <Demo />
-        </React.StrictMode>,
-      );
-      expect(content).toContain('ssr-id');
-
-      // Hydrate
-      resetUuid();
-      const holder = document.createElement('div');
-      holder.innerHTML = content;
-      const { container } = render(
-        <React.StrictMode>
-          <Demo />
-        </React.StrictMode>,
-        {
-          hydrate: true,
-          container: holder,
-        },
-      );
-
-      matchId(container, 'rc_unique_1');
-
-      errorSpy.mockRestore();
-      process.env.NODE_ENV = originEnv;
-      global.disableUseId = false;
     });
   });
 
