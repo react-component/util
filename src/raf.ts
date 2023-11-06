@@ -44,8 +44,12 @@ const wrapperRaf = (callback: () => void, times = 1): number => {
 
 wrapperRaf.cancel = (id: number) => {
   const realId = rafIds.get(id);
-  cleanup(realId);
+  cleanup(id);
   return caf(realId);
 };
+
+if (process.env.NODE_ENV !== 'production') {
+  wrapperRaf.ids = () => rafIds;
+}
 
 export default wrapperRaf;
