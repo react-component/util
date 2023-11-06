@@ -48,4 +48,8 @@ wrapperRaf.cancel = (id: number) => {
   return caf(realId);
 };
 
+if (process.env.NODE_ENV !== 'production') {
+  wrapperRaf.ids = () => rafIds;
+}
+
 export default wrapperRaf;

@@ -20,11 +20,19 @@ describe('raf', () => {
   it('cancel', done => {
     let bamboo = false;
 
+    // Call some native raf
+    for (let i = 0; i < 10; i += 1) {
+      const nativeId = requestAnimationFrame(() => {});
+      cancelAnimationFrame(nativeId);
+    }
+
     const id = raf(() => {
       bamboo = true;
     }, 2);
+    expect(raf.ids().has(id)).toBeTruthy();
 
     raf.cancel(id);
+    expect(raf.ids().has(id)).toBeFalsy();
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
