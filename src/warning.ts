@@ -16,8 +16,18 @@ export const preMessage = (fn: preMessageFn) => {
   preWarningFns.push(fn);
 };
 
+/**
+ * Warning if condition not match.
+ * @param valid Condition
+ * @param message Warning message
+ * @example
+ * ```js
+ * warning(false, 'some error'); // print some error
+ * warning(true, 'some error'); // print nothing
+ * warning(1 === 2, 'some error'); // print some error
+ * ```
+ */
 export function warning(valid: boolean, message: string) {
-  // Support uglify
   if (
     process.env.NODE_ENV !== 'production' &&
     !valid &&
@@ -34,8 +44,8 @@ export function warning(valid: boolean, message: string) {
   }
 }
 
+/** @see Similar to {@link warning} */
 export function note(valid: boolean, message: string) {
-  // Support uglify
   if (
     process.env.NODE_ENV !== 'production' &&
     !valid &&
@@ -67,10 +77,12 @@ export function call(
   }
 }
 
+/** @see Same as {@link warning}, but only warn once for the same message */
 export function warningOnce(valid: boolean, message: string) {
   call(warning, valid, message);
 }
 
+/** @see Same as {@link warning}, but only warn once for the same message */
 export function noteOnce(valid: boolean, message: string) {
   call(note, valid, message);
 }
@@ -80,4 +92,3 @@ warningOnce.resetWarned = resetWarned;
 warningOnce.noteOnce = noteOnce;
 
 export default warningOnce;
-/* eslint-enable */
