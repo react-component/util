@@ -17,7 +17,7 @@ function composeProps<T extends Record<string, any>>(
       };
     }
   });
-  return composedProps;
+  return composedProps as T;
 }
 
 export default composeProps;
