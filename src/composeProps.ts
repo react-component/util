@@ -1,3 +1,6 @@
+/**
+ * @description Unsuitable for function methods with return values
+ */
 function composeProps<T extends Record<string, any>>(
   originProps: T,
   patchProps: Partial<T>,
