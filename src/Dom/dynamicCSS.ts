@@ -21,6 +21,7 @@ interface Options {
    */
   priority?: number;
   mark?: string;
+  styles?: HTMLElement[];
 }
 
 function getMark({ mark }: Options = {}) {
@@ -83,18 +84,22 @@ export function injectCSS(css: string, option: Options = {}) {
   if (prepend) {
     // If is queue `prepend`, it will prepend first style and then append rest style
     if (isPrependQueue) {
-      const existStyle = findStyles(container).filter(node => {
-        // Ignore style which not injected by rc-util with prepend
-        if (
-          !['prepend', 'prependQueue'].includes(node.getAttribute(APPEND_ORDER))
-        ) {
-          return false;
-        }
+      const existStyle = (option.styles || findStyles(container)).filter(
+        node => {
+          // Ignore style which not injected by rc-util with prepend
+          if (
+            !['prepend', 'prependQueue'].includes(
+              node.getAttribute(APPEND_ORDER),
+            )
+          ) {
+            return false;
+          }
 
-        // Ignore style which priority less then new style
-        const nodePriority = Number(node.getAttribute(APPEND_PRIORITY) || 0);
-        return priority >= nodePriority;
-      });
+          // Ignore style which priority less then new style
+          const nodePriority = Number(node.getAttribute(APPEND_PRIORITY) || 0);
+          return priority >= nodePriority;
+        },
+      );
 
       if (existStyle.length) {
         container.insertBefore(
@@ -118,7 +123,7 @@ export function injectCSS(css: string, option: Options = {}) {
 function findExistNode(key: string, option: Options = {}) {
   const container = getContainer(option);
 
-  return findStyles(container).find(
+  return (option.styles || findStyles(container)).find(
     node => node.getAttribute(getMark(option)) === key,
   );
 }
@@ -153,8 +158,14 @@ export function clearContainerCache() {
   containerCache.clear();
 }
 
-export function updateCSS(css: string, key: string, option: Options = {}) {
-  const container = getContainer(option);
+export function updateCSS(
+  css: string,
+  key: string,
+  originOption: Options = {},
+) {
+  const container = getContainer(originOption);
+  const styles = findStyles(container);
+  const option = { ...originOption, styles };
 
   // Sync real parent
   syncRealContainer(container, option);
