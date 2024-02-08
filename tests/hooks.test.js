@@ -420,7 +420,7 @@ describe('hooks', () => {
       const errorSpy = jest.spyOn(console, 'error');
 
       const Demo = () => {
-        const [val, setValue] = useState(0);
+        const [_, setValue] = useState(0);
 
         React.useEffect(
           () => () => {
