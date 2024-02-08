@@ -20,7 +20,7 @@ describe('setStyle', () => {
 
     expect(document.body.style.cssText.replace(/\s/g, '')).toBe(
       `${JSON.stringify(style)
-        .replace(/[\\"|{|}|\s]/g, '')
+        .replace(/[\\"{|}|\s]/g, '')
         .replace(/,/g, ';')};`,
     );
     expect(cacheStyle).toEqual({
