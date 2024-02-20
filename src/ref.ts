@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import type * as React from 'react';
 import { isValidElement, ReactNode } from 'react';
-import { isFragment, isMemo } from 'react-is';
+import { ForwardRef, isFragment, isMemo } from 'react-is';
 import useMemo from './hooks/useMemo';
 
 export function fillRef<T>(ref: React.Ref<T>, node: T) {
@@ -43,14 +43,19 @@ export function supportRef(nodeOrComponent: any): boolean {
     : nodeOrComponent.type;
 
   // Function component node
-  if (typeof type === 'function' && !type.prototype?.render) {
+  if (
+    typeof type === 'function' &&
+    !type.prototype?.render &&
+    type.$$typeof !== ForwardRef
+  ) {
     return false;
   }
 
   // Class component
   if (
     typeof nodeOrComponent === 'function' &&
-    !nodeOrComponent.prototype?.render
+    !nodeOrComponent.prototype?.render &&
+    nodeOrComponent.$$typeof !== ForwardRef
   ) {
     return false;
   }
