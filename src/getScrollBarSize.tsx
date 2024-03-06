@@ -37,7 +37,7 @@ function measureScrollbarSize(ele?: HTMLElement): ScrollBarSize {
     // Set Webkit style
     const webkitScrollbarStyle = getComputedStyle(ele, '::-webkit-scrollbar');
 
-    // Try to avoid CSP case
+    // Try wrap to handle CSP case
     try {
       updateCSS(
         `
