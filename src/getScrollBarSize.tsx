@@ -49,6 +49,9 @@ function measureScrollbarSize(ele?: HTMLElement): ScrollBarSize {
         randomId,
       );
     } catch (e) {
+      // Can't wrap, just log error
+      console.error(e);
+
       // Get from style directly
       fallbackWidth = parseInt(webkitScrollbarStyle.width, 10);
       fallbackHeight = parseInt(webkitScrollbarStyle.height, 10);
