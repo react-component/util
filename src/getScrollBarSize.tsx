@@ -36,16 +36,22 @@ function measureScrollbarSize(ele?: HTMLElement): ScrollBarSize {
 
     // Set Webkit style
     const webkitScrollbarStyle = getComputedStyle(ele, '::-webkit-scrollbar');
+    const width = parseInt(webkitScrollbarStyle.width, 10);
+    const height = parseInt(webkitScrollbarStyle.height, 10);
 
     // Try wrap to handle CSP case
     try {
+      const widthStyle = width ? `width: ${webkitScrollbarStyle.width};` : '';
+      const heightStyle = height
+        ? `height: ${webkitScrollbarStyle.height};`
+        : '';
+
       updateCSS(
         `
-     #${randomId}::-webkit-scrollbar {
-        width: ${webkitScrollbarStyle.width};
-        height: ${webkitScrollbarStyle.height};
-     }
-    `,
+#${randomId}::-webkit-scrollbar {
+${widthStyle}
+${heightStyle}
+}`,
         randomId,
       );
     } catch (e) {
@@ -53,8 +59,8 @@ function measureScrollbarSize(ele?: HTMLElement): ScrollBarSize {
       console.error(e);
 
       // Get from style directly
-      fallbackWidth = parseInt(webkitScrollbarStyle.width, 10);
-      fallbackHeight = parseInt(webkitScrollbarStyle.height, 10);
+      fallbackWidth = width;
+      fallbackHeight = height;
     }
   }
 

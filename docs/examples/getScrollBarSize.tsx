@@ -22,20 +22,23 @@ const cssText = `
 `;
 
 export default () => {
+  const defaultRef = React.useRef<HTMLDivElement>();
   const webkitRef = React.useRef<HTMLDivElement>();
   const scrollRef = React.useRef<HTMLDivElement>();
   const [sizeData, setSizeData] = React.useState('');
 
   React.useEffect(() => {
     const originSize = getScrollBarSize();
+    const defaultSize = getTargetScrollBarSize(defaultRef.current);
     const webkitSize = getTargetScrollBarSize(webkitRef.current);
     const scrollSize = getTargetScrollBarSize(scrollRef.current);
 
     setSizeData(
       [
         `Origin: ${originSize}`,
+        `Default: ${defaultSize.width}/${defaultSize.height}`,
         `Webkit: ${webkitSize.width}/${webkitSize.height}`,
-        `Webkit: ${scrollSize.width}/${scrollSize.height}`,
+        `Scroll: ${scrollSize.width}/${scrollSize.height}`,
       ].join(', '),
     );
   }, []);
@@ -55,6 +58,7 @@ export default () => {
           overflow: 'scroll',
           background: 'yellow',
         }}
+        ref={defaultRef}
       >
         Origin
       </div>
