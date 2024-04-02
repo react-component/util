@@ -15,11 +15,52 @@
     "url": "git@github.com:react-component/util.git"
   },
   "license": "MIT",
-  "main": "./lib/index",
-  "module": "./es/index",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./es/index.js",
+      "require": "./lib/index.js",
+      "types": "./es/index.d.ts"
+    },
+    "./*": {
+      "import": "./es/*.js",
+      "require": "./lib/*.js",
+      "types": "./es/*.d.ts"
+    },
+    "./Children/*": {
+      "import": "./es/Children/*.js",
+      "require": "./lib/Children/*.js",
+      "types": "./es/Children/*.d.ts"
+    },
+    "./debug/*": {
+      "import": "./es/debug/*.js",
+      "require": "./lib/debug/*.js",
+      "types": "./es/debug/*.d.ts"
+    },
+    "./Dom/*": {
+      "import": "./es/Dom/*.js",
+      "require": "./lib/Dom/*.js",
+      "types": "./es/Dom/*.d.ts"
+    },
+    "./hooks/*": {
+      "import": "./es/hooks/*.js",
+      "require": "./lib/hooks/*.js",
+      "types": "./es/hooks/*.d.ts"
+    },
+    "./React/*": {
+      "import": "./es/React/*.js",
+      "require": "./lib/React/*.js",
+      "types": "./es/React/*.d.ts"
+    },
+    "./utils/*": {
+      "import": "./es/utils/*.js",
+      "require": "./lib/utils/*.js",
+      "types": "./es/utils/*.d.ts"
+    }
+  },
   "files": [
-    "lib",
-    "es"
+    "es",
+    "lib"
   ],
   "scripts": {
     "build": "dumi build",

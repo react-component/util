@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "baseUrl": "./",
     "jsx": "preserve",
     "declaration": true,
