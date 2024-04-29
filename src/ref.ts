@@ -28,16 +28,16 @@ export function composeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
   };
 }
 
-export const useComposeRef = <T>(...refs: React.Ref<T>[]): React.Ref<T> => {
+export function useComposeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
   return useMemo(
     () => composeRef(...refs),
     refs,
     (prev, next) =>
       prev.length !== next.length || prev.every((ref, i) => ref !== next[i]),
   );
-};
+}
 
-export const supportRef = (nodeOrComponent: any): boolean => {
+export function supportRef(nodeOrComponent: any): boolean {
   const type = isMemo(nodeOrComponent)
     ? nodeOrComponent.type.type
     : nodeOrComponent.type;
@@ -60,9 +60,9 @@ export const supportRef = (nodeOrComponent: any): boolean => {
     return false;
   }
   return true;
-};
+}
 
-export const supportNodeRef = (node: React.ReactNode): boolean => {
+export function supportNodeRef(node: React.ReactNode): boolean {
   if (!isValidElement(node)) {
     return false;
   }
@@ -70,5 +70,5 @@ export const supportNodeRef = (node: React.ReactNode): boolean => {
     return false;
   }
   return supportRef(node);
-};
+}
 /* eslint-enable */
