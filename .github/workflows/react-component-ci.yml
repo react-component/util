@@ -94,6 +94,9 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@master
+        with:
+          # https://github.com/codecov/codecov-action/issues/190
+          fetch-depth: 2     
 
       - name: restore cache from package-lock.json
         uses: actions/cache@v2
