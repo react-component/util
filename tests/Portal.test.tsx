@@ -1,8 +1,8 @@
+/* eslint-disable react/no-array-index-key */
+import { act, render } from '@testing-library/react';
 import React, { StrictMode, useEffect } from 'react';
-import { render } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
-import PortalWrapper, { getOpenCount } from '../src/PortalWrapper';
 import Portal from '../src/Portal';
+import PortalWrapper, { getOpenCount } from '../src/PortalWrapper';
 
 describe('Portal', () => {
   let domContainer: HTMLDivElement;
