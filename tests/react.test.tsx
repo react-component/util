@@ -1,6 +1,5 @@
-import React from 'react';
-import { act } from 'react-dom/test-utils';
-import { render, unmount, _r, _u } from '../src/React/render';
+import { act } from '@testing-library/react';
+import { _r, _u, render, unmount } from '../src/React/render';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
