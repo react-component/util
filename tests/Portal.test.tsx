@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import { act, render } from '@testing-library/react';
 import React, { StrictMode, useEffect } from 'react';
 import Portal from '../src/Portal';
