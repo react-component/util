@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import type * as React from 'react';
-import { isValidElement, ReactNode } from 'react';
+import { isValidElement } from 'react';
 import { ForwardRef, isFragment, isMemo } from 'react-is';
 import useMemo from './hooks/useMemo';
 
@@ -59,19 +59,16 @@ export function supportRef(nodeOrComponent: any): boolean {
   ) {
     return false;
   }
-
   return true;
 }
 
-export function supportNodeRef(node: ReactNode): boolean {
+export function supportNodeRef(node: React.ReactNode): boolean {
   if (!isValidElement(node)) {
     return false;
   }
-
   if (isFragment(node)) {
     return false;
   }
-
   return supportRef(node);
 }
 /* eslint-enable */
