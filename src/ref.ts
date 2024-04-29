@@ -1,4 +1,4 @@
-/* eslint-disable no-param-reassign,react-hooks/exhaustive-deps */
+/* eslint-disable no-param-reassign */
 import type * as React from 'react';
 import { isValidElement } from 'react';
 import { ForwardRef, isFragment, isMemo } from 'react-is';
