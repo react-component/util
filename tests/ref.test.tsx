@@ -186,5 +186,17 @@ describe('ref', () => {
       expect(supportNodeRef(<FC />)).toBeFalsy();
       expect(supportNodeRef(<RefFC />)).toBeTruthy();
     });
+
+    it('ref', () => {
+      const FC: React.FC = () => <div />;
+      const RefFC = React.forwardRef<
+        HTMLDivElement,
+        React.HTMLAttributes<HTMLDivElement>
+      >((props, ref) => <div {...props} ref={ref} />);
+      const com = <FC />;
+      const refCom = <RefFC ref={React.createRef()} />;
+      expect(supportNodeRef(com) && com.ref).toBeFalsy();
+      expect(supportNodeRef(refCom) && refCom.ref).toBeTruthy();
+    });
   });
 });
