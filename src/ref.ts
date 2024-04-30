@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import type * as React from 'react';
 import { isValidElement } from 'react';
-import { ForwardRef, isFragment, isMemo } from 'react-is';
+import { ForwardRef, isForwardRef, isFragment, isMemo } from 'react-is';
 import useMemo from './hooks/useMemo';
 
 export function fillRef<T>(ref: React.Ref<T>, node: T) {
@@ -37,9 +37,11 @@ export function useComposeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
   );
 }
 
-export function supportRef<T>(
-  nodeOrComponent: any,
-): nodeOrComponent is React.RefAttributes<T> {
+export function supportRef(nodeOrComponent: any): boolean {
+  if (isForwardRef(nodeOrComponent)) {
+    return true;
+  }
+
   const type = isMemo(nodeOrComponent)
     ? nodeOrComponent.type.type
     : nodeOrComponent.type;
@@ -64,7 +66,9 @@ export function supportRef<T>(
   return true;
 }
 
-export function supportNodeRef(node: React.ReactNode): boolean {
+export function supportNodeRef<P, T>(
+  node: React.ReactNode,
+): node is React.ReactElement<P> & React.RefAttributes<T> {
   if (!isValidElement(node)) {
     return false;
   }
