@@ -62,9 +62,9 @@ export function supportRef(nodeOrComponent: any): boolean {
   return true;
 }
 
-export function supportNodeRef(
+export function supportNodeRef<T = any>(
   node: React.ReactNode,
-): node is React.ReactElement & React.RefAttributes<any> {
+): node is React.ReactElement & React.RefAttributes<T> {
   if (!isValidElement(node)) {
     return false;
   }
