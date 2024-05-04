@@ -3,18 +3,18 @@ import { isValidElement } from 'react';
 import { ForwardRef, isFragment, isMemo } from 'react-is';
 import useMemo from './hooks/useMemo';
 
-export function fillRef<T>(ref: React.Ref<T>, node: T) {
+export const fillRef = <T>(ref: React.Ref<T>, node: T) => {
   if (typeof ref === 'function') {
     ref(node);
   } else if (typeof ref === 'object' && ref && 'current' in ref) {
     (ref as any).current = node;
   }
-}
+};
 
 /**
  * Merge refs into one ref function to support ref passing.
  */
-export function composeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
+export const composeRef = <T>(...refs: React.Ref<T>[]): React.Ref<T> => {
   const refList = refs.filter(Boolean);
   if (refList.length <= 1) {
     return refList[0];
@@ -24,18 +24,18 @@ export function composeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
       fillRef(ref, node);
     });
   };
-}
+};
 
-export function useComposeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
+export const useComposeRef = <T>(...refs: React.Ref<T>[]): React.Ref<T> => {
   return useMemo(
     () => composeRef(...refs),
     refs,
     (prev, next) =>
       prev.length !== next.length || prev.every((ref, i) => ref !== next[i]),
   );
-}
+};
 
-export function supportRef(nodeOrComponent: any): boolean {
+export const supportRef = (nodeOrComponent: any): boolean => {
   const type = isMemo(nodeOrComponent)
     ? nodeOrComponent.type.type
     : nodeOrComponent.type;
@@ -58,7 +58,7 @@ export function supportRef(nodeOrComponent: any): boolean {
     return false;
   }
   return true;
-}
+};
 
 interface RefAttributes<T> extends React.Attributes {
   ref: React.Ref<T>;
