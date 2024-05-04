@@ -60,9 +60,13 @@ export const supportRef = (nodeOrComponent: any): boolean => {
   return true;
 };
 
+interface RefAttributes<T> extends React.Attributes {
+  ref: React.Ref<T>;
+}
+
 export const supportNodeRef = <T = any>(
   node: React.ReactNode,
-): node is React.ReactElement & React.RefAttributes<T> => {
+): node is React.ReactElement & RefAttributes<T> => {
   if (!isValidElement(node)) {
     return false;
   }
