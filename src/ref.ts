@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import type * as React from 'react';
 import { isValidElement } from 'react';
 import { ForwardRef, isFragment, isMemo } from 'react-is';
@@ -16,11 +15,10 @@ export function fillRef<T>(ref: React.Ref<T>, node: T) {
  * Merge refs into one ref function to support ref passing.
  */
 export function composeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
-  const refList = refs.filter(ref => ref);
+  const refList = refs.filter(Boolean);
   if (refList.length <= 1) {
     return refList[0];
   }
-
   return (node: T) => {
     refs.forEach(ref => {
       fillRef(ref, node);
@@ -62,9 +60,13 @@ export function supportRef(nodeOrComponent: any): boolean {
   return true;
 }
 
-export function supportNodeRef<T = any>(
+interface RefAttributes<T> extends React.Attributes {
+  ref: React.Ref<T>;
+}
+
+export const supportNodeRef = <T = any>(
   node: React.ReactNode,
-): node is React.ReactElement & React.RefAttributes<T> {
+): node is React.ReactElement & RefAttributes<T> => {
   if (!isValidElement(node)) {
     return false;
   }
@@ -72,5 +74,4 @@ export function supportNodeRef<T = any>(
     return false;
   }
   return supportRef(node);
-}
-/* eslint-enable */
+};
