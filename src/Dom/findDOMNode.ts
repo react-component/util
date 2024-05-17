@@ -13,12 +13,12 @@ export function isDOM(node: any): node is HTMLElement | SVGElement {
 export default function findDOMNode<T = Element | Text>(
   node: React.ReactInstance | HTMLElement | SVGElement | { nativeElement: T },
 ): T {
-  if (isDOM(node)) {
-    return (node as unknown) as T;
-  }
-
   if (node && typeof node === 'object' && isDOM((node as any).nativeElement)) {
     return ((node as any).nativeElement as unknown) as T;
+  }
+
+  if (isDOM(node)) {
+    return (node as unknown) as T;
   }
 
   if (node instanceof React.Component) {

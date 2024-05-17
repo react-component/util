@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
 import findDOMNode, { isDOM } from '../src/Dom/findDOMNode';
+import proxyObject from '../src/proxyObject';
 
 describe('findDOMNode', () => {
   it('base work', () => {
@@ -96,5 +97,36 @@ describe('findDOMNode', () => {
     );
 
     expect(findDOMNode(elementRef.current)).toBe(container.querySelector('p'));
+  });
+
+  it('with proxyObject', () => {
+    const Demo = React.forwardRef((_, ref) => {
+      const rootRef = React.useRef<HTMLDivElement>(null);
+      const spanRef = React.useRef<HTMLParagraphElement>(null);
+
+      React.useImperativeHandle(ref, () =>
+        proxyObject(rootRef.current, {
+          nativeElement: spanRef.current,
+        }),
+      );
+
+      return (
+        <p ref={rootRef} id="root">
+          <span ref={spanRef} />
+        </p>
+      );
+    });
+
+    const holderRef = React.createRef<any>();
+    const { container } = render(
+      <React.StrictMode>
+        <Demo ref={holderRef} />
+      </React.StrictMode>,
+    );
+
+    expect(holderRef.current.id).toBe('root');
+    expect(findDOMNode(holderRef.current)).toBe(
+      container.querySelector('span'),
+    );
   });
 });
