@@ -74,4 +74,27 @@ describe('findDOMNode', () => {
       expect(true).toBeFalsy();
     }
   });
+
+  it('nativeElement', () => {
+    const Element = React.forwardRef<{ nativeElement: HTMLDivElement }>(
+      (_, ref) => {
+        const domRef = React.useRef<HTMLDivElement>(null);
+
+        React.useImperativeHandle(ref, () => ({
+          nativeElement: domRef.current!,
+        }));
+
+        return <p ref={domRef} />;
+      },
+    );
+
+    const elementRef = React.createRef<{ nativeElement: HTMLDivElement }>();
+    const { container } = render(
+      <React.StrictMode>
+        <Element ref={elementRef} />
+      </React.StrictMode>,
+    );
+
+    expect(findDOMNode(elementRef.current)).toBe(container.querySelector('p'));
+  });
 });
