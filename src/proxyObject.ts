@@ -5,7 +5,7 @@ export default function proxyObject<
   Obj extends object,
   ExtendObj extends object
 >(obj: Obj, extendProps: ExtendObj): Obj & ExtendObj {
-  if (typeof Proxy !== 'undefined') {
+  if (typeof Proxy !== 'undefined' && obj) {
     return new Proxy(obj, {
       get(target, prop) {
         if (extendProps[prop]) {

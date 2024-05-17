@@ -12,4 +12,12 @@ describe('proxyObject', () => {
 
     expect(proxyA.bamboo).toBe('little');
   });
+
+  it('null', () => {
+    const proxyA = proxyObject(null, {
+      bamboo: 'little',
+    });
+
+    expect(proxyA).toBe(null);
+  });
 });
