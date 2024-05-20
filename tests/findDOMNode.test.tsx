@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
-import findDOMNode, { isDOM } from '../src/Dom/findDOMNode';
+import findDOMNode, { extractDomNode, isDOM } from '../src/Dom/findDOMNode';
 import proxyObject from '../src/proxyObject';
 
 describe('findDOMNode', () => {
@@ -127,6 +127,33 @@ describe('findDOMNode', () => {
     expect(holderRef.current.id).toBe('root');
     expect(findDOMNode(holderRef.current)).toBe(
       container.querySelector('span'),
+    );
+  });
+
+  describe('extractDomNode', () => {
+    it('should return the DOM node when input is a DOM node', () => {
+      const node = document.createElement('div');
+      const result = extractDomNode(node);
+
+      expect(result).toBe(node);
+    });
+
+    it('should return the nativeElement when input is an object with a DOM node as nativeElement', () => {
+      const nativeElement = document.createElement('div');
+      const node = { nativeElement };
+
+      const result = extractDomNode(node);
+
+      expect(result).toBe(nativeElement);
+    });
+
+    it.each([null, void 0, { foo: 'bar' }, 'string'])(
+      'should return null when input is not a DOM node',
+      node => {
+        const result = extractDomNode(node);
+
+        expect(result).toBeNull();
+      },
     );
   });
 });
