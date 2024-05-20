@@ -10,7 +10,7 @@ export function isDOM(node: any): node is HTMLElement | SVGElement {
 /**
  * Retrieves a DOM node via a ref, and does not invoke `findDOMNode`.
  */
-export function getDOM(node: any): node is HTMLElement | SVGElement {
+export function getDOM(node: any): HTMLElement | SVGElement | null {
   if (node && typeof node === 'object' && isDOM(node.nativeElement)) {
     return node.nativeElement;
   }
@@ -34,7 +34,7 @@ export default function findDOMNode<T = Element | Text>(
   }
 
   if (node instanceof React.Component) {
-    return ReactDOM.findDOMNode(node) as unknown as T;
+    return ReactDOM.findDOMNode?.(node) as unknown as T;
   }
 
   return null;
