@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
-import findDOMNode, { extractDomNode, isDOM } from '../src/Dom/findDOMNode';
+import findDOMNode, { getDomNode, isDOM } from '../src/Dom/findDOMNode';
 import proxyObject from '../src/proxyObject';
 
 describe('findDOMNode', () => {
@@ -130,10 +130,10 @@ describe('findDOMNode', () => {
     );
   });
 
-  describe('extractDomNode', () => {
+  describe('getDomNode', () => {
     it('should return the DOM node when input is a DOM node', () => {
       const node = document.createElement('div');
-      const result = extractDomNode(node);
+      const result = getDomNode(node);
 
       expect(result).toBe(node);
     });
@@ -142,7 +142,7 @@ describe('findDOMNode', () => {
       const nativeElement = document.createElement('div');
       const node = { nativeElement };
 
-      const result = extractDomNode(node);
+      const result = getDomNode(node);
 
       expect(result).toBe(nativeElement);
     });
@@ -150,7 +150,7 @@ describe('findDOMNode', () => {
     it.each([null, void 0, { foo: 'bar' }, 'string'])(
       'should return null when input is not a DOM node',
       node => {
-        const result = extractDomNode(node);
+        const result = getDomNode(node);
 
         expect(result).toBeNull();
       },
