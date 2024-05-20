@@ -8,7 +8,7 @@ export function isDOM(node: any): node is HTMLElement | SVGElement {
 }
 
 /**
- * Retrieves a DOM node via a ref., and does not invoke `findDOMNode`.
+ * Retrieves a DOM node via a ref, and does not invoke `findDOMNode`.
  */
 export function getDomNode(node: any): node is HTMLElement | SVGElement {
   if (node && typeof node === 'object' && isDOM(node.nativeElement)) {
