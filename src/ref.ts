@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { isValidElement } from 'react';
+import { isValidElement, version } from 'react';
 import { ForwardRef, isFragment, isMemo } from 'react-is';
 import useMemo from './hooks/useMemo';
 
@@ -64,14 +64,36 @@ interface RefAttributes<T> extends React.Attributes {
   ref: React.Ref<T>;
 }
 
+function isReactElement(node: React.ReactNode) {
+  return isValidElement(node) && !isFragment(node);
+}
+
 export const supportNodeRef = <T = any>(
   node: React.ReactNode,
 ): node is React.ReactElement & RefAttributes<T> => {
-  if (!isValidElement(node)) {
-    return false;
-  }
-  if (isFragment(node)) {
-    return false;
-  }
-  return supportRef(node);
+  return isReactElement(node) && supportRef(node);
 };
+
+/**
+ * In React 19. `ref` is not a property from node.
+ * But a property from `props.ref`.
+ * To check if `props.ref` exist or fallback to `ref`.
+ */
+export const getNodeRef: <T = any>(
+  node: React.ReactNode,
+) => React.Ref<T> | null =
+  Number(version.split('.')[0]) >= 19
+    ? // >= React 19
+      node => {
+        if (isReactElement(node)) {
+          return (node as any).props.ref;
+        }
+        return null;
+      }
+    : // < React 19
+      node => {
+        if (isReactElement(node)) {
+          return (node as any).ref;
+        }
+        return null;
+      };

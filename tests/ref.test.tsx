@@ -1,9 +1,11 @@
 /* eslint-disable no-eval */
 import { fireEvent, render } from '@testing-library/react';
-import React, { ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React from 'react';
 import useEvent from '../src/hooks/useEvent';
 import {
   composeRef,
+  getNodeRef,
   supportNodeRef,
   supportRef,
   useComposeRef,
@@ -198,5 +200,12 @@ describe('ref', () => {
       expect(supportNodeRef(com) && com.ref).toBeFalsy();
       expect(supportNodeRef(refCom) && refCom.ref).toBeTruthy();
     });
+  });
+
+  it('getNodeRef', () => {
+    const ref = React.createRef<HTMLDivElement>();
+    const node = <div ref={ref} />;
+
+    expect(getNodeRef(node)).toBe(ref);
   });
 });
