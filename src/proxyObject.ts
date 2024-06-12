@@ -3,7 +3,7 @@
  */
 export default function proxyObject<
   Obj extends object,
-  ExtendObj extends object
+  ExtendObj extends object,
 >(obj: Obj, extendProps: ExtendObj): Obj & ExtendObj {
   if (typeof Proxy !== 'undefined' && obj) {
     return new Proxy(obj, {
@@ -17,6 +17,16 @@ export default function proxyObject<
         return typeof originProp === 'function'
           ? originProp.bind(target)
           : originProp;
+      },
+      set(target, prop, v) {
+        let value = v;
+        if (typeof prop === 'string' && ['value'].includes(prop)) {
+          if (typeof value !== 'string') {
+            value = '' + value;
+          }
+          target[prop] = value;
+          return true;
+        }
       },
     }) as Obj & ExtendObj;
   }
