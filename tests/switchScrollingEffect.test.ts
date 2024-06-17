@@ -21,11 +21,16 @@ describe('switchScrollingEffect', () => {
   });
 
   it('switchScrollingEffect correct', () => {
+    let bodyMock = spyElementPrototypes(HTMLBodyElement, {
+      offsetWidth: {
+        get: () => 1024,
+      },
+    });
     switchScrollingEffect();
 
     expect(document.body.style.cssText).toBe('');
 
-    const bodyMock = spyElementPrototypes(HTMLBodyElement, {
+    bodyMock = spyElementPrototypes(HTMLBodyElement, {
       scrollHeight: {
         get: () => 5000,
       },
