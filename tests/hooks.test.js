@@ -7,6 +7,7 @@ import useMemo from '../src/hooks/useMemo';
 import useMergedState from '../src/hooks/useMergedState';
 import useMobile from '../src/hooks/useMobile';
 import useState from '../src/hooks/useState';
+import useSyncState from '../src/hooks/useSyncState';
 
 global.disableUseId = false;
 
@@ -519,6 +520,24 @@ describe('hooks', () => {
         expect.stringContaining('useLayoutEffect'),
         expect.anything(),
       );
+    });
+  });
+
+  describe('useSyncState', () => {
+    it('batch use latest', () => {
+      const Demo = () => {
+        const [getCounter, setCounter] = useSyncState(0);
+
+        React.useEffect(() => {
+          setCounter(getCounter() + 1);
+          setCounter(getCounter() + 1);
+        }, [getCounter, setCounter]);
+
+        return getCounter();
+      };
+
+      const { container } = render(<Demo />);
+      expect(container.textContent).toEqual('2');
     });
   });
 });
