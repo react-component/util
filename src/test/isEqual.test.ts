@@ -2,18 +2,18 @@ import isEqual from '../isEqual';
 import warning from '../warning';
 
 describe('isEqual', () => {
-  let errorSpy: jest.SpyInstance;
+  let warnSpy: jest.SpyInstance;
 
   beforeAll(() => {
-    errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
   afterEach(() => {
-    errorSpy.mockReset();
+    warnSpy.mockReset();
   });
 
   afterAll(() => {
-    errorSpy.mockRestore();
+    warnSpy.mockRestore();
   });
 
   it('should equal', () => {
@@ -98,7 +98,7 @@ describe('isEqual', () => {
     obj.obj = obj;
     const obj2 = { a: 1, b: 2, c: [1, 2], obj: null };
     warning(false, 'error');
-    expect(errorSpy).toHaveBeenCalledWith('Warning: error');
+    expect(warnSpy).toHaveBeenCalledWith('Warning: error');
 
     const valueIsEqual = isEqual(obj, obj2);
     expect(valueIsEqual).toBe(false);
