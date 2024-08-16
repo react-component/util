@@ -1,15 +1,15 @@
 import useEvent from './useEvent';
 import { useLayoutUpdateEffect } from './useLayoutEffect';
 import useState from './useState';
-
+import isNil from 'lodash.isnil';
 type Updater<T> = (
   updater: T | ((origin: T) => T),
   ignoreDestroy?: boolean,
 ) => void;
 
-/** We only think `undefined` is empty */
+/** We think `undefined` and `null` is empty */
 function hasValue(value: any) {
-  return value !== undefined;
+  return !isNil(value);
 }
 
 /**
