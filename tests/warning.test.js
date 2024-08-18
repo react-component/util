@@ -11,7 +11,7 @@ describe('warning', () => {
   });
 
   it('warning', () => {
-    const warnSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     warning(false, '[antd Component] test hello world');
     expect(warnSpy).toHaveBeenCalledWith(
       'Warning: [antd Component] test hello world',
@@ -72,7 +72,6 @@ describe('warning', () => {
 
   describe('preMessage', () => {
     it('modify message', () => {
-      const errSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
       const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
       warning.preMessage((msg, type) => {
@@ -87,12 +86,11 @@ describe('warning', () => {
       });
 
       warning(false, 'warn');
-      warning.noteOnce(false, 'note');
+      expect(warnSpy).toHaveBeenCalledWith('Warning: WW-warn');
 
-      expect(errSpy).toHaveBeenCalledWith('Warning: WW-warn');
+      warning.noteOnce(false, 'note');
       expect(warnSpy).toHaveBeenCalledWith('Note: NN-note');
 
-      errSpy.mockRestore();
       warnSpy.mockRestore();
     });
   });

@@ -39,7 +39,7 @@ export function warning(valid: boolean, message: string) {
     );
 
     if (finalMessage) {
-      console.error(`Warning: ${finalMessage}`);
+      console.warn(`Warning: ${finalMessage}`);
     }
   }
 }
