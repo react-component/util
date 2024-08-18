@@ -17,7 +17,6 @@ describe('switchScrollingEffect', () => {
     // reset
     document.body.className = '';
     document.body.setAttribute('style', '');
-    getScrollBarSize.mockClear();
   });
 
   it('switchScrollingEffect correct', () => {
@@ -36,7 +35,9 @@ describe('switchScrollingEffect', () => {
 
     switchScrollingEffect();
 
-    expect(document.body.style.cssText).toBe('position: relative; width: calc(100% - 20px);');
+    expect(document.body.style.cssText).toBe(
+      'position: relative; width: calc(100% - 20px);',
+    );
     expect(document.body.className).toBe('ant-scrolling-effect');
 
     // when closed
