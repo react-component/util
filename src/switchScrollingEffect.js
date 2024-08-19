@@ -4,7 +4,7 @@ import setStyle from './setStyle';
 function isBodyOverflowing() {
   return (
     document.body.scrollHeight >
-      (window.innerHeight || document.documentElement.clientHeight) &&
+      (window.innerHeight || document.documentElement.clientHeight) ||
     window.innerWidth > document.body.offsetWidth
   );
 }
