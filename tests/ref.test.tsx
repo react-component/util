@@ -12,6 +12,12 @@ import {
 } from '../src/ref';
 
 describe('ref', () => {
+  const errSpy = jest.spyOn(console, 'error');
+
+  beforeEach(() => {
+    errSpy.mockReset();
+  });
+
   describe('composeRef', () => {
     it('basic', () => {
       const refFunc1 = jest.fn();
@@ -207,5 +213,7 @@ describe('ref', () => {
     const node = <div ref={ref} />;
 
     expect(getNodeRef(node)).toBe(ref);
+
+    expect(errSpy).not.toHaveBeenCalled();
   });
 });
