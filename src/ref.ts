@@ -81,19 +81,13 @@ export const supportNodeRef = <T = any>(
  */
 export const getNodeRef: <T = any>(
   node: React.ReactNode,
-) => React.Ref<T> | null =
-  Number(version.split('.')[0]) >= 19
-    ? // >= React 19
-      node => {
-        if (isReactElement(node)) {
-          return (node as any).props.ref;
-        }
-        return null;
-      }
-    : // < React 19
-      node => {
-        if (isReactElement(node)) {
-          return (node as any).ref;
-        }
-        return null;
-      };
+) => React.Ref<T> | null = node => {
+  if (node && isReactElement(node)) {
+    const ele = node as any;
+
+    // Source from:
+    // https://github.com/mui/material-ui/blob/master/packages/mui-utils/src/getReactNodeRef/getReactNodeRef.ts
+    return ele.props.propertyIsEnumerable('ref') ? ele.props.ref : ele.ref;
+  }
+  return null;
+};
