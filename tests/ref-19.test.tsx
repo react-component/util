@@ -30,6 +30,11 @@ describe('ref: React 19', () => {
     errSpy.mockReset();
   });
 
+  it('ensure is React 19', () => {
+    // Version should start with 19
+    expect(React.version).toMatch(/^19/);
+  });
+
   it('getNodeRef', () => {
     const ref = React.createRef<HTMLDivElement>();
     const node = <div ref={ref} />;
