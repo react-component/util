@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { isValidElement, version } from 'react';
+import { isValidElement } from 'react';
 import { ForwardRef, isFragment, isMemo } from 'react-is';
 import useMemo from './hooks/useMemo';
 
@@ -36,6 +36,14 @@ export const useComposeRef = <T>(...refs: React.Ref<T>[]): React.Ref<T> => {
 };
 
 export const supportRef = (nodeOrComponent: any): boolean => {
+  // React 19 no need `forwardRef` anymore. So just pass if is a React element.
+  if (
+    isReactElement(nodeOrComponent) &&
+    (nodeOrComponent as any).props.propertyIsEnumerable('ref')
+  ) {
+    return true;
+  }
+
   const type = isMemo(nodeOrComponent)
     ? nodeOrComponent.type.type
     : nodeOrComponent.type;
