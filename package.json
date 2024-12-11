@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
+    "lodash.isnil": "^4.0.0",
     "react-is": "^18.2.0"
   },
   "devDependencies": {
