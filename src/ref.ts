@@ -36,6 +36,10 @@ export const useComposeRef = <T>(...refs: React.Ref<T>[]): React.Ref<T> => {
 };
 
 export const supportRef = (nodeOrComponent: any): boolean => {
+  if (!nodeOrComponent) {
+    return false;
+  }
+
   // React 19 no need `forwardRef` anymore. So just pass if is a React element.
   if (
     isReactElement(nodeOrComponent) &&
