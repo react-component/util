@@ -178,6 +178,10 @@ describe('ref', () => {
       expect(supportRef(MemoFC)).toBeTruthy();
       expect(supportRef(holderRef.current.props.children)).toBeTruthy();
     });
+
+    it('skip null', () => {
+      expect(supportRef(null)).toBeFalsy();
+    });
   });
 
   describe('nodeSupportRef', () => {
