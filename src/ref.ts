@@ -1,7 +1,8 @@
 import type * as React from 'react';
 import { isValidElement } from 'react';
-import { ForwardRef, isFragment, isMemo } from 'react-is';
+import { ForwardRef, isMemo } from 'react-is';
 import useMemo from './hooks/useMemo';
+import isFragment from './React/isFragment';
 
 export const fillRef = <T>(ref: React.Ref<T>, node: T) => {
   if (typeof ref === 'function') {
