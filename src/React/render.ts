@@ -56,7 +56,7 @@ function modernRender(node: React.ReactElement, container: ContainerType) {
 }
 
 function legacyRender(node: React.ReactElement, container: ContainerType) {
-  reactRender(node, container);
+  reactRender?.(node, container);
 }
 
 /** @private Test usage. Not work in prod */
