@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable no-param-reassign */
 const NO_EXIST = { __NOT_EXIST: true };
 
-export type ElementClass = (...params: any[]) => void;
-export type Property = PropertyDescriptor | ((...params: any[]) => void);
+export type ElementClass = Function;
+export type Property = PropertyDescriptor | Function;
 
 export function spyElementPrototypes<T extends ElementClass>(
   elementClass: T,
