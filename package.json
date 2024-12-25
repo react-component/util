@@ -51,7 +51,7 @@
     "@types/react-is": "^19.0.0",
     "@types/responselike": "^1.0.0",
     "@types/warning": "^3.0.0",
-    "@umijs/fabric": "^3.0.0",
+    "@umijs/fabric": "^4.0.1",
     "create-react-class": "^15.6.3",
     "cross-env": "^7.0.2",
     "dumi": "^2.1.3",
