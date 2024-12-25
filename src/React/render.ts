@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import * as ReactDOM from 'react-dom/client';
 import type { Root } from 'react-dom/client';
 
 // Let compiler not to search module usage
