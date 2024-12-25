@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "react-is": "^18.2.0"
+    "react-is": "^19.0.0"
   },
   "devDependencies": {
     "@rc-component/father-plugin": "1.1.0",
