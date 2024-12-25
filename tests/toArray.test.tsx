@@ -3,15 +3,14 @@ import { render } from '@testing-library/react';
 import toArray from '../src/Children/toArray';
 
 describe('toArray', () => {
-  class UL extends React.Component {
+  class UL extends React.Component<Readonly<React.PropsWithChildren>> {
     render() {
       return <ul>{this.props.children}</ul>;
     }
   }
 
   it('basic', () => {
-    const ulRef = React.createRef();
-
+    const ulRef = React.createRef<UL>();
     render(
       <UL ref={ulRef}>
         <li key="1">1</li>
@@ -26,7 +25,7 @@ describe('toArray', () => {
   });
 
   it('Array', () => {
-    const ulRef = React.createRef();
+    const ulRef = React.createRef<UL>();
 
     render(
       <UL ref={ulRef}>
@@ -41,7 +40,7 @@ describe('toArray', () => {
   });
 
   it('Fragment', () => {
-    const ulRef = React.createRef();
+    const ulRef = React.createRef<UL>();
 
     render(
       <UL ref={ulRef}>
@@ -65,7 +64,7 @@ describe('toArray', () => {
   });
 
   it('keep empty', () => {
-    const ulRef = React.createRef();
+    const ulRef = React.createRef<UL>();
 
     render(
       <UL ref={ulRef}>

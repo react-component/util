@@ -3,7 +3,6 @@ import * as React from 'react';
 import raf from './raf';
 import Portal, { PortalRef } from './Portal';
 import canUseDom from './Dom/canUseDom';
-import switchScrollingEffect from './switchScrollingEffect';
 import setStyle from './setStyle';
 import ScrollLocker from './Dom/scrollLocker';
 
@@ -206,7 +205,6 @@ class PortalWrapper extends React.Component<PortalWrapperProps> {
    */
   switchScrollingEffect = () => {
     if (openCount === 1 && !Object.keys(cacheOverflow).length) {
-      switchScrollingEffect();
       // Must be set after switchScrollingEffect
       cacheOverflow = setStyle({
         overflow: 'hidden',
@@ -216,7 +214,6 @@ class PortalWrapper extends React.Component<PortalWrapperProps> {
     } else if (!openCount) {
       setStyle(cacheOverflow);
       cacheOverflow = {};
-      switchScrollingEffect(true);
     }
   };
 
