@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 const NO_EXIST = { __NOT_EXIST: true };
 
-export type ElementClass = Function;
-export type Property = PropertyDescriptor | Function;
+export type ElementClass = (...params: any[]) => void;
+export type Property = PropertyDescriptor | ((...params: any[]) => void);
 
 export function spyElementPrototypes<T extends ElementClass>(
   elementClass: T,
@@ -22,7 +22,7 @@ export function spyElementPrototypes<T extends ElementClass>(
 
     if (typeof spyProp === 'function') {
       // If is a function
-      elementClass.prototype[propName] = function spyFunc(...args) {
+      elementClass.prototype[propName] = function spyFunc(...args: any[]) {
         return spyProp.call(this, originDescriptor, ...args);
       };
     } else {
