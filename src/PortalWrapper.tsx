@@ -1,7 +1,8 @@
 /* eslint-disable no-underscore-dangle,react/require-default-props */
 import * as React from 'react';
 import raf from './raf';
-import Portal, { PortalRef } from './Portal';
+import Portal from './Portal';
+import type { PortalRef } from './Portal';
 import canUseDom from './Dom/canUseDom';
 import setStyle from './setStyle';
 import ScrollLocker from './Dom/scrollLocker';
@@ -58,7 +59,7 @@ export interface PortalWrapperProps {
 class PortalWrapper extends React.Component<PortalWrapperProps> {
   container?: HTMLElement;
 
-  componentRef: React.RefObject<PortalRef> = React.createRef();
+  componentRef = React.createRef<PortalRef>();
 
   rafId?: number;
 
@@ -72,8 +73,8 @@ class PortalWrapper extends React.Component<PortalWrapperProps> {
   }
 
   renderComponent?: (info: {
-    afterClose: Function;
-    onClose: Function;
+    afterClose: (...params: any[]) => void;
+    onClose: (...params: any[]) => void;
     visible: boolean;
   }) => void;
 
