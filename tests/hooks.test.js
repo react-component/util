@@ -74,6 +74,17 @@ describe('hooks', () => {
       expect(container.querySelector('.txt').textContent).toEqual('');
     });
 
+    it('control of to null', () => {
+      const { container, rerender } = render(<FC value="test" />);
+
+      expect(container.querySelector('input').value).toEqual('test');
+      expect(container.querySelector('.txt').textContent).toEqual('test');
+
+      rerender(<FC value={null} />);
+      expect(container.querySelector('input').value).toEqual('test');
+      expect(container.querySelector('.txt').textContent).toEqual('');
+    });
+
     describe('correct defaultValue', () => {
       it('raw', () => {
         const { container } = render(<FC defaultValue="test" />);
