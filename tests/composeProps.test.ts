@@ -6,7 +6,12 @@ describe('composeProps', () => {
     const aBlur = jest.fn();
     const bChange = jest.fn();
     const bDemo = jest.fn();
-    const sourceProps = { value: '11', onChange: aChange, onBlur: aBlur };
+    const sourceProps = {
+      value: '11',
+      onChange: aChange,
+      onBlur: aBlur,
+      onDemo: undefined,
+    };
     const patchProps = { onChange: bChange, onDemo: bDemo, placeholder: 'x' };
 
     const props = composeProps(sourceProps, patchProps, true);
@@ -30,7 +35,12 @@ describe('composeProps', () => {
     const aBlur = jest.fn();
     const bChange = jest.fn();
     const bDemo = jest.fn();
-    const sourceProps = { value: '11', onChange: aChange, onBlur: aBlur };
+    const sourceProps = {
+      value: '11',
+      onChange: aChange,
+      onBlur: aBlur,
+      onDemo: undefined,
+    };
     const patchProps = { onChange: bChange, onDemo: bDemo, placeholder: 'x' };
 
     const props = composeProps(sourceProps, patchProps);

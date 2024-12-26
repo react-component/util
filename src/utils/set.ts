@@ -9,18 +9,18 @@ function internalSet<Entity = any, Output = Entity, Value = any>(
   removeIfUndefined: boolean,
 ): Output {
   if (!paths.length) {
-    return (value as unknown) as Output;
+    return value as unknown as Output;
   }
 
   const [path, ...restPath] = paths;
 
   let clone: Output;
   if (!entity && typeof path === 'number') {
-    clone = ([] as unknown) as Output;
+    clone = [] as unknown as Output;
   } else if (Array.isArray(entity)) {
-    clone = ([...entity] as unknown) as Output;
+    clone = [...entity] as unknown as Output;
   } else {
-    clone = ({ ...entity } as unknown) as Output;
+    clone = { ...entity } as unknown as Output;
   }
 
   // Delete prop if `removeIfUndefined` and value is undefined
@@ -46,7 +46,7 @@ export default function set<Entity = any, Output = Entity, Value = any>(
     value === undefined &&
     !get(entity, paths.slice(0, -1))
   ) {
-    return (entity as unknown) as Output;
+    return entity as unknown as Output;
   }
 
   return internalSet(entity, paths, value, removeIfUndefined);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable no-param-reassign */
 const NO_EXIST = { __NOT_EXIST: true };
 
@@ -12,14 +13,17 @@ export function spyElementPrototypes<T extends ElementClass>(
   const originDescriptors = {};
 
   propNames.forEach(propName => {
-    const originDescriptor = Object.getOwnPropertyDescriptor(elementClass.prototype, propName);
+    const originDescriptor = Object.getOwnPropertyDescriptor(
+      elementClass.prototype,
+      propName,
+    );
     originDescriptors[propName] = originDescriptor || NO_EXIST;
 
     const spyProp = properties[propName];
 
     if (typeof spyProp === 'function') {
       // If is a function
-      elementClass.prototype[propName] = function spyFunc(...args) {
+      elementClass.prototype[propName] = function spyFunc(...args: any[]) {
         return spyProp.call(this, originDescriptor, ...args);
       };
     } else {
@@ -52,14 +56,22 @@ export function spyElementPrototypes<T extends ElementClass>(
         } else if (typeof originDescriptor === 'function') {
           elementClass.prototype[propName] = originDescriptor;
         } else {
-          Object.defineProperty(elementClass.prototype, propName, originDescriptor);
+          Object.defineProperty(
+            elementClass.prototype,
+            propName,
+            originDescriptor,
+          );
         }
       });
     },
   };
 }
 
-export function spyElementPrototype(Element: ElementClass, propName: string, property: Property) {
+export function spyElementPrototype(
+  Element: ElementClass,
+  propName: string,
+  property: Property,
+) {
   return spyElementPrototypes(Element, {
     [propName]: property,
   });

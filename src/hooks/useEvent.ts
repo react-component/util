@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 
-export default function useEvent<T extends Function>(callback: T): T {
+function useEvent<T extends Function>(callback: T): T {
   const fnRef = React.useRef<any>();
   fnRef.current = callback;
 
@@ -11,3 +13,5 @@ export default function useEvent<T extends Function>(callback: T): T {
 
   return memoFn;
 }
+
+export default useEvent;

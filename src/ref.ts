@@ -30,6 +30,7 @@ export const composeRef = <T>(...refs: React.Ref<T>[]): React.Ref<T> => {
 export const useComposeRef = <T>(...refs: React.Ref<T>[]): React.Ref<T> => {
   return useMemo(
     () => composeRef(...refs),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     refs,
     (prev, next) =>
       prev.length !== next.length || prev.every((ref, i) => ref !== next[i]),

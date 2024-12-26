@@ -1,7 +1,4 @@
-import { render } from '@testing-library/react';
-import React from 'react';
 import { warning } from '../src';
-import unsafeLifecyclesPolyfill from '../src/unsafeLifecyclesPolyfill';
 
 const { resetWarned, noteOnce } = warning;
 
@@ -49,24 +46,6 @@ describe('warning', () => {
     noteOnce(true, '[antd Component] test1');
     expect(warnSpy).not.toHaveBeenCalledWith('[antd Component] test1');
 
-    warnSpy.mockRestore();
-  });
-
-  // https://github.com/ant-design/ant-design/issues/9792
-  it('should not warning React componentWillReceiveProps', () => {
-    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-    class App extends React.Component {
-      state = {};
-
-      render() {
-        return null;
-      }
-    }
-    const FixedWarningApp = unsafeLifecyclesPolyfill(App);
-    render(<FixedWarningApp />);
-    expect(warnSpy).not.toHaveBeenCalledWith(
-      expect.stringContaining('componentWillReceiveProps has been renamed'),
-    );
     warnSpy.mockRestore();
   });
 

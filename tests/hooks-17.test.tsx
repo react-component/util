@@ -17,12 +17,12 @@ jest.mock('react', () => {
 
 describe('hooks-17', () => {
   describe('useId', () => {
-    const Demo = ({ id } = {}) => {
+    const Demo: React.FC<{ id?: string }> = ({ id }) => {
       const mergedId = useId(id);
       return <div id={mergedId} className="target" />;
     };
 
-    function matchId(container, id) {
+    function matchId(container: HTMLElement, id: string) {
       const ele = container.querySelector('.target');
       return expect(ele.id).toEqual(id);
     }
@@ -48,10 +48,7 @@ describe('hooks-17', () => {
         <React.StrictMode>
           <Demo />
         </React.StrictMode>,
-        {
-          hydrate: true,
-          container: holder,
-        },
+        { hydrate: true, container: holder },
       );
 
       matchId(container, 'rc_unique_1');

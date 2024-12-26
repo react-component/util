@@ -192,12 +192,12 @@ describe('Portal', () => {
 
   it('should restore to original place in StrictMode', () => {
     const parentContainer = document.createElement('div');
-    const domContainer = document.createElement('div');
-    parentContainer.appendChild(domContainer);
+    const curDomContainer = document.createElement('div');
+    parentContainer.appendChild(curDomContainer);
     let mountCount = 0;
     let unmountCount = 0;
 
-    const Demo = () => {
+    const Demo: React.FC = () => {
       useEffect(() => {
         mountCount += 1;
         return () => {
@@ -205,7 +205,7 @@ describe('Portal', () => {
         };
       }, []);
 
-      return <Portal getContainer={() => domContainer}>Contents</Portal>;
+      return <Portal getContainer={() => curDomContainer}>Contents</Portal>;
     };
 
     render(<Demo />, { wrapper: StrictMode });
