@@ -41,13 +41,5 @@ export default function findDOMNode<T = Element | Text>(
     return node.current as T;
   }
 
-  if (node instanceof React.Component) {
-    console.warn(
-      'findDOMNode is deprecated in StrictMode. ' +
-        'Please use ref instead to access the DOM node.',
-    );
-    return null;
-  }
-
   return null;
 }
