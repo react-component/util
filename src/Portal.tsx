@@ -3,7 +3,7 @@ import { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import ReactDOM from 'react-dom';
 import canUseDom from './Dom/canUseDom';
 
-export type PortalRef = object;
+export type PortalRef = {};
 
 export interface PortalProps {
   didUpdate?: (prevProps: PortalProps) => void;
