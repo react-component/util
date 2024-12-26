@@ -48,4 +48,20 @@ describe('composeProps', () => {
       'onDemo',
     ]);
   });
+
+  it('composeProps patch return', () => {
+    const aChange = jest.fn().mockImplementation(() => 'a');
+    const bChange = jest.fn().mockImplementation(() => 'b');
+
+    const props = composeProps(
+      { onChange: aChange },
+      { onChange: bChange }, // patch return not work (Expected)
+    );
+
+    expect(Object.keys(props)).toEqual(['onChange']);
+
+    expect(props.onChange()).toEqual('a');
+    expect(aChange).toHaveBeenCalled();
+    expect(bChange).toHaveBeenCalled();
+  });
 });
