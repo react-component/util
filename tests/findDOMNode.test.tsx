@@ -35,12 +35,13 @@ describe('findDOMNode', () => {
     const errSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     class DOMWrapper extends React.Component {
+      private elementRef = React.createRef<HTMLDivElement>();
       getDOM = () => {
-        return findDOMNode(this);
+        return findDOMNode(this.elementRef);
       };
 
       render() {
-        return <div />;
+        return <div ref={this.elementRef} />;
       }
     }
 
@@ -53,7 +54,7 @@ describe('findDOMNode', () => {
 
     expect(wrapperRef.current!.getDOM()).toBe(container.firstChild);
 
-    expect(errSpy).toHaveBeenCalled();
+    expect(errSpy).not.toHaveBeenCalled();
     errSpy.mockRestore();
   });
 
