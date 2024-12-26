@@ -291,5 +291,11 @@ describe('utils', () => {
         role: 'button',
       });
     });
+
+    it('data only', () => {
+      expect(pickAttrs(originProps, { data: true })).toEqual({
+        'data-my': 1,
+      });
+    });
   });
 });
