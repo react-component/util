@@ -37,7 +37,7 @@ export default function findDOMNode<T = Element | Text>(
     return domNode as T;
   }
 
-  if (node && typeof node === 'object' && 'current' in node) {
+  if (node && typeof node === 'object' && 'current' in node && isDOM(node.current)) {
     return node.current as T;
   }
 
