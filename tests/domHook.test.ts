@@ -2,7 +2,12 @@
 import { spyElementPrototype } from '../src/test/domHook';
 
 describe('domHook', () => {
-  function spyTest(name, propName, hookProp, assetFunc) {
+  function spyTest(
+    name: string,
+    propName: string,
+    hookProp: (() => string) | { get?: () => string },
+    assetFunc: (test?: any) => void,
+  ) {
     it(name, () => {
       class Test {
         func() {}

@@ -25,9 +25,11 @@ jest.mock('react', () => {
 
 describe('hooks', () => {
   it('useMemo', () => {
-    const FC = ({ open, data }) => {
+    const FC: React.FC<Readonly<{ open?: boolean; data?: string }>> = props => {
+      const { open, data } = props;
       const memoData = useMemo(
         () => data,
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [open, data],
         (prev, next) => next[0] && prev[1] !== next[1],
       );
@@ -48,8 +50,15 @@ describe('hooks', () => {
   });
 
   describe('useMergedState', () => {
-    const FC = ({ value, defaultValue }) => {
-      const [val, setVal] = useMergedState(null, { value, defaultValue });
+    const FC: React.FC<{
+      value?: string;
+      defaultValue?: string | (() => string);
+    }> = props => {
+      const { value, defaultValue } = props;
+      const [val, setVal] = useMergedState<string>(null, {
+        value,
+        defaultValue,
+      });
       return (
         <>
           <input
@@ -125,9 +134,8 @@ describe('hooks', () => {
     });
 
     it('postState', () => {
-      const Demo = () => {
+      const Demo: React.FC = () => {
         const [val] = useMergedState(1, { postState: v => v * 2 });
-
         return <div>{val}</div>;
       };
 
@@ -141,10 +149,16 @@ describe('hooks', () => {
     });
 
     describe('not trigger onChange if props change', () => {
-      function test(name, postWrapper = node => node) {
+      function test(
+        name: string,
+        postWrapper = (node?: React.ReactNode) => node,
+      ) {
         it(name, () => {
-          const Demo = ({ value, onChange }) => {
-            const [mergedValue, setValue] = useMergedState(0, {
+          const Demo: React.FC<{
+            onChange: (value: number) => void;
+          }> = props => {
+            const { onChange } = props;
+            const [mergedValue, setValue] = useMergedState<number>(0, {
               onChange,
             });
 
@@ -196,11 +210,11 @@ describe('hooks', () => {
     it('uncontrolled to controlled', () => {
       const onChange = jest.fn();
 
-      const Demo = ({ value }) => {
-        const [mergedValue, setMergedValue] = useMergedState(() => 233, {
-          value,
-          onChange,
-        });
+      const Demo: React.FC<Readonly<{ value?: number }>> = ({ value }) => {
+        const [mergedValue, setMergedValue] = useMergedState<number>(
+          () => 233,
+          { value, onChange },
+        );
 
         return (
           <span
@@ -237,11 +251,11 @@ describe('hooks', () => {
     it('not trigger onChange if set same value', () => {
       const onChange = jest.fn();
 
-      const Test = ({ value }) => {
-        const [mergedValue, setMergedValue] = useMergedState(undefined, {
-          value,
-          onChange,
-        });
+      const Test: React.FC<Readonly<{ value?: number }>> = ({ value }) => {
+        const [mergedValue, setMergedValue] = useMergedState<number>(
+          undefined,
+          { value, onChange },
+        );
         return (
           <span
             onClick={() => {
@@ -267,11 +281,11 @@ describe('hooks', () => {
     it('should alway use option value', () => {
       const onChange = jest.fn();
 
-      const Test = ({ value }) => {
-        const [mergedValue, setMergedValue] = useMergedState(undefined, {
-          value,
-          onChange,
-        });
+      const Test: React.FC<Readonly<{ value?: number }>> = ({ value }) => {
+        const [mergedValue, setMergedValue] = useMergedState<number>(
+          undefined,
+          { value, onChange },
+        );
         return (
           <span
             onClick={() => {
@@ -292,8 +306,8 @@ describe('hooks', () => {
     it('render once', () => {
       let count = 0;
 
-      const Demo = () => {
-        const [] = useMergedState();
+      const Demo: React.FC = () => {
+        const [] = useMergedState(undefined);
         count += 1;
         return null;
       };
@@ -304,9 +318,10 @@ describe('hooks', () => {
   });
 
   describe('useLayoutEffect', () => {
-    const FC = ({ defaultValue }) => {
-      const [val, setVal] = React.useState(defaultValue);
-      const [val2, setVal2] = React.useState();
+    const FC: React.FC<Readonly<{ defaultValue?: string }>> = props => {
+      const { defaultValue } = props;
+      const [val, setVal] = React.useState<string>(defaultValue);
+      const [val2, setVal2] = React.useState<string>();
       useLayoutEffect(() => {
         setVal2(`${val}a`);
       }, [val]);
@@ -346,10 +361,11 @@ describe('hooks', () => {
     });
 
     it('can get mount state', () => {
-      const Demo = () => {
-        const timesRef = React.useRef(0);
-        const [, forceUpdate] = React.useState(0);
+      const Demo: React.FC = () => {
+        const timesRef = React.useRef<number>(0);
+        const [, forceUpdate] = React.useState<number>(0);
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         useLayoutEffect(firstMount => {
           if (timesRef.current === 0) {
             expect(firstMount).toBeTruthy();
@@ -374,8 +390,8 @@ describe('hooks', () => {
     it('not throw', done => {
       const errorSpy = jest.spyOn(console, 'error');
 
-      const Demo = () => {
-        const [val, setValue] = useState(0);
+      const Demo: React.FC = () => {
+        const [val, setValue] = useState<number>(0);
 
         React.useEffect(
           () => () => {
@@ -420,8 +436,8 @@ describe('hooks', () => {
     it.skip('throw', done => {
       const errorSpy = jest.spyOn(console, 'error');
 
-      const Demo = () => {
-        const [_, setValue] = useState(0);
+      const Demo: React.FC = () => {
+        const [, setValue] = useState<number>(0);
 
         React.useEffect(
           () => () => {
@@ -446,12 +462,12 @@ describe('hooks', () => {
   });
 
   describe('useId', () => {
-    const Demo = ({ id } = {}) => {
+    const Demo: React.FC<Readonly<{ id?: string }>> = ({ id }) => {
       const mergedId = useId(id);
       return <div id={mergedId} className="target" />;
     };
 
-    function matchId(container, id) {
+    function matchId(container: HTMLElement, id: string) {
       const ele = container.querySelector('.target');
       return expect(ele.id).toEqual(id);
     }
@@ -511,7 +527,7 @@ describe('hooks', () => {
 
     it('should not warn useLayoutEffect in SSR', () => {
       const errorSpy = jest.spyOn(console, 'error');
-      const Demo = () => {
+      const Demo: React.FC = () => {
         useMobile();
         return null;
       };
