@@ -18,7 +18,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 20
 
       - name: create package-lock.json
         run: npm i --package-lock-only --ignore-scripts
