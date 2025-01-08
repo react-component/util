@@ -37,8 +37,11 @@ export default function findDOMNode<T = Element | Text>(
     return domNode as T;
   }
 
-  if (node && typeof node === 'object' && 'current' in node && isDOM(node.current)) {
-    return node.current as T;
+  if (node && typeof node === 'object' && 'current' in node) {
+    const refDomNode = getDOM(node.current);
+    if (refDomNode) {
+      return refDomNode as T;
+    }
   }
 
   return null;

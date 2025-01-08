@@ -76,7 +76,26 @@ describe('findDOMNode', () => {
       expect(true).toBeFalsy();
     }
   });
+  it('should return DOM node from ref.current', () => {
+    const TestComponent = React.forwardRef<HTMLDivElement>((_, ref) => {
+      return <div ref={ref}>test</div>;
+    });
 
+    const elementRef = React.createRef<HTMLDivElement>();
+    const { container } = render(
+      <React.StrictMode>
+        <TestComponent ref={elementRef} />
+      </React.StrictMode>,
+    );
+
+    expect(findDOMNode(elementRef)).toBe(container.firstChild);
+  });
+
+  it('should return null if ref is not mounted', () => {
+    const elementRef = React.createRef<HTMLDivElement>();
+
+    expect(findDOMNode(elementRef)).toBeNull();
+  });
   it('nativeElement', () => {
     const Element = React.forwardRef<{ nativeElement: HTMLDivElement }>(
       (_, ref) => {
