@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 export function isDOM(node: any): node is HTMLElement | SVGElement {
   // https://developer.mozilla.org/en-US/docs/Web/API/Element
@@ -26,15 +25,23 @@ export function getDOM(node: any): HTMLElement | SVGElement | null {
  * Return if a node is a DOM node. Else will return by `findDOMNode`
  */
 export default function findDOMNode<T = Element | Text>(
-  node: React.ReactInstance | HTMLElement | SVGElement | { nativeElement: T },
-): T {
+  node:
+    | React.ReactInstance
+    | HTMLElement
+    | SVGElement
+    | { nativeElement: T }
+    | { current: T },
+): T | null {
   const domNode = getDOM(node);
   if (domNode) {
     return domNode as T;
   }
 
-  if (node instanceof React.Component) {
-    return ReactDOM.findDOMNode?.(node) as unknown as T;
+  if (node && typeof node === 'object' && 'current' in node) {
+    const refDomNode = getDOM(node.current);
+    if (refDomNode) {
+      return refDomNode as T;
+    }
   }
 
   return null;
