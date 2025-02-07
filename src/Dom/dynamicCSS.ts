@@ -121,11 +121,11 @@ export function injectCSS(css: string, option: Options = {}) {
 }
 
 function findExistNode(key: string, option: Options = {}) {
-  const container = getContainer(option);
+  let { styles } = option;
 
-  return (option.styles || findStyles(container)).find(
-    node => node.getAttribute(getMark(option)) === key,
-  );
+  styles ||= findStyles(getContainer(option));
+
+  return styles.find(node => node.getAttribute(getMark(option)) === key);
 }
 
 export function removeCSS(key: string, option: Options = {}) {

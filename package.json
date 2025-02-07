@@ -27,7 +27,7 @@
     "coverage": "npm test -- --coverage",
     "lint": "eslint src/ --ext .tsx,.ts & eslint tests/ --ext .tsx,.ts",
     "prepare": "husky install",
-    "prepublishOnly": "npm run compile && np --yolo --no-publish",
+    "prepublishOnly": "npm run compile && rc-np",
     "start": "dumi dev",
     "test": "rc-test"
   },
@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@rc-component/father-plugin": "^2.0.1",
+    "@rc-component/np": "^1.0.3",
     "@testing-library/react": "^16.0.0",
     "@types/jest": "^29.4.0",
     "@types/node": "^22.5.5",
@@ -60,7 +61,6 @@
     "glob": "^9.2.1",
     "husky": "^9.1.6",
     "lint-staged": "^15.1.0",
-    "np": "^10.0.2",
     "prettier": "^3.3.2",
     "rc-test": "^7.0.14",
     "react": "^18.0.0",
