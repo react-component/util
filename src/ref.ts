@@ -45,7 +45,7 @@ export const supportRef = (nodeOrComponent: any): boolean => {
   // React 19 no need `forwardRef` anymore. So just pass if is a React element.
   if (
     isReactElement(nodeOrComponent) &&
-    (nodeOrComponent as any).props.propertyIsEnumerable('ref')
+    React.version.startsWith('19.')
   ) {
     return true;
   }
