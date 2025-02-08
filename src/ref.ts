@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { isValidElement } from 'react';
+import { isValidElement, version } from 'react';
 import { ForwardRef, isMemo } from 'react-is';
 import useMemo from './hooks/useMemo';
 import isFragment from './React/isFragment';
@@ -45,7 +45,7 @@ export const supportRef = (nodeOrComponent: any): boolean => {
   // React 19 no need `forwardRef` anymore. So just pass if is a React element.
   if (
     isReactElement(nodeOrComponent) &&
-    React.version.startsWith('19.')
+    version.startsWith('19.')
   ) {
     return true;
   }
