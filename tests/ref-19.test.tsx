@@ -1,6 +1,6 @@
 /* eslint-disable no-eval */
 import React from 'react';
-import { getNodeRef, useComposeRef } from '../src/ref';
+import { getNodeRef, useComposeRef, supportRef } from '../src/ref';
 import { render } from '@testing-library/react';
 
 jest.mock('react', () => {
@@ -75,5 +75,21 @@ describe('ref: React 19', () => {
 
     expect(outerRef.current?.className).toBe('bamboo');
     expect(container.querySelector('.test-output')?.textContent).toBe('bamboo');
+  });
+
+  it('supportRef with not provide ref', () => {
+    const Empty = () => <div />;
+
+    const Checker = ({ children }: { children: React.ReactElement }) => {
+      return <p>{String(supportRef(children))}</p>;
+    };
+
+    const { container } = render(
+      <Checker>
+        <Empty />
+      </Checker>,
+    );
+
+    expect(container.querySelector('p')?.textContent).toBe('true');
   });
 });
