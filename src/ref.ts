@@ -4,6 +4,8 @@ import { ForwardRef, isMemo } from 'react-is';
 import useMemo from './hooks/useMemo';
 import isFragment from './React/isFragment';
 
+const ReactMajorVersion = Number(version.split('.')[0]);
+
 export const fillRef = <T>(ref: React.Ref<T>, node: T) => {
   if (typeof ref === 'function') {
     ref(node);
@@ -43,10 +45,7 @@ export const supportRef = (nodeOrComponent: any): boolean => {
   }
 
   // React 19 no need `forwardRef` anymore. So just pass if is a React element.
-  if (
-    isReactElement(nodeOrComponent) &&
-    version.startsWith('19.')
-  ) {
+  if (isReactElement(nodeOrComponent) && ReactMajorVersion >= 19) {
     return true;
   }
 
