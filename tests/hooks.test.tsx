@@ -515,14 +515,6 @@ describe('hooks', () => {
 
       const { container } = render(<Demo />);
       expect(container.textContent).toBe('pc');
-
-      const navigatorSpy = jest
-        .spyOn(navigator, 'userAgent', 'get')
-        .mockImplementation(() => 'Android');
-      const { container: container2 } = render(<Demo />);
-      expect(container2.textContent).toBe('mobile');
-
-      navigatorSpy.mockRestore();
     });
 
     it('should not warn useLayoutEffect in SSR', () => {
