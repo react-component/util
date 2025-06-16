@@ -31,7 +31,9 @@ describe('dynamicCSS', () => {
       const style = injectCSS(TEST_STYLE, { csp: { nonce: 'light' } });
       expect(document.contains(style));
       expect(document.querySelector('style').innerHTML).toEqual(TEST_STYLE);
-      expect(document.querySelector('style').nonce).toEqual('light');
+      expect(document.querySelector('style').getAttribute('nonce')).toEqual(
+        'light',
+      );
     });
 
     describe('prepend', () => {
