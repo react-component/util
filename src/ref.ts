@@ -35,7 +35,7 @@ export const useComposeRef = <T>(...refs: React.Ref<T>[]): React.Ref<T> => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     refs,
     (prev, next) =>
-      prev.length !== next.length || prev.every((ref, i) => ref !== next[i]),
+      prev.length !== next.length || prev.some((ref, i) => ref !== next[i]),
   );
 };
 
