@@ -21,6 +21,13 @@
     "lib",
     "es"
   ],
+  "exports": {
+    ".": {
+      "types": "./es/index.d.ts",
+      "require": "./lib/index.js",
+      "import": "./es/index.js"
+    }
+  },
   "scripts": {
     "build": "dumi build",
     "compile": "father build",

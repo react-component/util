@@ -1,5 +1,5 @@
-import isEqual from '../isEqual';
-import warning from '../warning';
+import isEqual from '../src/isEqual';
+import warning from '../src/warning';
 
 describe('isEqual', () => {
   let errorSpy: jest.SpyInstance;
