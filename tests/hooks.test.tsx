@@ -8,7 +8,7 @@ import useMergedState from '../src/hooks/useMergedState';
 import useMobile from '../src/hooks/useMobile';
 import useState from '../src/hooks/useState';
 import useSyncState from '../src/hooks/useSyncState';
-import usePropState from '../src/hooks/usePropState';
+import useControlledState from '../src/hooks/useControlledState';
 
 global.disableUseId = false;
 
@@ -318,13 +318,16 @@ describe('hooks', () => {
     });
   });
 
-  describe('usePropState', () => {
+  describe('useControlledState', () => {
     const FC: React.FC<{
       value?: string;
       defaultValue?: string | (() => string);
     }> = props => {
       const { value, defaultValue } = props;
-      const [val, setVal] = usePropState<string>(defaultValue ?? null, value);
+      const [val, setVal] = useControlledState<string>(
+        defaultValue ?? null,
+        value,
+      );
       return (
         <>
           <input
@@ -367,7 +370,7 @@ describe('hooks', () => {
       let renderTimes = 0;
 
       const Test = () => {
-        const [val, setVal] = usePropState(0);
+        const [val, setVal] = useControlledState(0);
 
         React.useEffect(() => {
           renderTimes += 1;
@@ -385,7 +388,7 @@ describe('hooks', () => {
 
     it('React 18 should not reset to undefined', () => {
       const Demo = () => {
-        const [val] = usePropState(33, undefined);
+        const [val] = useControlledState(33, undefined);
 
         return <div>{val}</div>;
       };
@@ -401,7 +404,7 @@ describe('hooks', () => {
 
     it('uncontrolled to controlled', () => {
       const Demo: React.FC<Readonly<{ value?: number }>> = ({ value }) => {
-        const [mergedValue, setMergedValue] = usePropState<number>(
+        const [mergedValue, setMergedValue] = useControlledState<number>(
           () => 233,
           value,
         );
@@ -437,7 +440,7 @@ describe('hooks', () => {
 
     it('should alway use option value', () => {
       const Test: React.FC<Readonly<{ value?: number }>> = ({ value }) => {
-        const [mergedValue, setMergedValue] = usePropState<number>(
+        const [mergedValue, setMergedValue] = useControlledState<number>(
           undefined,
           value,
         );
@@ -462,7 +465,7 @@ describe('hooks', () => {
       let count = 0;
 
       const Demo: React.FC = () => {
-        const [] = usePropState(undefined);
+        const [] = useControlledState(undefined);
         count += 1;
         return null;
       };
