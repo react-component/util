@@ -36,6 +36,7 @@ export const useLayoutUpdateEffect: typeof React.useEffect = (
     if (!firstMount) {
       return callback();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 };
 

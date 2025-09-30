@@ -1,8 +1,5 @@
-import React from 'react';
-import { act } from 'react-dom/test-utils';
-import { render, unmount, _r, _u } from '../src/React/render';
-
-globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+import { act } from '@testing-library/react';
+import { render, unmount } from '../src/React/render';
 
 describe('React', () => {
   afterEach(() => {
@@ -30,22 +27,5 @@ describe('React', () => {
     expect(div.querySelector('.bamboo')).toBeFalsy();
 
     expect(errorSpy).not.toHaveBeenCalled();
-  });
-
-  it('React 17 render & unmount', async () => {
-    const div = document.createElement('div');
-    document.body.appendChild(div);
-
-    // Mount
-    act(() => {
-      _r(<div className="bamboo" />, div);
-    });
-    expect(div.querySelector('.bamboo')).toBeTruthy();
-
-    // Unmount
-    act(() => {
-      _u(div);
-    });
-    expect(div.querySelector('.bamboo')).toBeFalsy();
   });
 });

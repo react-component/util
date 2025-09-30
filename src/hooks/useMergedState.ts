@@ -13,6 +13,7 @@ function hasValue(value: any) {
 }
 
 /**
+ * @deprecated Please use `useControlledState` instead if not need support < React 18.
  * Similar to `useState` but will use props value if provided.
  * Note that internal use rc-util `useState` hook.
  */

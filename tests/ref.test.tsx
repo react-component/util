@@ -1,15 +1,23 @@
 /* eslint-disable no-eval */
 import { fireEvent, render } from '@testing-library/react';
-import React, { ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React from 'react';
 import useEvent from '../src/hooks/useEvent';
 import {
   composeRef,
+  getNodeRef,
   supportNodeRef,
   supportRef,
   useComposeRef,
 } from '../src/ref';
 
 describe('ref', () => {
+  const errSpy = jest.spyOn(console, 'error');
+
+  beforeEach(() => {
+    errSpy.mockReset();
+  });
+
   describe('composeRef', () => {
     it('basic', () => {
       const refFunc1 = jest.fn();
@@ -81,7 +89,7 @@ describe('ref', () => {
       }
     }
 
-    it('function component', () => {
+    it('function component1', () => {
       const holderRef = React.createRef<Holder>();
 
       function FC() {
@@ -94,7 +102,7 @@ describe('ref', () => {
         </Holder>,
       );
       expect(supportRef(FC)).toBeFalsy();
-      expect(supportRef(holderRef.current.props.children)).toBeFalsy();
+      // expect(supportRef(holderRef.current.props.children)).toBeFalsy();
     });
 
     it('arrow function component', () => {
@@ -170,6 +178,10 @@ describe('ref', () => {
       expect(supportRef(MemoFC)).toBeTruthy();
       expect(supportRef(holderRef.current.props.children)).toBeTruthy();
     });
+
+    it('skip null', () => {
+      expect(supportRef(null)).toBeFalsy();
+    });
   });
 
   describe('nodeSupportRef', () => {
@@ -186,5 +198,26 @@ describe('ref', () => {
       expect(supportNodeRef(<FC />)).toBeFalsy();
       expect(supportNodeRef(<RefFC />)).toBeTruthy();
     });
+
+    it('ref', () => {
+      const FC: React.FC = () => <div />;
+      const RefFC = React.forwardRef<
+        HTMLDivElement,
+        React.HTMLAttributes<HTMLDivElement>
+      >((props, ref) => <div {...props} ref={ref} />);
+      const com = <FC />;
+      const refCom = <RefFC ref={React.createRef()} />;
+      expect(supportNodeRef(com) && com.ref).toBeFalsy();
+      expect(supportNodeRef(refCom) && refCom.ref).toBeTruthy();
+    });
+  });
+
+  it('getNodeRef', () => {
+    const ref = React.createRef<HTMLDivElement>();
+    const node = <div ref={ref} />;
+
+    expect(getNodeRef(node)).toBe(ref);
+
+    expect(errSpy).not.toHaveBeenCalled();
   });
 });

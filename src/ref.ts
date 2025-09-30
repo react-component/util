@@ -1,43 +1,54 @@
-/* eslint-disable no-param-reassign */
 import type * as React from 'react';
-import { isValidElement, ReactNode } from 'react';
-import { ForwardRef, isFragment, isMemo } from 'react-is';
+import { isValidElement, version } from 'react';
+import { ForwardRef, isMemo } from 'react-is';
 import useMemo from './hooks/useMemo';
+import isFragment from './React/isFragment';
 
-export function fillRef<T>(ref: React.Ref<T>, node: T) {
+const ReactMajorVersion = Number(version.split('.')[0]);
+
+export const fillRef = <T>(ref: React.Ref<T>, node: T) => {
   if (typeof ref === 'function') {
     ref(node);
   } else if (typeof ref === 'object' && ref && 'current' in ref) {
     (ref as any).current = node;
   }
-}
+};
 
 /**
  * Merge refs into one ref function to support ref passing.
  */
-export function composeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
-  const refList = refs.filter(ref => ref);
+export const composeRef = <T>(...refs: React.Ref<T>[]): React.Ref<T> => {
+  const refList = refs.filter(Boolean);
   if (refList.length <= 1) {
     return refList[0];
   }
-
   return (node: T) => {
     refs.forEach(ref => {
       fillRef(ref, node);
     });
   };
-}
+};
 
-export function useComposeRef<T>(...refs: React.Ref<T>[]): React.Ref<T> {
+export const useComposeRef = <T>(...refs: React.Ref<T>[]): React.Ref<T> => {
   return useMemo(
     () => composeRef(...refs),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     refs,
     (prev, next) =>
       prev.length !== next.length || prev.every((ref, i) => ref !== next[i]),
   );
-}
+};
 
-export function supportRef(nodeOrComponent: any): boolean {
+export const supportRef = (nodeOrComponent: any): boolean => {
+  if (!nodeOrComponent) {
+    return false;
+  }
+
+  // React 19 no need `forwardRef` anymore. So just pass if is a React element.
+  if (isReactElement(nodeOrComponent) && ReactMajorVersion >= 19) {
+    return true;
+  }
+
   const type = isMemo(nodeOrComponent)
     ? nodeOrComponent.type.type
     : nodeOrComponent.type;
@@ -59,19 +70,37 @@ export function supportRef(nodeOrComponent: any): boolean {
   ) {
     return false;
   }
-
   return true;
+};
+
+interface RefAttributes<T> extends React.Attributes {
+  ref: React.Ref<T>;
 }
 
-export function supportNodeRef(node: ReactNode): boolean {
-  if (!isValidElement(node)) {
-    return false;
-  }
-
-  if (isFragment(node)) {
-    return false;
-  }
-
-  return supportRef(node);
+function isReactElement(node: React.ReactNode) {
+  return isValidElement(node) && !isFragment(node);
 }
-/* eslint-enable */
+
+export const supportNodeRef = <T = any>(
+  node: React.ReactNode,
+): node is React.ReactElement & RefAttributes<T> => {
+  return isReactElement(node) && supportRef(node);
+};
+
+/**
+ * In React 19. `ref` is not a property from node.
+ * But a property from `props.ref`.
+ * To check if `props.ref` exist or fallback to `ref`.
+ */
+export const getNodeRef: <T = any>(
+  node: React.ReactNode,
+) => React.Ref<T> | null = node => {
+  if (node && isReactElement(node)) {
+    const ele = node as any;
+
+    // Source from:
+    // https://github.com/mui/material-ui/blob/master/packages/mui-utils/src/getReactNodeRef/getReactNodeRef.ts
+    return ele.props.propertyIsEnumerable('ref') ? ele.props.ref : ele.ref;
+  }
+  return null;
+};

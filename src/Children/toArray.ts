@@ -1,5 +1,5 @@
+import isFragment from '../React/isFragment';
 import React from 'react';
-import { isFragment } from 'react-is';
 
 export interface Option {
   keepEmpty?: boolean;

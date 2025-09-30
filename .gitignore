@@ -24,10 +24,12 @@ node_modules
 build
 lib
 coverage
-yarn.lock
 /es/
 package-lock.json
+pnpm-lock.yaml
+yarn.lock
 .doc
+bun.lockb
 
 # umi
 .umi

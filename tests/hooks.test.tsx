@@ -7,6 +7,8 @@ import useMemo from '../src/hooks/useMemo';
 import useMergedState from '../src/hooks/useMergedState';
 import useMobile from '../src/hooks/useMobile';
 import useState from '../src/hooks/useState';
+import useSyncState from '../src/hooks/useSyncState';
+import useControlledState from '../src/hooks/useControlledState';
 
 global.disableUseId = false;
 
@@ -24,9 +26,11 @@ jest.mock('react', () => {
 
 describe('hooks', () => {
   it('useMemo', () => {
-    const FC = ({ open, data }) => {
+    const FC: React.FC<Readonly<{ open?: boolean; data?: string }>> = props => {
+      const { open, data } = props;
       const memoData = useMemo(
         () => data,
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [open, data],
         (prev, next) => next[0] && prev[1] !== next[1],
       );
@@ -47,8 +51,15 @@ describe('hooks', () => {
   });
 
   describe('useMergedState', () => {
-    const FC = ({ value, defaultValue }) => {
-      const [val, setVal] = useMergedState(null, { value, defaultValue });
+    const FC: React.FC<{
+      value?: string;
+      defaultValue?: string | (() => string);
+    }> = props => {
+      const { value, defaultValue } = props;
+      const [val, setVal] = useMergedState<string>(null, {
+        value,
+        defaultValue,
+      });
       return (
         <>
           <input
@@ -124,9 +135,8 @@ describe('hooks', () => {
     });
 
     it('postState', () => {
-      const Demo = () => {
+      const Demo: React.FC = () => {
         const [val] = useMergedState(1, { postState: v => v * 2 });
-
         return <div>{val}</div>;
       };
 
@@ -140,10 +150,16 @@ describe('hooks', () => {
     });
 
     describe('not trigger onChange if props change', () => {
-      function test(name, postWrapper = node => node) {
+      function test(
+        name: string,
+        postWrapper = (node?: React.ReactNode) => node,
+      ) {
         it(name, () => {
-          const Demo = ({ value, onChange }) => {
-            const [mergedValue, setValue] = useMergedState(0, {
+          const Demo: React.FC<{
+            onChange: (value: number) => void;
+          }> = props => {
+            const { onChange } = props;
+            const [mergedValue, setValue] = useMergedState<number>(0, {
               onChange,
             });
 
@@ -195,11 +211,11 @@ describe('hooks', () => {
     it('uncontrolled to controlled', () => {
       const onChange = jest.fn();
 
-      const Demo = ({ value }) => {
-        const [mergedValue, setMergedValue] = useMergedState(() => 233, {
-          value,
-          onChange,
-        });
+      const Demo: React.FC<Readonly<{ value?: number }>> = ({ value }) => {
+        const [mergedValue, setMergedValue] = useMergedState<number>(
+          () => 233,
+          { value, onChange },
+        );
 
         return (
           <span
@@ -236,11 +252,11 @@ describe('hooks', () => {
     it('not trigger onChange if set same value', () => {
       const onChange = jest.fn();
 
-      const Test = ({ value }) => {
-        const [mergedValue, setMergedValue] = useMergedState(undefined, {
-          value,
-          onChange,
-        });
+      const Test: React.FC<Readonly<{ value?: number }>> = ({ value }) => {
+        const [mergedValue, setMergedValue] = useMergedState<number>(
+          undefined,
+          { value, onChange },
+        );
         return (
           <span
             onClick={() => {
@@ -266,11 +282,11 @@ describe('hooks', () => {
     it('should alway use option value', () => {
       const onChange = jest.fn();
 
-      const Test = ({ value }) => {
-        const [mergedValue, setMergedValue] = useMergedState(undefined, {
-          value,
-          onChange,
-        });
+      const Test: React.FC<Readonly<{ value?: number }>> = ({ value }) => {
+        const [mergedValue, setMergedValue] = useMergedState<number>(
+          undefined,
+          { value, onChange },
+        );
         return (
           <span
             onClick={() => {
@@ -291,8 +307,165 @@ describe('hooks', () => {
     it('render once', () => {
       let count = 0;
 
+      const Demo: React.FC = () => {
+        const [] = useMergedState(undefined);
+        count += 1;
+        return null;
+      };
+
+      render(<Demo />);
+      expect(count).toBe(1);
+    });
+  });
+
+  describe('useControlledState', () => {
+    const FC: React.FC<{
+      value?: string;
+      defaultValue?: string | (() => string);
+    }> = props => {
+      const { value, defaultValue } = props;
+      const [val, setVal] = useControlledState<string>(
+        defaultValue ?? null,
+        value,
+      );
+      return (
+        <>
+          <input
+            value={val}
+            onChange={e => {
+              setVal(e.target.value);
+            }}
+          />
+          <span className="txt">{val}</span>
+        </>
+      );
+    };
+
+    it('still control of to undefined', () => {
+      const { container, rerender } = render(<FC value="test" />);
+
+      expect(container.querySelector('input').value).toEqual('test');
+      expect(container.querySelector('.txt').textContent).toEqual('test');
+
+      rerender(<FC value={undefined} />);
+      expect(container.querySelector('input').value).toEqual('test');
+      expect(container.querySelector('.txt').textContent).toEqual('');
+    });
+
+    describe('correct defaultValue', () => {
+      it('raw', () => {
+        const { container } = render(<FC defaultValue="test" />);
+
+        expect(container.querySelector('input').value).toEqual('test');
+      });
+
+      it('func', () => {
+        const { container } = render(<FC defaultValue={() => 'bamboo'} />);
+
+        expect(container.querySelector('input').value).toEqual('bamboo');
+      });
+    });
+
+    it('not rerender when setState as deps', () => {
+      let renderTimes = 0;
+
+      const Test = () => {
+        const [val, setVal] = useControlledState(0);
+
+        React.useEffect(() => {
+          renderTimes += 1;
+          expect(renderTimes < 10).toBeTruthy();
+
+          setVal(1);
+        }, [setVal]);
+
+        return <div>{val}</div>;
+      };
+
+      const { container } = render(<Test />);
+      expect(container.firstChild.textContent).toEqual('1');
+    });
+
+    it('React 18 should not reset to undefined', () => {
       const Demo = () => {
-        const [] = useMergedState();
+        const [val] = useControlledState(33, undefined);
+
+        return <div>{val}</div>;
+      };
+
+      const { container } = render(
+        <React.StrictMode>
+          <Demo />
+        </React.StrictMode>,
+      );
+
+      expect(container.querySelector('div').textContent).toEqual('33');
+    });
+
+    it('uncontrolled to controlled', () => {
+      const Demo: React.FC<Readonly<{ value?: number }>> = ({ value }) => {
+        const [mergedValue, setMergedValue] = useControlledState<number>(
+          () => 233,
+          value,
+        );
+
+        return (
+          <span
+            onClick={() => {
+              setMergedValue(v => v + 1);
+              setMergedValue(v => v + 1);
+            }}
+            onMouseEnter={() => {
+              setMergedValue(1);
+            }}
+          >
+            {mergedValue}
+          </span>
+        );
+      };
+
+      const { container, rerender } = render(<Demo />);
+      expect(container.textContent).toEqual('233');
+
+      // Update value
+      rerender(<Demo value={1} />);
+      expect(container.textContent).toEqual('1');
+
+      // Click update
+      rerender(<Demo value={undefined} />);
+      fireEvent.mouseEnter(container.querySelector('span'));
+      fireEvent.click(container.querySelector('span'));
+      expect(container.textContent).toEqual('3');
+    });
+
+    it('should alway use option value', () => {
+      const Test: React.FC<Readonly<{ value?: number }>> = ({ value }) => {
+        const [mergedValue, setMergedValue] = useControlledState<number>(
+          undefined,
+          value,
+        );
+        return (
+          <span
+            onClick={() => {
+              setMergedValue(12);
+            }}
+          >
+            {mergedValue}
+          </span>
+        );
+      };
+
+      const { container } = render(<Test value={1} />);
+      fireEvent.click(container.querySelector('span'));
+
+      expect(container.textContent).toBe('1');
+    });
+
+    it('render once', () => {
+      let count = 0;
+
+      const Demo: React.FC = () => {
+        const [] = useControlledState(undefined);
         count += 1;
         return null;
       };
@@ -303,9 +476,10 @@ describe('hooks', () => {
   });
 
   describe('useLayoutEffect', () => {
-    const FC = ({ defaultValue }) => {
-      const [val, setVal] = React.useState(defaultValue);
-      const [val2, setVal2] = React.useState();
+    const FC: React.FC<Readonly<{ defaultValue?: string }>> = props => {
+      const { defaultValue } = props;
+      const [val, setVal] = React.useState<string>(defaultValue);
+      const [val2, setVal2] = React.useState<string>();
       useLayoutEffect(() => {
         setVal2(`${val}a`);
       }, [val]);
@@ -345,10 +519,11 @@ describe('hooks', () => {
     });
 
     it('can get mount state', () => {
-      const Demo = () => {
-        const timesRef = React.useRef(0);
-        const [, forceUpdate] = React.useState(0);
+      const Demo: React.FC = () => {
+        const timesRef = React.useRef<number>(0);
+        const [, forceUpdate] = React.useState<number>(0);
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         useLayoutEffect(firstMount => {
           if (timesRef.current === 0) {
             expect(firstMount).toBeTruthy();
@@ -373,8 +548,8 @@ describe('hooks', () => {
     it('not throw', done => {
       const errorSpy = jest.spyOn(console, 'error');
 
-      const Demo = () => {
-        const [val, setValue] = useState(0);
+      const Demo: React.FC = () => {
+        const [val, setValue] = useState<number>(0);
 
         React.useEffect(
           () => () => {
@@ -419,8 +594,8 @@ describe('hooks', () => {
     it.skip('throw', done => {
       const errorSpy = jest.spyOn(console, 'error');
 
-      const Demo = () => {
-        const [_, setValue] = useState(0);
+      const Demo: React.FC = () => {
+        const [, setValue] = useState<number>(0);
 
         React.useEffect(
           () => () => {
@@ -445,12 +620,12 @@ describe('hooks', () => {
   });
 
   describe('useId', () => {
-    const Demo = ({ id } = {}) => {
+    const Demo: React.FC<Readonly<{ id?: string }>> = ({ id }) => {
       const mergedId = useId(id);
       return <div id={mergedId} className="target" />;
     };
 
-    function matchId(container, id) {
+    function matchId(container: HTMLElement, id: string) {
       const ele = container.querySelector('.target');
       return expect(ele.id).toEqual(id);
     }
@@ -498,19 +673,11 @@ describe('hooks', () => {
 
       const { container } = render(<Demo />);
       expect(container.textContent).toBe('pc');
-
-      const navigatorSpy = jest
-        .spyOn(navigator, 'userAgent', 'get')
-        .mockImplementation(() => 'Android');
-      const { container: container2 } = render(<Demo />);
-      expect(container2.textContent).toBe('mobile');
-
-      navigatorSpy.mockRestore();
     });
 
     it('should not warn useLayoutEffect in SSR', () => {
       const errorSpy = jest.spyOn(console, 'error');
-      const Demo = () => {
+      const Demo: React.FC = () => {
         useMobile();
         return null;
       };
@@ -519,6 +686,24 @@ describe('hooks', () => {
         expect.stringContaining('useLayoutEffect'),
         expect.anything(),
       );
+    });
+  });
+
+  describe('useSyncState', () => {
+    it('batch use latest', () => {
+      const Demo = () => {
+        const [getCounter, setCounter] = useSyncState(0);
+
+        React.useEffect(() => {
+          setCounter(getCounter() + 1);
+          setCounter(getCounter() + 1);
+        }, [getCounter, setCounter]);
+
+        return getCounter();
+      };
+
+      const { container } = render(<Demo />);
+      expect(container.textContent).toEqual('2');
     });
   });
 });

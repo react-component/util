@@ -172,6 +172,7 @@ describe('utils', () => {
           a: 1,
           b: {
             c: 3,
+            looper: undefined,
           },
         };
         looper.b.looper = looper;
@@ -195,7 +196,10 @@ describe('utils', () => {
 
       it('shallow copy', () => {
         const ori = {
-          list: [{ a: 1 }, { a: 2 }],
+          list: [
+            { a: 1, b: undefined },
+            { a: 2, b: undefined },
+          ],
         };
 
         const cloneList = [...ori.list];
@@ -213,7 +217,9 @@ describe('utils', () => {
 
       it('skip class object', () => {
         class User {
-          constructor(name, age) {
+          name: string;
+          age: number;
+          constructor(name: string, age: number) {
             this.name = name;
             this.age = age;
           }
