@@ -8,6 +8,7 @@ import useMergedState from '../src/hooks/useMergedState';
 import useMobile from '../src/hooks/useMobile';
 import useState from '../src/hooks/useState';
 import useSyncState from '../src/hooks/useSyncState';
+import useControlledState from '../src/hooks/useControlledState';
 
 global.disableUseId = false;
 
@@ -308,6 +309,163 @@ describe('hooks', () => {
 
       const Demo: React.FC = () => {
         const [] = useMergedState(undefined);
+        count += 1;
+        return null;
+      };
+
+      render(<Demo />);
+      expect(count).toBe(1);
+    });
+  });
+
+  describe('useControlledState', () => {
+    const FC: React.FC<{
+      value?: string;
+      defaultValue?: string | (() => string);
+    }> = props => {
+      const { value, defaultValue } = props;
+      const [val, setVal] = useControlledState<string>(
+        defaultValue ?? null,
+        value,
+      );
+      return (
+        <>
+          <input
+            value={val}
+            onChange={e => {
+              setVal(e.target.value);
+            }}
+          />
+          <span className="txt">{val}</span>
+        </>
+      );
+    };
+
+    it('still control of to undefined', () => {
+      const { container, rerender } = render(<FC value="test" />);
+
+      expect(container.querySelector('input').value).toEqual('test');
+      expect(container.querySelector('.txt').textContent).toEqual('test');
+
+      rerender(<FC value={undefined} />);
+      expect(container.querySelector('input').value).toEqual('test');
+      expect(container.querySelector('.txt').textContent).toEqual('');
+    });
+
+    describe('correct defaultValue', () => {
+      it('raw', () => {
+        const { container } = render(<FC defaultValue="test" />);
+
+        expect(container.querySelector('input').value).toEqual('test');
+      });
+
+      it('func', () => {
+        const { container } = render(<FC defaultValue={() => 'bamboo'} />);
+
+        expect(container.querySelector('input').value).toEqual('bamboo');
+      });
+    });
+
+    it('not rerender when setState as deps', () => {
+      let renderTimes = 0;
+
+      const Test = () => {
+        const [val, setVal] = useControlledState(0);
+
+        React.useEffect(() => {
+          renderTimes += 1;
+          expect(renderTimes < 10).toBeTruthy();
+
+          setVal(1);
+        }, [setVal]);
+
+        return <div>{val}</div>;
+      };
+
+      const { container } = render(<Test />);
+      expect(container.firstChild.textContent).toEqual('1');
+    });
+
+    it('React 18 should not reset to undefined', () => {
+      const Demo = () => {
+        const [val] = useControlledState(33, undefined);
+
+        return <div>{val}</div>;
+      };
+
+      const { container } = render(
+        <React.StrictMode>
+          <Demo />
+        </React.StrictMode>,
+      );
+
+      expect(container.querySelector('div').textContent).toEqual('33');
+    });
+
+    it('uncontrolled to controlled', () => {
+      const Demo: React.FC<Readonly<{ value?: number }>> = ({ value }) => {
+        const [mergedValue, setMergedValue] = useControlledState<number>(
+          () => 233,
+          value,
+        );
+
+        return (
+          <span
+            onClick={() => {
+              setMergedValue(v => v + 1);
+              setMergedValue(v => v + 1);
+            }}
+            onMouseEnter={() => {
+              setMergedValue(1);
+            }}
+          >
+            {mergedValue}
+          </span>
+        );
+      };
+
+      const { container, rerender } = render(<Demo />);
+      expect(container.textContent).toEqual('233');
+
+      // Update value
+      rerender(<Demo value={1} />);
+      expect(container.textContent).toEqual('1');
+
+      // Click update
+      rerender(<Demo value={undefined} />);
+      fireEvent.mouseEnter(container.querySelector('span'));
+      fireEvent.click(container.querySelector('span'));
+      expect(container.textContent).toEqual('3');
+    });
+
+    it('should alway use option value', () => {
+      const Test: React.FC<Readonly<{ value?: number }>> = ({ value }) => {
+        const [mergedValue, setMergedValue] = useControlledState<number>(
+          undefined,
+          value,
+        );
+        return (
+          <span
+            onClick={() => {
+              setMergedValue(12);
+            }}
+          >
+            {mergedValue}
+          </span>
+        );
+      };
+
+      const { container } = render(<Test value={1} />);
+      fireEvent.click(container.querySelector('span'));
+
+      expect(container.textContent).toBe('1');
+    });
+
+    it('render once', () => {
+      let count = 0;
+
+      const Demo: React.FC = () => {
+        const [] = useControlledState(undefined);
         count += 1;
         return null;
       };
