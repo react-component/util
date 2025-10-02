@@ -56,8 +56,9 @@ describe('ref', () => {
       const Demo = () => {
         const [, forceUpdate] = React.useState({});
 
-        const ref1 = React.useRef();
-        const ref2 = React.useRef();
+        const ref1 = React.useRef<HTMLButtonElement>(null);
+        const ref2 = React.useRef<HTMLButtonElement>(null);
+
         const refFn = useEvent(() => {
           count += 1;
         });
@@ -102,7 +103,6 @@ describe('ref', () => {
         </Holder>,
       );
       expect(supportRef(FC)).toBeFalsy();
-      // expect(supportRef(holderRef.current.props.children)).toBeFalsy();
     });
 
     it('arrow function component', () => {
@@ -116,7 +116,7 @@ describe('ref', () => {
         </Holder>,
       );
       expect(supportRef(FC)).toBeFalsy();
-      expect(supportRef(holderRef.current.props.children)).toBeFalsy();
+      expect(supportRef(holderRef.current.props.children)).toBeTruthy(); // React19 ref 收拢到了 props 里面，默认支持
     });
 
     it('forwardRef function component', () => {
@@ -162,7 +162,7 @@ describe('ref', () => {
         </Holder>,
       );
       expect(supportRef(MemoFC)).toBeFalsy();
-      expect(supportRef(holderRef.current.props.children)).toBeFalsy();
+      expect(supportRef(holderRef.current.props.children)).toBeTruthy(); // React19 ref 收拢到了 props 里面，默认支持
     });
 
     it('memo of forwardRef function component', () => {
@@ -195,7 +195,7 @@ describe('ref', () => {
     it('FC', () => {
       const FC = () => <div />;
       const RefFC = React.forwardRef(FC);
-      expect(supportNodeRef(<FC />)).toBeFalsy();
+      expect(supportNodeRef(<FC />)).toBeTruthy(); // React19 ref 收拢到了 props 里面，默认支持
       expect(supportNodeRef(<RefFC />)).toBeTruthy();
     });
 

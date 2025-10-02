@@ -3,26 +3,6 @@ import React from 'react';
 import { getNodeRef, useComposeRef, supportRef } from '../src/ref';
 import { render } from '@testing-library/react';
 
-jest.mock('react', () => {
-  const react19 = jest.requireActual('react-19');
-  return react19;
-});
-
-jest.mock('react-dom', () => {
-  const reactDom19 = jest.requireActual('react-dom-19');
-  return reactDom19;
-});
-
-jest.mock('react-dom/client', () => {
-  const reactDom19Client = jest.requireActual('react-dom-19/client');
-  return reactDom19Client;
-});
-
-jest.mock('react-dom/test-utils', () => {
-  const reactDom19Test = jest.requireActual('react-dom-19/test-utils');
-  return reactDom19Test;
-});
-
 describe('ref: React 19', () => {
   const errSpy = jest.spyOn(console, 'error');
 
@@ -59,7 +39,7 @@ describe('ref: React 19', () => {
 
       return (
         <>
-          {React.cloneElement(children, { ref: mergedRef })}
+          {React.cloneElement<any>(children, { ref: mergedRef })}
           <div className="test-output">{childClassName}</div>
         </>
       );
