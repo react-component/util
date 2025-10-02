@@ -59,7 +59,7 @@ describe('ref: React 19', () => {
 
       return (
         <>
-          {React.cloneElement(children, { ref: mergedRef })}
+          {React.cloneElement<any>(children, { ref: mergedRef })}
           <div className="test-output">{childClassName}</div>
         </>
       );

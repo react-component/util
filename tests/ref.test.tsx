@@ -56,8 +56,9 @@ describe('ref', () => {
       const Demo = () => {
         const [, forceUpdate] = React.useState({});
 
-        const ref1 = React.useRef();
-        const ref2 = React.useRef();
+        const ref1 = React.useRef<HTMLButtonElement>(null);
+        const ref2 = React.useRef<HTMLButtonElement>(null);
+
         const refFn = useEvent(() => {
           count += 1;
         });
