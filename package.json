@@ -45,7 +45,7 @@
     "@rc-component/father-plugin": "^2.0.1",
     "@rc-component/np": "^1.0.3",
     "@testing-library/react": "^16.0.0",
-    "@types/jest": "^29.4.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.6.1",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
