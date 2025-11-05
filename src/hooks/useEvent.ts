@@ -2,12 +2,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 
-function useEvent<T extends Function>(callback: T): T {
-  const fnRef = React.useRef<any>();
+function useEvent<T extends (...args: any[]) => any>(
+  callback: T | undefined,
+): T {
+  const fnRef = React.useRef<T | undefined>(callback);
   fnRef.current = callback;
 
-  const memoFn = React.useCallback<T>(
-    ((...args: any) => fnRef.current?.(...args)) as any,
+  const memoFn = React.useCallback(
+    ((...args) => fnRef.current?.(...args)) as T,
     [],
   );
 
