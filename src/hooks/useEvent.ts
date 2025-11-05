@@ -2,14 +2,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 
-function useEvent<T extends (...args: any[]) => any>(
-  callback: T | undefined,
-): T {
+function useEvent<T extends ((...args: any[]) => any) | undefined>(
+  callback: T,
+): undefined extends T
+  ? (
+      ...args: Parameters<NonNullable<T>>
+    ) => ReturnType<NonNullable<T>> | undefined
+  : T {
   const fnRef = React.useRef<T | undefined>(callback);
   fnRef.current = callback;
 
   const memoFn = React.useCallback(
-    ((...args) => fnRef.current?.(...args)) as T,
+    (...args: any[]) => fnRef.current?.(...args),
     [],
   );
 

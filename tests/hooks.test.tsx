@@ -9,6 +9,7 @@ import useMobile from '../src/hooks/useMobile';
 import useState from '../src/hooks/useState';
 import useSyncState from '../src/hooks/useSyncState';
 import useControlledState from '../src/hooks/useControlledState';
+import useEvent from '../src/hooks/useEvent';
 
 global.disableUseId = false;
 
@@ -704,6 +705,25 @@ describe('hooks', () => {
 
       const { container } = render(<Demo />);
       expect(container.textContent).toEqual('2');
+    });
+  });
+
+  describe('useEvent', () => {
+    it('extract type', () => {
+      const Demo = (props: {
+        canUndefined?: (a: number) => boolean;
+        notUndefined: (a: number) => boolean;
+      }) => {
+        const ua = useEvent(props.canUndefined);
+        const ub = useEvent(props.notUndefined);
+
+        ua(1);
+        ub(2);
+
+        return null;
+      };
+
+      expect(Demo).toBeTruthy();
     });
   });
 });
