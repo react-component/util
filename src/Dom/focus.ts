@@ -97,3 +97,43 @@ export function limitTabRange(node: HTMLElement, e: KeyboardEvent) {
     }
   }
 }
+
+export interface InputFocusOptions extends FocusOptions {
+  cursor?: 'start' | 'end' | 'all';
+}
+
+// Used for `rc-input` `rc-textarea` `rc-input-number`
+/**
+ * Focus element and set cursor position for input/textarea elements.
+ */
+export function triggerFocus(
+  element?: HTMLElement,
+  option?: InputFocusOptions,
+) {
+  if (!element) return;
+
+  element.focus(option);
+
+  // Selection content
+  const { cursor } = option || {};
+  if (
+    cursor &&
+    (element instanceof HTMLInputElement ||
+      element instanceof HTMLTextAreaElement)
+  ) {
+    const len = element.value.length;
+
+    switch (cursor) {
+      case 'start':
+        element.setSelectionRange(0, 0);
+        break;
+
+      case 'end':
+        element.setSelectionRange(len, len);
+        break;
+
+      default:
+        element.setSelectionRange(0, len);
+    }
+  }
+}

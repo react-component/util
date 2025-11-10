@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { spyElementPrototype } from '../src/test/domHook';
-import { getFocusNodeList } from '../src/Dom/focus';
+import { getFocusNodeList, triggerFocus } from '../src/Dom/focus';
 
 describe('focus', () => {
   beforeAll(() => {
@@ -30,5 +30,30 @@ describe('focus', () => {
 
     const tabFocusList = getFocusNodeList(div, true);
     expect(tabFocusList).toHaveLength(5);
+  });
+
+  it('triggerFocus should set cursor position for textarea', () => {
+    const textarea = document.createElement('textarea');
+    textarea.value = 'test content';
+
+    const focusSpy = jest.spyOn(textarea, 'focus');
+    const setSelectionRangeSpy = jest.spyOn(textarea, 'setSelectionRange');
+
+    // Test cursor: 'start'
+    triggerFocus(textarea, { cursor: 'start' });
+    expect(setSelectionRangeSpy).toHaveBeenCalledWith(0, 0);
+
+    // Test cursor: 'end'
+    triggerFocus(textarea, { cursor: 'end' });
+    expect(setSelectionRangeSpy).toHaveBeenCalledWith(12, 12); // 'test content'.length = 12
+
+    // Test cursor: 'all'
+    triggerFocus(textarea, { cursor: 'all' });
+    expect(setSelectionRangeSpy).toHaveBeenCalledWith(0, 12); // select all text
+
+    expect(focusSpy).toHaveBeenCalledTimes(3);
+
+    focusSpy.mockRestore();
+    setSelectionRangeSpy.mockRestore();
   });
 });
