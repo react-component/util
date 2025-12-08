@@ -66,10 +66,25 @@ function createEmpty<T>(source: T) {
 
 const keys = typeof Reflect === 'undefined' ? Object.keys : Reflect.ownKeys;
 
+// ================================ Merge ================================
+export type MergeFn = (current: any, next: any) => any;
+
 /**
- * Merge objects which will create
+ * Merge multiple objects. Support custom merge logic.
+ * @param sources object sources
+ * @param config.prepareArray Customize array prepare function.
+ * It will return empty [] by default.
+ * So when match array, it will auto be override with next array in sources.
  */
-export function merge<T extends object>(...sources: T[]) {
+export function mergeWith<T extends object>(
+  sources: T[],
+  config: {
+    prepareArray?: MergeFn;
+  } = {},
+) {
+  const { prepareArray } = config;
+  const finalPrepareArray: MergeFn = prepareArray || (() => []);
+
   let clone = createEmpty(sources[0]);
 
   sources.forEach(src => {
@@ -89,7 +104,7 @@ export function merge<T extends object>(...sources: T[]) {
 
           if (isArr) {
             // Array will always be override
-            clone = set(clone, path, []);
+            clone = set(clone, path, finalPrepareArray(originValue, value));
           } else if (!originValue || typeof originValue !== 'object') {
             // Init container if not exist
             clone = set(clone, path, createEmpty(value));
@@ -108,4 +123,12 @@ export function merge<T extends object>(...sources: T[]) {
   });
 
   return clone;
+}
+
+/**
+ * Merge multiple objects into a new single object.
+ * Arrays will be replaced by default.
+ */
+export function merge<T extends object>(...sources: T[]) {
+  return mergeWith(sources);
 }
