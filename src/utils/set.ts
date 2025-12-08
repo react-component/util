@@ -126,7 +126,8 @@ export function deepMerge<T extends object>(
 }
 
 /**
- * Merge objects which will create
+ * Merge multiple objects into a new single object.
+ * Arrays will be replaced by default.
  */
 export function merge<T extends object>(...sources: T[]) {
   return deepMerge(sources);
