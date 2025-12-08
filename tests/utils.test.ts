@@ -1,6 +1,6 @@
 import pickAttrs from '../src/pickAttrs';
 import get from '../src/utils/get';
-import set, { merge } from '../src/utils/set';
+import set, { deepMerge, merge } from '../src/utils/set';
 
 describe('utils', () => {
   it('get', () => {
@@ -250,6 +250,39 @@ describe('utils', () => {
 
         expect(merged).toEqual({
           [symbol]: 1,
+        });
+      });
+
+      it('deepMerge for custom logic', () => {
+        const src = {
+          rest: 233,
+          list: [
+            {
+              a: 1,
+            },
+          ],
+        };
+        const tgt = {
+          list: [
+            {
+              b: 1,
+            },
+          ],
+        };
+
+        const merged = deepMerge<any>([src, tgt], {
+          prepareArray: srcVal => {
+            return [...(srcVal || [])];
+          },
+        });
+        expect(merged).toEqual({
+          rest: 233,
+          list: [
+            {
+              a: 1,
+              b: 1,
+            },
+          ],
         });
       });
     });
