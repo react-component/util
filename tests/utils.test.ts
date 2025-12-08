@@ -1,6 +1,6 @@
 import pickAttrs from '../src/pickAttrs';
 import get from '../src/utils/get';
-import set, { customMerge, merge } from '../src/utils/set';
+import set, { mergeWith, merge } from '../src/utils/set';
 
 describe('utils', () => {
   it('get', () => {
@@ -270,7 +270,7 @@ describe('utils', () => {
           ],
         };
 
-        const merged = customMerge<any>([src, tgt], {
+        const merged = mergeWith<any>([src, tgt], {
           prepareArray: current => {
             return [...(current || [])];
           },
