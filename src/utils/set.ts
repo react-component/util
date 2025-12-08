@@ -67,7 +67,7 @@ function createEmpty<T>(source: T) {
 const keys = typeof Reflect === 'undefined' ? Object.keys : Reflect.ownKeys;
 
 // ================================ Merge ================================
-export type MergeFn = (srcVal: any, tgtVal: any) => any;
+export type MergeFn = (current: any, next: any) => any;
 
 /**
  * Merge multiple objects. Support custom merge logic.
