@@ -271,8 +271,8 @@ describe('utils', () => {
         };
 
         const merged = deepMerge<any>([src, tgt], {
-          prepareArray: srcVal => {
-            return [...(srcVal || [])];
+          prepareArray: current => {
+            return [...(current || [])];
           },
         });
         expect(merged).toEqual({
