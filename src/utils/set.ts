@@ -76,7 +76,7 @@ export type MergeFn = (current: any, next: any) => any;
  * It will return empty [] by default.
  * So when match array, it will auto be override with next array in sources.
  */
-export function deepMerge<T extends object>(
+export function customMerge<T extends object>(
   sources: T[],
   config: {
     prepareArray?: MergeFn;
@@ -130,5 +130,5 @@ export function deepMerge<T extends object>(
  * Arrays will be replaced by default.
  */
 export function merge<T extends object>(...sources: T[]) {
-  return deepMerge(sources);
+  return customMerge(sources);
 }

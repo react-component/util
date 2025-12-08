@@ -1,6 +1,6 @@
 import pickAttrs from '../src/pickAttrs';
 import get from '../src/utils/get';
-import set, { deepMerge, merge } from '../src/utils/set';
+import set, { customMerge, merge } from '../src/utils/set';
 
 describe('utils', () => {
   it('get', () => {
@@ -253,7 +253,7 @@ describe('utils', () => {
         });
       });
 
-      it('deepMerge for custom logic', () => {
+      it('customMerge for custom logic', () => {
         const src = {
           rest: 233,
           list: [
@@ -270,7 +270,7 @@ describe('utils', () => {
           ],
         };
 
-        const merged = deepMerge<any>([src, tgt], {
+        const merged = customMerge<any>([src, tgt], {
           prepareArray: current => {
             return [...(current || [])];
           },
