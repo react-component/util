@@ -56,48 +56,6 @@ export function getFocusNodeList(node: HTMLElement, includePositive = false) {
   return res;
 }
 
-let lastFocusElement = null;
-
-/** @deprecated Do not use since this may failed when used in async */
-export function saveLastFocusNode() {
-  lastFocusElement = document.activeElement;
-}
-
-/** @deprecated Do not use since this may failed when used in async */
-export function clearLastFocusNode() {
-  lastFocusElement = null;
-}
-
-/** @deprecated Do not use since this may failed when used in async */
-export function backLastFocusNode() {
-  if (lastFocusElement) {
-    try {
-      // 元素可能已经被移动了
-      lastFocusElement.focus();
-
-      /* eslint-disable no-empty */
-    } catch (e) {
-      // empty
-    }
-    /* eslint-enable no-empty */
-  }
-}
-
-export function limitTabRange(node: HTMLElement, e: KeyboardEvent) {
-  if (e.keyCode === 9) {
-    const tabNodeList = getFocusNodeList(node);
-    const lastTabNode = tabNodeList[e.shiftKey ? 0 : tabNodeList.length - 1];
-    const leavingTab =
-      lastTabNode === document.activeElement || node === document.activeElement;
-
-    if (leavingTab) {
-      const target = tabNodeList[e.shiftKey ? tabNodeList.length - 1 : 0];
-      target.focus();
-      e.preventDefault();
-    }
-  }
-}
-
 export interface InputFocusOptions extends FocusOptions {
   cursor?: 'start' | 'end' | 'all';
 }
@@ -136,4 +94,35 @@ export function triggerFocus(
         element.setSelectionRange(0, len);
     }
   }
+}
+
+// ======================================================
+// ==                    Lock Focus                    ==
+// ======================================================
+let focusElements: HTMLElement[] = [];
+
+function onWindowFocus(e: FocusEvent) {
+  const lastElement = focusElements[focusElements.length - 1];
+
+  console.log('lock focus', e.target, lastElement);
+}
+
+/**
+ * Lock focus in the element.
+ * It will force back to the first focusable element when focus leaves the element.
+ */
+export function lockFocus(element: HTMLElement): VoidFunction {
+  // Refresh focus elements
+  focusElements = focusElements.filter(ele => ele !== element);
+  focusElements.push(element);
+
+  // Just add event since it will de-duplicate
+  window.addEventListener('focusin', onWindowFocus, true);
+
+  return () => {
+    focusElements = focusElements.filter(ele => ele !== element);
+    if (focusElements.length === 0) {
+      window.removeEventListener('focusin', onWindowFocus, true);
+    }
+  };
 }
