@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
-import React, { JSX, useRef } from 'react';
-import { render, cleanup } from '@testing-library/react';
+import React, { useRef } from 'react';
+import { render } from '@testing-library/react';
 import { spyElementPrototype } from '../src/test/domHook';
 import { getFocusNodeList, triggerFocus, useLockFocus } from '../src/Dom/focus';
 

@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import {} from '../../src';
 import { useLockFocus } from '../../src/Dom/focus';
 import './focus.css';
 

@@ -151,15 +151,18 @@ function onWindowKeyDown(e: KeyboardEvent) {
  * It will force back to the first focusable element when focus leaves the element.
  */
 export function lockFocus(element: HTMLElement): VoidFunction {
-  // Refresh focus elements
-  focusElements = focusElements.filter(ele => ele !== element);
-  focusElements.push(element);
+  if (element) {
+    // Refresh focus elements
+    focusElements = focusElements.filter(ele => ele !== element);
+    focusElements.push(element);
 
-  // Just add event since it will de-duplicate
-  window.addEventListener('focusin', syncFocus);
-  window.addEventListener('keydown', onWindowKeyDown, true);
-  syncFocus();
+    // Just add event since it will de-duplicate
+    window.addEventListener('focusin', syncFocus);
+    window.addEventListener('keydown', onWindowKeyDown, true);
+    syncFocus();
+  }
 
+  // Always return unregister function
   return () => {
     lastFocusElement = null;
     focusElements = focusElements.filter(ele => ele !== element);
@@ -176,7 +179,10 @@ export function useLockFocus(
 ) {
   useEffect(() => {
     if (lock) {
-      return lockFocus(getElement());
+      const element = getElement();
+      if (element) {
+        return lockFocus(element);
+      }
     }
   }, [lock]);
 }
