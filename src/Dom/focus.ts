@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import isVisible from './isVisible';
 
 type DisabledElement =
@@ -56,48 +57,6 @@ export function getFocusNodeList(node: HTMLElement, includePositive = false) {
   return res;
 }
 
-let lastFocusElement = null;
-
-/** @deprecated Do not use since this may failed when used in async */
-export function saveLastFocusNode() {
-  lastFocusElement = document.activeElement;
-}
-
-/** @deprecated Do not use since this may failed when used in async */
-export function clearLastFocusNode() {
-  lastFocusElement = null;
-}
-
-/** @deprecated Do not use since this may failed when used in async */
-export function backLastFocusNode() {
-  if (lastFocusElement) {
-    try {
-      // 元素可能已经被移动了
-      lastFocusElement.focus();
-
-      /* eslint-disable no-empty */
-    } catch (e) {
-      // empty
-    }
-    /* eslint-enable no-empty */
-  }
-}
-
-export function limitTabRange(node: HTMLElement, e: KeyboardEvent) {
-  if (e.keyCode === 9) {
-    const tabNodeList = getFocusNodeList(node);
-    const lastTabNode = tabNodeList[e.shiftKey ? 0 : tabNodeList.length - 1];
-    const leavingTab =
-      lastTabNode === document.activeElement || node === document.activeElement;
-
-    if (leavingTab) {
-      const target = tabNodeList[e.shiftKey ? tabNodeList.length - 1 : 0];
-      target.focus();
-      e.preventDefault();
-    }
-  }
-}
-
 export interface InputFocusOptions extends FocusOptions {
   cursor?: 'start' | 'end' | 'all';
 }
@@ -136,4 +95,99 @@ export function triggerFocus(
         element.setSelectionRange(0, len);
     }
   }
+}
+
+// ======================================================
+// ==                    Lock Focus                    ==
+// ======================================================
+let lastFocusElement: HTMLElement | null = null;
+let focusElements: HTMLElement[] = [];
+
+function getLastElement() {
+  return focusElements[focusElements.length - 1];
+}
+
+function hasFocus(element: HTMLElement) {
+  const { activeElement } = document;
+  return element === activeElement || element.contains(activeElement);
+}
+
+function syncFocus() {
+  const lastElement = getLastElement();
+  const { activeElement } = document;
+
+  if (lastElement && !hasFocus(lastElement)) {
+    const focusableList = getFocusNodeList(lastElement);
+
+    const matchElement = focusableList.includes(lastFocusElement as HTMLElement)
+      ? lastFocusElement
+      : focusableList[0];
+
+    matchElement?.focus();
+  } else {
+    lastFocusElement = activeElement as HTMLElement;
+  }
+}
+
+function onWindowKeyDown(e: KeyboardEvent) {
+  if (e.key === 'Tab') {
+    const { activeElement } = document;
+    const lastElement = getLastElement();
+    const focusableList = getFocusNodeList(lastElement);
+    const last = focusableList[focusableList.length - 1];
+
+    if (e.shiftKey && activeElement === focusableList[0]) {
+      // Tab backward on first focusable element
+      lastFocusElement = last;
+    } else if (!e.shiftKey && activeElement === last) {
+      // Tab forward on last focusable element
+      lastFocusElement = focusableList[0];
+    }
+  }
+}
+
+/**
+ * Lock focus in the element.
+ * It will force back to the first focusable element when focus leaves the element.
+ */
+export function lockFocus(element: HTMLElement): VoidFunction {
+  if (element) {
+    // Refresh focus elements
+    focusElements = focusElements.filter(ele => ele !== element);
+    focusElements.push(element);
+
+    // Just add event since it will de-duplicate
+    window.addEventListener('focusin', syncFocus);
+    window.addEventListener('keydown', onWindowKeyDown, true);
+    syncFocus();
+  }
+
+  // Always return unregister function
+  return () => {
+    lastFocusElement = null;
+    focusElements = focusElements.filter(ele => ele !== element);
+    if (focusElements.length === 0) {
+      window.removeEventListener('focusin', syncFocus);
+      window.removeEventListener('keydown', onWindowKeyDown, true);
+    }
+  };
+}
+
+/**
+ * Lock focus within an element.
+ * When locked, focus will be restricted to focusable elements within the specified element.
+ * If multiple elements are locked, only the last locked element will be effective.
+ */
+export function useLockFocus(
+  lock: boolean,
+  getElement: () => HTMLElement | null,
+) {
+  useEffect(() => {
+    if (lock) {
+      const element = getElement();
+      if (element) {
+        return lockFocus(element);
+      }
+    }
+  }, [lock]);
 }
