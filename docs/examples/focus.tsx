@@ -1,17 +1,13 @@
 import React, { useRef } from 'react';
 import {} from '../../src';
-import { lockFocus } from '../../src/Dom/focus';
+import { useLockFocus } from '../../src/Dom/focus';
 import './focus.css';
 
 export default function FocusDemo() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [locking, setLocking] = React.useState(false);
+  const [locking, setLocking] = React.useState(true);
 
-  React.useEffect(() => {
-    if (locking) {
-      return lockFocus(containerRef.current!);
-    }
-  }, [locking]);
+  useLockFocus(locking, () => containerRef.current);
 
   return (
     <div style={{ padding: 32 }} className="focus-demo">

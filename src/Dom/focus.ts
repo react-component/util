@@ -170,10 +170,13 @@ export function lockFocus(element: HTMLElement): VoidFunction {
   };
 }
 
-export function useFocusLock(element: HTMLElement | null) {
+export function useLockFocus(
+  lock: boolean,
+  getElement: () => HTMLElement | null,
+) {
   useEffect(() => {
-    if (element) {
-      return lockFocus(element);
+    if (lock) {
+      return lockFocus(getElement());
     }
-  }, [element]);
+  }, [lock]);
 }

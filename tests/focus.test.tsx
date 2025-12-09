@@ -1,6 +1,8 @@
 /* eslint-disable class-methods-use-this */
+import React, { JSX, useRef } from 'react';
+import { render, cleanup } from '@testing-library/react';
 import { spyElementPrototype } from '../src/test/domHook';
-import { getFocusNodeList, triggerFocus } from '../src/Dom/focus';
+import { getFocusNodeList, triggerFocus, useLockFocus } from '../src/Dom/focus';
 
 describe('focus', () => {
   beforeAll(() => {
@@ -55,5 +57,43 @@ describe('focus', () => {
 
     focusSpy.mockRestore();
     setSelectionRangeSpy.mockRestore();
+  });
+
+  describe('useLockFocus', () => {
+    const TestComponent: React.FC<{ lock: boolean }> = ({ lock }) => {
+      const elementRef = useRef<HTMLDivElement>(null);
+      useLockFocus(lock, () => elementRef.current);
+
+      return (
+        <>
+          <button data-testid="outer-button">Outer</button>
+          <div ref={elementRef} data-testid="focus-container" tabIndex={0}>
+            <input key="input1" data-testid="input1" />
+            <button key="button1" data-testid="button1">
+              Button
+            </button>
+          </div>
+        </>
+      );
+    };
+
+    it('should restore focus to range when focusing other elements', () => {
+      const { getByTestId } = render(<TestComponent lock={true} />);
+
+      const focusContainer = getByTestId('focus-container');
+      const input1 = getByTestId('input1') as HTMLInputElement;
+
+      // Should focus to first focusable element after lock
+      expect(document.activeElement).toBe(focusContainer);
+
+      // Focus inside container first
+      input1.focus();
+      expect(document.activeElement).toBe(input1);
+
+      // Focus outer button
+      const outerButton = getByTestId('outer-button') as HTMLButtonElement;
+      outerButton.focus();
+      expect(document.activeElement).toBe(input1);
+    });
   });
 });
