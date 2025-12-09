@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import isVisible from './isVisible';
 
 type DisabledElement =
@@ -99,12 +100,50 @@ export function triggerFocus(
 // ======================================================
 // ==                    Lock Focus                    ==
 // ======================================================
+let lastFocusElement: HTMLElement | null = null;
 let focusElements: HTMLElement[] = [];
 
-function onWindowFocus(e: FocusEvent) {
-  const lastElement = focusElements[focusElements.length - 1];
+function getLastElement() {
+  return focusElements[focusElements.length - 1];
+}
 
-  console.log('lock focus', e.target, lastElement);
+function hasFocus(element: HTMLElement) {
+  const { activeElement } = document;
+  return element === activeElement || element.contains(activeElement);
+}
+
+function syncFocus() {
+  const lastElement = getLastElement();
+  const { activeElement } = document;
+
+  if (lastElement && !hasFocus(lastElement)) {
+    const focusableList = getFocusNodeList(lastElement);
+
+    const matchElement = focusableList.includes(lastFocusElement as HTMLElement)
+      ? lastFocusElement
+      : focusableList[0];
+
+    matchElement?.focus();
+  } else {
+    lastFocusElement = activeElement as HTMLElement;
+  }
+}
+
+function onWindowKeyDown(e: KeyboardEvent) {
+  if (e.key === 'Tab') {
+    const { activeElement } = document;
+    const lastElement = getLastElement();
+    const focusableList = getFocusNodeList(lastElement);
+    const last = focusableList[focusableList.length - 1];
+
+    if (e.shiftKey && activeElement === focusableList[0]) {
+      // Tab backward on first focusable element
+      lastFocusElement = last;
+    } else if (!e.shiftKey && activeElement === last) {
+      // Tab forward on last focusable element
+      lastFocusElement = focusableList[0];
+    }
+  }
 }
 
 /**
@@ -117,12 +156,24 @@ export function lockFocus(element: HTMLElement): VoidFunction {
   focusElements.push(element);
 
   // Just add event since it will de-duplicate
-  window.addEventListener('focusin', onWindowFocus, true);
+  window.addEventListener('focusin', syncFocus);
+  window.addEventListener('keydown', onWindowKeyDown, true);
+  syncFocus();
 
   return () => {
+    lastFocusElement = null;
     focusElements = focusElements.filter(ele => ele !== element);
     if (focusElements.length === 0) {
-      window.removeEventListener('focusin', onWindowFocus, true);
+      window.removeEventListener('focusin', syncFocus);
+      window.removeEventListener('keydown', onWindowKeyDown, true);
     }
   };
+}
+
+export function useFocusLock(element: HTMLElement | null) {
+  useEffect(() => {
+    if (element) {
+      return lockFocus(element);
+    }
+  }, [element]);
 }

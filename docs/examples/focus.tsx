@@ -1,21 +1,33 @@
 import React, { useRef } from 'react';
 import {} from '../../src';
+import { lockFocus } from '../../src/Dom/focus';
+import './focus.css';
 
 export default function FocusDemo() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [locking, setLocking] = React.useState(false);
+
+  React.useEffect(() => {
+    if (locking) {
+      return lockFocus(containerRef.current!);
+    }
+  }, [locking]);
 
   return (
-    <div style={{ padding: 32 }}>
+    <div style={{ padding: 32 }} className="focus-demo">
       <h2>Focus Utils Demo</h2>
 
       {/* External buttons */}
-      <button>External Button 1</button>
+      <button onClick={() => setLocking(!locking)}>
+        Lock ({String(locking)})
+      </button>
 
       {/* Middle container - Tab key cycling is limited within this area */}
       <div
         ref={containerRef}
+        tabIndex={0}
         style={{
-          border: '2px solid #1890ff',
+          border: '2px solid green',
           padding: 24,
           margin: 16,
           borderRadius: 8,
