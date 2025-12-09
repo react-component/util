@@ -173,6 +173,11 @@ export function lockFocus(element: HTMLElement): VoidFunction {
   };
 }
 
+/**
+ * Lock focus within an element.
+ * When locked, focus will be restricted to focusable elements within the specified element.
+ * If multiple elements are locked, only the last locked element will be effective.
+ */
 export function useLockFocus(
   lock: boolean,
   getElement: () => HTMLElement | null,
