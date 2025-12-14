@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { useLockFocus } from '../../src/Dom/focus';
-import './focus.css';
 
 export default function FocusDemo() {
   const containerRef = useRef<HTMLDivElement>(null);
