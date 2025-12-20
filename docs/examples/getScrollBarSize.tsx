@@ -22,9 +22,9 @@ const cssText = `
 `;
 
 export default () => {
-  const defaultRef = React.useRef<HTMLDivElement>();
-  const webkitRef = React.useRef<HTMLDivElement>();
-  const scrollRef = React.useRef<HTMLDivElement>();
+  const defaultRef = React.useRef<HTMLDivElement>(null);
+  const webkitRef = React.useRef<HTMLDivElement>(null);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
   const [sizeData, setSizeData] = React.useState('');
 
   React.useEffect(() => {

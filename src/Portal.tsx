@@ -14,8 +14,8 @@ export interface PortalProps {
 const Portal = forwardRef<PortalRef, PortalProps>((props, ref) => {
   const { didUpdate, getContainer, children } = props;
 
-  const parentRef = useRef<ParentNode>();
-  const containerRef = useRef<HTMLElement>();
+  const parentRef = useRef<ParentNode>(null);
+  const containerRef = useRef<HTMLElement>(null);
 
   // Ref return nothing, only for wrapper check exist
   useImperativeHandle(ref, () => ({}));
