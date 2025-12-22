@@ -111,10 +111,9 @@ export function mergeWith<T extends object>(
           }
 
           keys(value).forEach(key => {
-            if (isArr && key === 'length') {
-              return;
+            if (Object.getOwnPropertyDescriptor(value, key).enumerable) {
+              internalMerge([...path, key], loopSet);
             }
-            internalMerge([...path, key], loopSet);
           });
         }
       } else {
