@@ -110,10 +110,10 @@ export function mergeWith<T extends object>(
             clone = set(clone, path, createEmpty(value));
           }
 
-          const valueKeys = isArr
-            ? keys(value).filter(key => key !== 'length')
-            : keys(value);
-          valueKeys.forEach(key => {
+          keys(value).forEach(key => {
+            if (isArr && key === 'length') {
+              return;
+            }
             internalMerge([...path, key], loopSet);
           });
         }
