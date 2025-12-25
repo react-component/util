@@ -111,7 +111,9 @@ export function mergeWith<T extends object>(
           }
 
           keys(value).forEach(key => {
-            internalMerge([...path, key], loopSet);
+            if (Object.getOwnPropertyDescriptor(value, key).enumerable) {
+              internalMerge([...path, key], loopSet);
+            }
           });
         }
       } else {
