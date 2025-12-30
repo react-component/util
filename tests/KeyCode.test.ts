@@ -20,9 +20,12 @@ describe('KeyCode.isEditableTarget', () => {
   }
 
   it('check non-editable target', () => {
-    const result = testIsEditableTarget(window, window);
+    const div = document.createElement('div');
+    const result1 = testIsEditableTarget(window, window);
+    const result2 = testIsEditableTarget(div, div);
 
-    expect(result).toBe(false);
+    expect(result1).toBe(false);
+    expect(result2).toBe(false);
   });
 
   it('IME composing', () => {
@@ -32,23 +35,19 @@ describe('KeyCode.isEditableTarget', () => {
     expect(result).toBe(true);
   });
 
-  it('check input target', () => {
+  it('check editable target', () => {
     const input = document.createElement('input');
     document.body.appendChild(input);
-
-    const result = testIsEditableTarget(window, input, { bubbles: true });
-
-    document.body.removeChild(input);
-
-    expect(result).toBe(true);
-  });
-
-  it('check contentEditable target', () => {
     const editable = document.createElement('div');
     // mock isContentEditable cause JSDOM don't support it
     Object.defineProperty(editable, 'isContentEditable', { value: true });
-    const result = testIsEditableTarget(editable, editable);
 
-    expect(result).toBe(true);
+    const result1 = testIsEditableTarget(window, input, { bubbles: true });
+    const result2 = testIsEditableTarget(editable, editable);
+
+    document.body.removeChild(input);
+
+    expect(result1).toBe(true);
+    expect(result2).toBe(true);
   });
 });
