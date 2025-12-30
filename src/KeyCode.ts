@@ -517,6 +517,26 @@ const KeyCode = {
         return false;
     }
   },
+
+  isEditableTarget: function isEditableTarget(e: KeyboardEvent) {
+    const target = e.target;
+
+    if (!(target instanceof HTMLElement)) {
+      return false;
+    }
+
+    const tagName = target.tagName;
+    if (
+      tagName === 'INPUT' ||
+      tagName === 'TEXTAREA' ||
+      tagName === 'SELECT' ||
+      target.isContentEditable
+    ) {
+      return true;
+    }
+
+    return false;
+  },
 };
 
 export default KeyCode;
