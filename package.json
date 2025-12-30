@@ -1,6 +1,6 @@
 {
   "name": "@rc-component/util",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "description": "Common Utils For React Component",
   "keywords": [
     "react",
