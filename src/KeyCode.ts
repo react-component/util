@@ -518,15 +518,8 @@ const KeyCode = {
     }
   },
 
-  shouldIgnoreKeyboardEvent: function shouldIgnoreKeyboardEvent(
-    e: KeyboardEvent,
-    options?: {
-      checkEditable?: boolean;
-      checkComposing?: boolean;
-    },
-  ) {
+  isEditableTarget: function isEditableTarget(e: KeyboardEvent) {
     const target = e.target;
-    const { checkEditable = true, checkComposing = true } = options || {};
 
     if (!(target instanceof HTMLElement)) {
       return false;
@@ -534,16 +527,12 @@ const KeyCode = {
 
     const tagName = target.tagName;
     if (
-      checkEditable &&
-      (tagName === 'INPUT' ||
-        tagName === 'TEXTAREA' ||
-        tagName === 'SELECT' ||
-        target.isContentEditable)
+      e.isComposing ||
+      tagName === 'INPUT' ||
+      tagName === 'TEXTAREA' ||
+      tagName === 'SELECT' ||
+      target.isContentEditable
     ) {
-      return true;
-    }
-
-    if (checkComposing && e.isComposing) {
       return true;
     }
 
