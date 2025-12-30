@@ -527,7 +527,6 @@ const KeyCode = {
 
     const tagName = target.tagName;
     if (
-      e.isComposing ||
       tagName === 'INPUT' ||
       tagName === 'TEXTAREA' ||
       tagName === 'SELECT' ||
