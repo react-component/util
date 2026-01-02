@@ -10,7 +10,10 @@ type ExtendCSSStyleDeclaration = CSSStyleDeclaration & {
 
 let cached: ScrollBarSize;
 
-function measureScrollbarSize(ele?: HTMLElement): ScrollBarSize {
+function measureScrollbarSize(
+  ele?: HTMLElement,
+  nonce?: string,
+): ScrollBarSize {
   const randomId = `rc-scrollbar-measure-${Math.random()
     .toString(36)
     .substring(7)}`;
@@ -53,6 +56,7 @@ ${widthStyle}
 ${heightStyle}
 }`,
         randomId,
+        nonce ? { csp: { nonce } } : undefined,
       );
     } catch (e) {
       // Can't wrap, just log error
@@ -86,18 +90,21 @@ ${heightStyle}
   };
 }
 
-export default function getScrollBarSize(fresh?: boolean): number {
+export default function getScrollBarSize(
+  fresh?: boolean,
+  nonce?: string,
+): number {
   if (typeof document === 'undefined') {
     return 0;
   }
 
   if (fresh || cached === undefined) {
-    cached = measureScrollbarSize();
+    cached = measureScrollbarSize(undefined, nonce);
   }
   return cached.width;
 }
 
-export function getTargetScrollBarSize(target: HTMLElement) {
+export function getTargetScrollBarSize(target: HTMLElement, nonce?: string) {
   if (
     typeof document === 'undefined' ||
     !target ||
@@ -106,5 +113,5 @@ export function getTargetScrollBarSize(target: HTMLElement) {
     return { width: 0, height: 0 };
   }
 
-  return measureScrollbarSize(target);
+  return measureScrollbarSize(target, nonce);
 }
