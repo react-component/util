@@ -16,15 +16,12 @@ export type SetState<T> = (
  * We do not make this auto is to avoid real memory leak.
  * Developer should confirm it's safe to ignore themselves.
  */
-export default function useSafeState<T>(
-  defaultValue?: T | (() => T),
-): [T, SetState<T>] {
-  const destroyRef = React.useRef(false);
+const useSafeState = <T>(defaultValue?: T | (() => T)): [T, SetState<T>] => {
+  const destroyRef = React.useRef<boolean>(false);
   const [value, setValue] = React.useState(defaultValue);
 
   React.useEffect(() => {
     destroyRef.current = false;
-
     return () => {
       destroyRef.current = true;
     };
@@ -34,9 +31,10 @@ export default function useSafeState<T>(
     if (ignoreDestroy && destroyRef.current) {
       return;
     }
-
     setValue(updater);
   }
 
   return [value, safeSetState];
-}
+};
+
+export default useSafeState;

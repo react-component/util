@@ -21,10 +21,11 @@ const cssText = `
 }
 `;
 
-export default () => {
-  const defaultRef = React.useRef<HTMLDivElement>();
-  const webkitRef = React.useRef<HTMLDivElement>();
-  const scrollRef = React.useRef<HTMLDivElement>();
+const Demo = () => {
+  const defaultRef = React.useRef<HTMLDivElement>(null);
+  const webkitRef = React.useRef<HTMLDivElement>(null);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
   const [sizeData, setSizeData] = React.useState('');
 
   React.useEffect(() => {
@@ -45,12 +46,7 @@ export default () => {
 
   return (
     <div>
-      <style
-        dangerouslySetInnerHTML={{
-          __html: cssText,
-        }}
-      />
-
+      <style dangerouslySetInnerHTML={{ __html: cssText }} />
       <div
         style={{
           width: 300,
@@ -87,3 +83,5 @@ export default () => {
     </div>
   );
 };
+
+export default Demo;

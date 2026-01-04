@@ -11,9 +11,9 @@ function injectStyle(id: number, prepend?: Prepend, priority?: number) {
   });
 }
 
-export default () => {
+const Demo = () => {
   const [id, setId] = React.useState(0);
-  const idRef = React.useRef(id);
+  const idRef = React.useRef<number>(id);
   idRef.current = id;
 
   // Clean up
@@ -55,3 +55,5 @@ export default () => {
     </>
   );
 };
+
+export default Demo;

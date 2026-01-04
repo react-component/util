@@ -13,7 +13,7 @@ const useLayoutEffect = (
   callback: (mount: boolean) => void | VoidFunction,
   deps?: React.DependencyList,
 ) => {
-  const firstMountRef = React.useRef(true);
+  const firstMountRef = React.useRef<boolean>(true);
 
   useInternalLayoutEffect(() => {
     return callback(firstMountRef.current);

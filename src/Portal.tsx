@@ -14,14 +14,15 @@ export interface PortalProps {
 const Portal = forwardRef<PortalRef, PortalProps>((props, ref) => {
   const { didUpdate, getContainer, children } = props;
 
-  const parentRef = useRef<ParentNode>();
-  const containerRef = useRef<HTMLElement>();
+  const parentRef = useRef<ParentNode>(null);
+  const containerRef = useRef<HTMLElement>(null);
 
   // Ref return nothing, only for wrapper check exist
   useImperativeHandle(ref, () => ({}));
 
   // Create container in client side with sync to avoid useEffect not get ref
-  const initRef = useRef(false);
+  const initRef = useRef<boolean>(false);
+
   if (!initRef.current && canUseDom()) {
     containerRef.current = getContainer();
     parentRef.current = containerRef.current.parentNode;
