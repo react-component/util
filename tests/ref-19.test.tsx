@@ -45,7 +45,7 @@ describe('ref: React 19', () => {
   });
 
   it('useComposeRef', () => {
-    const Demo = ({ children }: { children: React.ReactElement }) => {
+    const Demo: React.FC<React.PropsWithChildren> = ({ children }) => {
       const ref = React.useRef<HTMLDivElement>(null);
       const childRef = getNodeRef(children); // Should get child real `ref` props
       const mergedRef = useComposeRef(ref, childRef);
@@ -59,7 +59,10 @@ describe('ref: React 19', () => {
 
       return (
         <>
-          {React.cloneElement(children, { ref: mergedRef })}
+          {React.cloneElement<{ ref?: any }>(
+            children as React.ReactElement<any>,
+            { ref: mergedRef },
+          )}
           <div className="test-output">{childClassName}</div>
         </>
       );
@@ -79,7 +82,6 @@ describe('ref: React 19', () => {
 
   it('supportRef with not provide ref', () => {
     const Empty = () => <div />;
-
     const Checker = ({ children }: { children: React.ReactElement }) => {
       return <p>{String(supportRef(children))}</p>;
     };

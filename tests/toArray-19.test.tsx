@@ -22,9 +22,7 @@ jest.mock('react-dom/test-utils', () => {
   return reactDom19Test;
 });
 
-class UL extends React.Component<{
-  children?: React.ReactNode;
-}> {
+class UL extends React.Component<React.PropsWithChildren<any>> {
   render() {
     return <ul>{this.props.children}</ul>;
   }
@@ -33,7 +31,6 @@ class UL extends React.Component<{
 describe('toArray', () => {
   it('Fragment', () => {
     const ulRef = React.createRef<UL>();
-
     render(
       <UL ref={ulRef}>
         <li key="1">1</li>
@@ -49,7 +46,6 @@ describe('toArray', () => {
         </React.Fragment>
       </UL>,
     );
-
     const children = toArray(ulRef.current.props.children);
     expect(children).toHaveLength(5);
     expect(children.map(c => c.key)).toEqual(['1', '2', '3', '4', '5']);
