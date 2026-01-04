@@ -1,10 +1,7 @@
 import * as React from 'react';
 
 /** As `React.useEffect` but pass origin value in callback and not need care deps length change. */
-export default function useEffect(
-  callback: (prevDeps: any[]) => void,
-  deps: any[],
-) {
+function useEffect(callback: (prevDeps: any[]) => void, deps: any[]) {
   const prevRef = React.useRef(deps);
   React.useEffect(() => {
     if (
@@ -16,3 +13,5 @@ export default function useEffect(
     prevRef.current = deps;
   });
 }
+
+export default useEffect;
