@@ -28,7 +28,7 @@ export function resetUuid() {
 export function getId(prefix: string, key: string): string {
   // Valid id characters: letters, digits, hyphen, underscore, colon, period
   // Replace all invalid characters (including spaces) with hyphens to preserve length
-  const sanitizedKey = key.replace(/[^a-zA-Z0-9-_:.]/g, '-');
+  const sanitizedKey = key.replace(/[^a-zA-Z0-9_.:-]/g, '-');
 
   return `${prefix}-${sanitizedKey}`;
 }
