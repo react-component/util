@@ -25,10 +25,13 @@ export function resetUuid() {
  * @param key - The key from React element, may contain spaces or invalid characters
  * @returns A valid HTML id string
  */
-export function getId(prefix: string, key: string): string {
+export function getId(prefix: string, key: React.Key): string {
+  // React.Key can be string | number, convert to string first
+  const keyStr = String(key);
+
   // Valid id characters: letters, digits, hyphen, underscore, colon, period
   // Replace all invalid characters (including spaces) with hyphens to preserve length
-  const sanitizedKey = key.replace(/[^a-zA-Z0-9_.:-]/g, '-');
+  const sanitizedKey = keyStr.replace(/[^a-zA-Z0-9_.:-]/g, '-');
 
   return `${prefix}-${sanitizedKey}`;
 }
