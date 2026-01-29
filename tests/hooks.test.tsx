@@ -675,6 +675,9 @@ describe('hooks', () => {
       expect(getId('btn', 'valid-key_123:456.789')).toBe(
         'btn-valid-key_123:456.789',
       );
+      expect(getId('item', 1)).toBe('item-1');
+      expect(getId('tab', 123)).toBe('tab-123');
+      expect(getId('panel', 0)).toBe('panel-0');
     });
   });
 
