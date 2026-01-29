@@ -2,6 +2,7 @@ import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 import useId from '../src/hooks/useId';
+import { getId } from '../src/hooks/useId';
 import useLayoutEffect from '../src/hooks/useLayoutEffect';
 import useMemo from '../src/hooks/useMemo';
 import useMergedState from '../src/hooks/useMergedState';
@@ -662,6 +663,18 @@ describe('hooks', () => {
 
       errorSpy.mockRestore();
       process.env.NODE_ENV = originEnv;
+    });
+
+    it('should sanitize keys with invalid characters', () => {
+      expect(getId('item', 'hello world')).toBe('item-hello-world');
+      expect(getId('tab', 'user@name#123')).toBe('tab-user-name-123');
+      expect(getId('panel', 'test/path\\file')).toBe('panel-test-path-file');
+      expect(getId('menu', 'key with  multiple   spaces')).toBe(
+        'menu-key-with--multiple---spaces',
+      );
+      expect(getId('btn', 'valid-key_123:456.789')).toBe(
+        'btn-valid-key_123:456.789',
+      );
     });
   });
 

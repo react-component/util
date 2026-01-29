@@ -18,6 +18,21 @@ export function resetUuid() {
   }
 }
 
+/**
+ * Generate a valid HTML id from prefix and key.
+ * Sanitizes the key by replacing invalid characters with hyphens.
+ * @param prefix - The prefix for the id
+ * @param key - The key from React element, may contain spaces or invalid characters
+ * @returns A valid HTML id string
+ */
+export function getId(prefix: string, key: string): string {
+  // Valid id characters: letters, digits, hyphen, underscore, colon, period
+  // Replace all invalid characters (including spaces) with hyphens to preserve length
+  const sanitizedKey = key.replace(/[^a-zA-Z0-9_.:-]/g, '-');
+
+  return `${prefix}-${sanitizedKey}`;
+}
+
 const useOriginId = getUseId();
 
 export default useOriginId
