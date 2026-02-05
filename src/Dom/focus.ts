@@ -123,7 +123,7 @@ function syncFocus() {
       ? lastFocusElement
       : focusableList[0];
 
-    matchElement?.focus();
+    matchElement?.focus({ preventScroll: true });
   } else {
     lastFocusElement = activeElement as HTMLElement;
   }
