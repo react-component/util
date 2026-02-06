@@ -102,9 +102,18 @@ export function triggerFocus(
 // ======================================================
 let lastFocusElement: HTMLElement | null = null;
 let focusElements: HTMLElement[] = [];
+const ignoredElementMap = new Map<HTMLElement, HTMLElement | null>();
 
 function getLastElement() {
   return focusElements[focusElements.length - 1];
+}
+
+function isIgnoredElement(element: HTMLElement | null): boolean {
+  if (!element) return false;
+  const ignoredEle = ignoredElementMap.get(getLastElement());
+  return (
+    !!ignoredEle && (ignoredEle === element || ignoredEle.contains(element))
+  );
 }
 
 function hasFocus(element: HTMLElement) {
@@ -115,6 +124,11 @@ function hasFocus(element: HTMLElement) {
 function syncFocus() {
   const lastElement = getLastElement();
   const { activeElement } = document;
+
+  // If current focus is on an ignored element, don't force it back
+  if (isIgnoredElement(activeElement as HTMLElement)) {
+    return;
+  }
 
   if (lastElement && !hasFocus(lastElement)) {
     const focusableList = getFocusNodeList(lastElement);
@@ -166,6 +180,7 @@ export function lockFocus(element: HTMLElement): VoidFunction {
   return () => {
     lastFocusElement = null;
     focusElements = focusElements.filter(ele => ele !== element);
+    ignoredElementMap.delete(element);
     if (focusElements.length === 0) {
       window.removeEventListener('focusin', syncFocus);
       window.removeEventListener('keydown', onWindowKeyDown, true);
@@ -177,11 +192,12 @@ export function lockFocus(element: HTMLElement): VoidFunction {
  * Lock focus within an element.
  * When locked, focus will be restricted to focusable elements within the specified element.
  * If multiple elements are locked, only the last locked element will be effective.
+ * @returns A function to mark an element as ignored, which will temporarily allow focus on that element even if it's outside the locked area.
  */
 export function useLockFocus(
   lock: boolean,
   getElement: () => HTMLElement | null,
-) {
+): [ignoreElement: (ele: HTMLElement) => void] {
   useEffect(() => {
     if (lock) {
       const element = getElement();
@@ -190,4 +206,15 @@ export function useLockFocus(
       }
     }
   }, [lock]);
+
+  const ignoreElement = (ele: HTMLElement) => {
+    const element = getElement();
+    if (element && ele) {
+      // Set the ignored element for current lock element
+      // Only one element can be ignored at a time for this lock
+      ignoredElementMap.set(element, ele);
+    }
+  };
+
+  return [ignoreElement];
 }
