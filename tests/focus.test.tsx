@@ -96,4 +96,39 @@ describe('focus', () => {
       expect(document.activeElement).toBe(input1);
     });
   });
+
+  it('ignoreElement should allow focus on ignored elements', () => {
+    let capturedIgnoreElement: ((ele: HTMLElement) => void) | null = null;
+
+    const TestComponent: React.FC = () => {
+      const elementRef = useRef<HTMLDivElement>(null);
+      const [ignoreElement] = useLockFocus(true, () => elementRef.current);
+
+      if (ignoreElement && !capturedIgnoreElement) {
+        capturedIgnoreElement = ignoreElement;
+      }
+
+      return (
+        <>
+          <button data-testid="ignored-button">Ignored</button>
+          <div ref={elementRef} data-testid="focus-container" tabIndex={0}>
+            <input key="input1" data-testid="input1" />
+          </div>
+        </>
+      );
+    };
+
+    const { getByTestId } = render(<TestComponent />);
+
+    const ignoredButton = getByTestId('ignored-button');
+
+    // Mark the button as ignored
+    if (capturedIgnoreElement) {
+      capturedIgnoreElement(ignoredButton);
+    }
+
+    // Focus should be allowed on the ignored button
+    ignoredButton.focus();
+    expect(document.activeElement).toBe(ignoredButton);
+  });
 });
