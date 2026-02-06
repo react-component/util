@@ -113,25 +113,25 @@ function getLastElement() {
 }
 
 function isIgnoredElement(element: Element | null): boolean {
-  if (!element) return false;
   const lastElement = getLastElement();
-  if (!lastElement) return false;
 
-  // Find the ID that maps to the last element
-  let lockId: string | undefined;
-  for (const [id, ele] of idToElementMap.entries()) {
-    if (ele === lastElement) {
-      lockId = id;
-      break;
+  if (element && lastElement) {
+    // Find the ID that maps to the last element
+    let lockId: string | undefined;
+    for (const [id, ele] of idToElementMap.entries()) {
+      if (ele === lastElement) {
+        lockId = id;
+        break;
+      }
     }
+
+    const ignoredEle = ignoredElementMap.get(lockId);
+    return (
+      !!ignoredEle && (ignoredEle === element || ignoredEle.contains(element))
+    );
   }
 
-  if (!lockId) return false;
-
-  const ignoredEle = ignoredElementMap.get(lockId);
-  return (
-    !!ignoredEle && (ignoredEle === element || ignoredEle.contains(element))
-  );
+  return false;
 }
 
 function hasFocus(element: HTMLElement) {
