@@ -108,7 +108,7 @@ function getLastElement() {
   return focusElements[focusElements.length - 1];
 }
 
-function isIgnoredElement(element: HTMLElement | null): boolean {
+function isIgnoredElement(element: Element | null): boolean {
   if (!element) return false;
   const ignoredEle = ignoredElementMap.get(getLastElement());
   return (
