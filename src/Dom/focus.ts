@@ -103,8 +103,8 @@ export function triggerFocus(
 // ======================================================
 let lastFocusElement: HTMLElement | null = null;
 let focusElements: HTMLElement[] = [];
-// Map lock element to its stable ID
-const elementToIdMap = new Map<HTMLElement, string>();
+// Map stable ID to lock element
+const idToElementMap = new Map<string, HTMLElement>();
 // Map stable ID to ignored element
 const ignoredElementMap = new Map<string, HTMLElement | null>();
 
@@ -116,8 +116,18 @@ function isIgnoredElement(element: Element | null): boolean {
   if (!element) return false;
   const lastElement = getLastElement();
   if (!lastElement) return false;
-  const lockId = elementToIdMap.get(lastElement);
+
+  // Find the ID that maps to the last element
+  let lockId: string | undefined;
+  for (const [id, ele] of idToElementMap.entries()) {
+    if (ele === lastElement) {
+      lockId = id;
+      break;
+    }
+  }
+
   if (!lockId) return false;
+
   const ignoredEle = ignoredElementMap.get(lockId);
   return (
     !!ignoredEle && (ignoredEle === element || ignoredEle.contains(element))
@@ -175,8 +185,8 @@ function onWindowKeyDown(e: KeyboardEvent) {
  */
 export function lockFocus(element: HTMLElement, id: string): VoidFunction {
   if (element) {
-    // Store the mapping between element and its stable ID
-    elementToIdMap.set(element, id);
+    // Store the mapping between ID and element
+    idToElementMap.set(id, element);
 
     // Refresh focus elements
     focusElements = focusElements.filter(ele => ele !== element);
@@ -192,7 +202,7 @@ export function lockFocus(element: HTMLElement, id: string): VoidFunction {
   return () => {
     lastFocusElement = null;
     focusElements = focusElements.filter(ele => ele !== element);
-    elementToIdMap.delete(element);
+    idToElementMap.delete(id);
     ignoredElementMap.delete(id);
     if (focusElements.length === 0) {
       window.removeEventListener('focusin', syncFocus);
@@ -223,12 +233,9 @@ export function useLockFocus(
   }, [lock, id]);
 
   const ignoreElement = (ele: HTMLElement) => {
-    const element = getElement();
-    if (element && ele) {
-      // Set the ignored element for current lock using stable ID
-      // Only one element can be ignored at a time for this lock
-      const lockId = elementToIdMap.get(element) || id;
-      ignoredElementMap.set(lockId, ele);
+    if (ele) {
+      // Set the ignored element using stable ID
+      ignoredElementMap.set(id, ele);
     }
   };
 
