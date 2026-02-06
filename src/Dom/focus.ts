@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import isVisible from './isVisible';
+import useId from '../hooks/useId';
 
 type DisabledElement =
   | HTMLLinkElement
@@ -102,7 +103,10 @@ export function triggerFocus(
 // ======================================================
 let lastFocusElement: HTMLElement | null = null;
 let focusElements: HTMLElement[] = [];
-const ignoredElementMap = new Map<HTMLElement, HTMLElement | null>();
+// Map lock element to its stable ID
+const elementToIdMap = new Map<HTMLElement, string>();
+// Map stable ID to ignored element
+const ignoredElementMap = new Map<string, HTMLElement | null>();
 
 function getLastElement() {
   return focusElements[focusElements.length - 1];
@@ -110,7 +114,11 @@ function getLastElement() {
 
 function isIgnoredElement(element: Element | null): boolean {
   if (!element) return false;
-  const ignoredEle = ignoredElementMap.get(getLastElement());
+  const lastElement = getLastElement();
+  if (!lastElement) return false;
+  const lockId = elementToIdMap.get(lastElement);
+  if (!lockId) return false;
+  const ignoredEle = ignoredElementMap.get(lockId);
   return (
     !!ignoredEle && (ignoredEle === element || ignoredEle.contains(element))
   );
@@ -163,9 +171,13 @@ function onWindowKeyDown(e: KeyboardEvent) {
 /**
  * Lock focus in the element.
  * It will force back to the first focusable element when focus leaves the element.
+ * @param id - A stable ID for this lock instance
  */
-export function lockFocus(element: HTMLElement): VoidFunction {
+export function lockFocus(element: HTMLElement, id: string): VoidFunction {
   if (element) {
+    // Store the mapping between element and its stable ID
+    elementToIdMap.set(element, id);
+
     // Refresh focus elements
     focusElements = focusElements.filter(ele => ele !== element);
     focusElements.push(element);
@@ -180,7 +192,8 @@ export function lockFocus(element: HTMLElement): VoidFunction {
   return () => {
     lastFocusElement = null;
     focusElements = focusElements.filter(ele => ele !== element);
-    ignoredElementMap.delete(element);
+    elementToIdMap.delete(element);
+    ignoredElementMap.delete(id);
     if (focusElements.length === 0) {
       window.removeEventListener('focusin', syncFocus);
       window.removeEventListener('keydown', onWindowKeyDown, true);
@@ -198,21 +211,24 @@ export function useLockFocus(
   lock: boolean,
   getElement: () => HTMLElement | null,
 ): [ignoreElement: (ele: HTMLElement) => void] {
+  const id = useId();
+
   useEffect(() => {
     if (lock) {
       const element = getElement();
       if (element) {
-        return lockFocus(element);
+        return lockFocus(element, id);
       }
     }
-  }, [lock]);
+  }, [lock, id]);
 
   const ignoreElement = (ele: HTMLElement) => {
     const element = getElement();
     if (element && ele) {
-      // Set the ignored element for current lock element
+      // Set the ignored element for current lock using stable ID
       // Only one element can be ignored at a time for this lock
-      ignoredElementMap.set(element, ele);
+      const lockId = elementToIdMap.get(element) || id;
+      ignoredElementMap.set(lockId, ele);
     }
   };
 
