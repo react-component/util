@@ -17,7 +17,7 @@ export function getOpenCount() {
 
 // https://github.com/ant-design/ant-design/issues/19340
 // https://github.com/ant-design/ant-design/issues/19332
-let cacheOverflow = {};
+let cacheOverflow: React.CSSProperties = {};
 
 const getParent = (getContainer: GetContainer) => {
   if (!supportDom) {

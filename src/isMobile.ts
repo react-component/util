@@ -2,10 +2,11 @@ import isMobile from 'is-mobile';
 
 let cached: boolean;
 
-export default () => {
+const getIsMobile = () => {
   if (typeof cached === 'undefined') {
     cached = isMobile();
   }
-
   return cached;
 };
+
+export default getIsMobile;

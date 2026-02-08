@@ -68,11 +68,12 @@ ${heightStyle}
 
   // Measure. Get fallback style if provided
   const scrollWidth =
-    ele && fallbackWidth && !isNaN(fallbackWidth)
+    ele && fallbackWidth && !Number.isNaN(fallbackWidth)
       ? fallbackWidth
       : measureEle.offsetWidth - measureEle.clientWidth;
+
   const scrollHeight =
-    ele && fallbackHeight && !isNaN(fallbackHeight)
+    ele && fallbackHeight && !Number.isNaN(fallbackHeight)
       ? fallbackHeight
       : measureEle.offsetHeight - measureEle.clientHeight;
 
