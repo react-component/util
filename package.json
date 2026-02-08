@@ -46,7 +46,7 @@
     "@rc-component/np": "^1.0.3",
     "@testing-library/react": "^16.0.0",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.6.1",
+    "@types/node": "^25.0.3",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.2",
     "@types/react-is": "^19.0.0",
