@@ -13,8 +13,8 @@ Common Utils For React Component.
 [npm-url]: http://npmjs.org/package/rc-util
 [travis-image]: https://img.shields.io/travis/react-component/util/master?style=flat-square
 [travis-url]: https://travis-ci.com/react-component/util
-[github-actions-image]: https://github.com/react-component/util/workflows/CI/badge.svg
-[github-actions-url]: https://github.com/react-component/util/actions
+[github-actions-image]: https://github.com/react-component/util/actions/workflows/react-component-ci.yml/badge.svg
+[github-actions-url]: https://github.com/react-component/util/actions/workflows/react-component-ci.yml
 [codecov-image]: https://img.shields.io/codecov/c/github/react-component/util/master.svg?style=flat-square
 [codecov-url]: https://app.codecov.io/gh/react-component/util
 [david-url]: https://david-dm.org/react-component/util
