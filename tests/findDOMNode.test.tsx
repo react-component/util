@@ -76,6 +76,24 @@ describe('findDOMNode', () => {
       expect(true).toBeFalsy();
     }
   });
+
+  it('isDOM type in iframe', () => {
+    const iframe = document.createElement('iframe');
+    document.body.appendChild(iframe);
+    const svg: any = iframe.contentWindow.document.createElementNS(
+      'http://www.w3.org/2000/svg',
+      'svg',
+    );
+
+    // debugger;
+    // This `getBoundingClientRect` is used for ts type check
+    if (isDOM(svg) && svg.getBoundingClientRect()) {
+      expect(true).toBeTruthy();
+    } else {
+      expect(true).toBeFalsy();
+    }
+  });
+
   it('should return DOM node from ref.current', () => {
     const TestComponent = React.forwardRef<HTMLDivElement>((_, ref) => {
       return <div ref={ref}>test</div>;
