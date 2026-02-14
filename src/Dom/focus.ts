@@ -195,6 +195,11 @@ export function lockFocus(element: HTMLElement, id: string): VoidFunction {
     // Just add event since it will de-duplicate
     window.addEventListener('focusin', syncFocus);
     window.addEventListener('keydown', onWindowKeyDown, true);
+    // If the element is not focused, focus it
+    // https://github.com/ant-design/ant-design/issues/56963
+    if (!hasFocus(element)) {
+      element.focus({ preventScroll: true });
+    }
     syncFocus();
   }
 
