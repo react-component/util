@@ -2,7 +2,12 @@
 import React, { useRef } from 'react';
 import { render } from '@testing-library/react';
 import { spyElementPrototype } from '../src/test/domHook';
-import { getFocusNodeList, triggerFocus, useLockFocus } from '../src/Dom/focus';
+import {
+  getFocusNodeList,
+  lockFocus,
+  triggerFocus,
+  useLockFocus,
+} from '../src/Dom/focus';
 
 describe('focus', () => {
   beforeAll(() => {
@@ -94,6 +99,71 @@ describe('focus', () => {
       const outerButton = getByTestId('outer-button') as HTMLButtonElement;
       outerButton.focus();
       expect(document.activeElement).toBe(input1);
+    });
+  });
+
+  // https://github.com/ant-design/ant-design/issues/56963
+  describe('lockFocus should focus element immediately', () => {
+    it('should call element.focus when element does not have focus', () => {
+      const wrapper = document.createElement('div');
+      wrapper.tabIndex = 0;
+      document.body.appendChild(wrapper);
+
+      const input = document.createElement('input');
+      wrapper.appendChild(input);
+
+      // Focus is on body, not on wrapper
+      expect(document.activeElement).toBe(document.body);
+
+      const focusSpy = jest.spyOn(wrapper, 'focus');
+      const unlock = lockFocus(wrapper, 'test-focus-immediate');
+
+      expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
+
+      unlock();
+      focusSpy.mockRestore();
+      document.body.removeChild(wrapper);
+    });
+
+    it('should not call element.focus when element already has focus', () => {
+      const wrapper = document.createElement('div');
+      wrapper.tabIndex = 0;
+      document.body.appendChild(wrapper);
+
+      const input = document.createElement('input');
+      wrapper.appendChild(input);
+
+      // Focus inside wrapper first
+      input.focus();
+      expect(wrapper.contains(document.activeElement)).toBe(true);
+
+      const focusSpy = jest.spyOn(wrapper, 'focus');
+      const unlock = lockFocus(wrapper, 'test-focus-already');
+
+      expect(focusSpy).not.toHaveBeenCalled();
+
+      unlock();
+      focusSpy.mockRestore();
+      document.body.removeChild(wrapper);
+    });
+
+    it('should focus element and then sync focus to first focusable child', () => {
+      const wrapper = document.createElement('div');
+      document.body.appendChild(wrapper);
+
+      const input = document.createElement('input');
+      wrapper.appendChild(input);
+
+      // wrapper itself is not focusable (no tabIndex), focus is on body
+      expect(document.activeElement).toBe(document.body);
+
+      const unlock = lockFocus(wrapper, 'test-focus-child');
+
+      // syncFocus should move focus to the first focusable child
+      expect(document.activeElement).toBe(input);
+
+      unlock();
+      document.body.removeChild(wrapper);
     });
   });
 

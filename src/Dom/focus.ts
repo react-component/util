@@ -153,7 +153,11 @@ function syncFocus() {
 
     const matchElement = focusableList.includes(lastFocusElement as HTMLElement)
       ? lastFocusElement
-      : focusableList[0];
+      : // https://github.com/ant-design/ant-design/issues/56963
+        // lastElement may not be focusable, so we need to check if it is focusable and then focus it
+        focusable(lastElement)
+        ? lastElement
+        : focusableList[0];
 
     matchElement?.focus({ preventScroll: true });
   } else {
