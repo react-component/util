@@ -153,7 +153,11 @@ function syncFocus() {
 
     const matchElement = focusableList.includes(lastFocusElement as HTMLElement)
       ? lastFocusElement
-      : focusableList[0];
+      : // https://github.com/ant-design/ant-design/issues/56963
+        // lastElement may not be focusable, so we need to check if it is focusable and then focus it
+        focusable(lastElement)
+        ? lastElement
+        : focusableList[0];
 
     matchElement?.focus({ preventScroll: true });
   } else {
@@ -195,11 +199,6 @@ export function lockFocus(element: HTMLElement, id: string): VoidFunction {
     // Just add event since it will de-duplicate
     window.addEventListener('focusin', syncFocus);
     window.addEventListener('keydown', onWindowKeyDown, true);
-    // If the element is not focused, focus it
-    // https://github.com/ant-design/ant-design/issues/56963
-    if (!hasFocus(element)) {
-      element.focus({ preventScroll: true });
-    }
     syncFocus();
   }
 
