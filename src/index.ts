@@ -7,3 +7,4 @@ export { default as set, merge, mergeWith } from './utils/set';
 export { default as warning, noteOnce } from './warning';
 export { default as omit } from './omit';
 export { default as toArray } from './Children/toArray';
+export { default as mergeProps } from './mergeProps';
