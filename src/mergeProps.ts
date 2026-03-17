@@ -3,15 +3,15 @@ function mergeProps<A, B, C>(a: A, b: B, c: C): C & B & A;
 function mergeProps<A, B, C, D>(a: A, b: B, c: C, d: D): D & C & B & A;
 function mergeProps(...items: any[]) {
   const ret: any = {};
-  items.forEach(item => {
+  for (const item of items) {
     if (item) {
-      Object.keys(item).forEach(key => {
+      for (const key of Object.keys(item)) {
         if (item[key] !== undefined) {
           ret[key] = item[key];
         }
-      });
+      }
     }
-  });
+  }
   return ret;
 }
 
