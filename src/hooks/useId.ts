@@ -40,7 +40,7 @@ const useOriginId = getUseId();
 
 export default useOriginId
   ? // Use React `useId`
-    function useId(id?: string) {
+    function useId(id?: string, forceReactUseId?: boolean) {
       const reactId = useOriginId();
 
       // Developer passed id is single source of truth
@@ -49,7 +49,7 @@ export default useOriginId
       }
 
       // Test env always return mock id
-      if (process.env.NODE_ENV === 'test') {
+      if (!forceReactUseId && process.env.NODE_ENV === 'test') {
         return 'test-id';
       }
 
