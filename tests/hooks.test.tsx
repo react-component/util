@@ -642,6 +642,18 @@ describe('hooks', () => {
       matchId(container, 'test-id');
     });
 
+    it('force use react useId in test env', () => {
+      const DemoForce: React.FC<Readonly<{ id?: string }>> = ({ id }) => {
+        const mergedId = useId(id, true);
+        return <div id={mergedId} className="target-force" />;
+      };
+
+      const { container } = render(<DemoForce />);
+      const ele = container.querySelector('.target-force');
+      expect(ele.id).toBeTruthy();
+      expect(ele.id).not.toEqual('test-id');
+    });
+
     it('react useId', () => {
       const errorSpy = jest.spyOn(console, 'error');
       const originEnv = process.env.NODE_ENV;

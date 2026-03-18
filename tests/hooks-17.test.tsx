@@ -56,5 +56,19 @@ describe('hooks-17', () => {
       errorSpy.mockRestore();
       process.env.NODE_ENV = originEnv;
     });
+
+    it('force use compat id in test env', () => {
+      const DemoForce: React.FC<{ id?: string }> = ({ id }) => {
+        const mergedId = useId(id, true);
+        return <div id={mergedId} className="target-force" />;
+      };
+
+      resetUuid();
+      const { container } = render(<DemoForce />);
+      const ele = container.querySelector('.target-force');
+
+      expect(ele.id).toBeTruthy();
+      expect(ele.id).not.toEqual('test-id');
+    });
   });
 });
