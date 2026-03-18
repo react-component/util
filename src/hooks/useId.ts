@@ -48,7 +48,7 @@ export default useOriginId
         return id;
       }
 
-      // Test env always return mock id
+      // By default, test env always return mock id, but also allow force use id for test case which need to test id logic.
       if (!forceUseId && process.env.NODE_ENV === 'test') {
         return 'test-id';
       }
@@ -72,7 +72,7 @@ export default useOriginId
         return id;
       }
 
-      // Test env always return mock id
+      // By default, test env always return mock id, but also allow force use id for test case which need to test id logic.
       if (!forceUseId && process.env.NODE_ENV === 'test') {
         return 'test-id';
       }
