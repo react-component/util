@@ -40,7 +40,7 @@ const useOriginId = getUseId();
 
 export default useOriginId
   ? // Use React `useId`
-    function useId(id?: string, forceUseId?: boolean) {
+    function useId(id?: string, disableTestMock?: boolean) {
       const reactId = useOriginId();
 
       // Developer passed id is single source of truth
@@ -49,14 +49,14 @@ export default useOriginId
       }
 
       // By default, test env always return mock id, but also allow force use id for test case which need to test id logic.
-      if (!forceUseId && process.env.NODE_ENV === 'test') {
+      if (!disableTestMock && process.env.NODE_ENV === 'test') {
         return 'test-id';
       }
 
       return reactId;
     }
   : // Use compatible of `useId`
-    function useCompatId(id?: string, forceUseId?: boolean) {
+    function useCompatId(id?: string, disableTestMock?: boolean) {
       // Inner id for accessibility usage. Only work in client side
       const [innerId, setInnerId] = React.useState<string>('ssr-id');
 
@@ -73,7 +73,7 @@ export default useOriginId
       }
 
       // By default, test env always return mock id, but also allow force use id for test case which need to test id logic.
-      if (!forceUseId && process.env.NODE_ENV === 'test') {
+      if (!disableTestMock && process.env.NODE_ENV === 'test') {
         return 'test-id';
       }
 
