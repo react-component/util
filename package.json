@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "is-mobile": "^5.0.0",
-    "react-is": "^18.2.0"
+    "react-is": "^19.2.4"
   },
   "devDependencies": {
     "@rc-component/father-plugin": "^2.0.1",
