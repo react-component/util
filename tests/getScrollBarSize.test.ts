@@ -57,17 +57,19 @@ describe('getScrollBarSize', () => {
       const target = document.createElement('div');
       document.body.appendChild(target);
 
-      const nonce = 'test-nonce-123';
-      getTargetScrollBarSize(target, { nonce });
+      try {
+        const nonce = 'test-nonce-123';
+        getTargetScrollBarSize(target, { nonce });
 
-      expect(updateCSSSpy).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.any(String),
-        { csp: { nonce } },
-      );
-
-      updateCSSSpy.mockRestore();
-      document.body.removeChild(target);
+        expect(updateCSSSpy).toHaveBeenCalledWith(
+          expect.any(String),
+          expect.any(String),
+          { csp: { nonce } },
+        );
+      } finally {
+        updateCSSSpy.mockRestore();
+        document.body.removeChild(target);
+      }
     });
   });
 });
