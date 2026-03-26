@@ -7,6 +7,20 @@ describe('mergeProps', () => {
     expect(mergeProps(a, b)).toEqual({ foo: 1, bar: 3, baz: 4 });
   });
 
+  it('merges className', () => {
+    const a = { className: 'a' };
+    const b = { className: 'b' };
+    expect(mergeProps(a, b)).toEqual({ className: 'a b' });
+  });
+
+  it('merges style', () => {
+    const a = { style: { color: 'red' } };
+    const b = { style: { backgroundColor: 'blue' } };
+    expect(mergeProps(a, b)).toEqual({
+      style: { color: 'red', backgroundColor: 'blue' },
+    });
+  });
+
   it('excludes keys with undefined values', () => {
     const a = { foo: 1, bar: undefined };
     const b = { bar: 2 };

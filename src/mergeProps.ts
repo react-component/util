@@ -1,6 +1,11 @@
 /**
  * Merges multiple props objects into one. Unlike `Object.assign()` or `{ ...a, ...b }`, it skips
  * properties whose value is explicitly set to `undefined`.
+ *
+ * @example
+ * ```ts
+ * const { a, b } = mergeProps(defaults, config, props);
+ * ```
  */
 function mergeProps<A, B>(a: A, b: B): B & A;
 function mergeProps<A, B, C>(a: A, b: B, c: C): C & B & A;
@@ -11,7 +16,13 @@ function mergeProps(...items: any[]) {
     if (item) {
       for (const key of Object.keys(item)) {
         if (item[key] !== undefined) {
-          ret[key] = item[key];
+          if (key === 'className') {
+            ret[key] = ret[key] ? `${ret[key]} ${item[key]}` : item[key];
+          } else if (key === 'style') {
+            ret[key] = { ...ret[key], ...item[key] };
+          } else {
+            ret[key] = item[key];
+          }
         }
       }
     }
