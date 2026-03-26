@@ -47,5 +47,27 @@ describe('getScrollBarSize', () => {
         height: 0,
       });
     });
+
+    it('should pass csp nonce to updateCSS', () => {
+      const updateCSSSpy = jest.spyOn(
+        require('../src/Dom/dynamicCSS'),
+        'updateCSS',
+      );
+
+      const target = document.createElement('div');
+      document.body.appendChild(target);
+
+      const nonce = 'test-nonce-123';
+      getTargetScrollBarSize(target, { nonce });
+
+      expect(updateCSSSpy).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.any(String),
+        { csp: { nonce } },
+      );
+
+      updateCSSSpy.mockRestore();
+      document.body.removeChild(target);
+    });
   });
 });
