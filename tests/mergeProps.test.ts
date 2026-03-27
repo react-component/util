@@ -80,6 +80,30 @@ describe('mergeProps', () => {
         (mergeProps as (...items: any[]) => any)({ className: null as any }),
       ).toEqual({ className: '' });
     });
+
+    it('empty string className', () => {
+      expect(mergeProps({ className: 'a' }, { className: '' })).toEqual({
+        className: 'a',
+      });
+      expect(mergeProps({ className: '' }, { className: 'b' })).toEqual({
+        className: 'b',
+      });
+      expect(
+        (mergeProps as (...items: any[]) => any)({ className: '' }),
+      ).toEqual({ className: '' });
+    });
+
+    it('whitespace-only className is trimmed', () => {
+      expect(mergeProps({ className: 'a' }, { className: ' ' })).toEqual({
+        className: 'a',
+      });
+      expect(mergeProps({ className: ' ' }, { className: 'b' })).toEqual({
+        className: 'b',
+      });
+      expect(
+        (mergeProps as (...items: any[]) => any)({ className: ' ' }),
+      ).toEqual({ className: '' });
+    });
   });
 
   describe('style', () => {
