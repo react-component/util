@@ -17,7 +17,7 @@ function mergeProps(...items: any[]) {
       for (const key of Object.keys(item)) {
         if (item[key] !== undefined) {
           if (key === 'className') {
-            ret[key] = ret[key] ? `${ret[key]} ${item[key]}` : item[key];
+            ret[key] = `${ret[key] || ''} ${item[key] || ''}`.trim();
           } else if (key === 'style') {
             ret[key] = { ...ret[key], ...item[key] };
           } else {
