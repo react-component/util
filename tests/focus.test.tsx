@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
-import React, { useRef } from 'react';
-import { render } from '@testing-library/react';
+import React, { useEffect, useRef, useState } from 'react';
+import { render, waitFor } from '@testing-library/react';
 import { spyElementPrototype } from '../src/test/domHook';
 import { getFocusNodeList, triggerFocus, useLockFocus } from '../src/Dom/focus';
 
@@ -94,6 +94,39 @@ describe('focus', () => {
       const outerButton = getByTestId('outer-button') as HTMLButtonElement;
       outerButton.focus();
       expect(document.activeElement).toBe(input1);
+    });
+
+    it('should retry lock once when element is filled after lock starts', async () => {
+      const DelayedElementComponent: React.FC = () => {
+        const elementRef = useRef<HTMLDivElement>(null);
+        const [element, setElement] = useState<HTMLDivElement | null>(null);
+
+        useLockFocus(true, () => element);
+
+        useEffect(() => {
+          setElement(elementRef.current);
+        }, []);
+
+        return (
+          <>
+            <button data-testid="outer-button">Outer</button>
+            <div ref={elementRef} data-testid="focus-container" tabIndex={0}>
+              <input key="input1" data-testid="input1" />
+              <button key="button1" data-testid="button1">
+                Button
+              </button>
+            </div>
+          </>
+        );
+      };
+
+      const { getByTestId } = render(<DelayedElementComponent />);
+
+      const focusContainer = getByTestId('focus-container');
+
+      await waitFor(() => {
+        expect(document.activeElement).toBe(focusContainer);
+      });
     });
   });
 

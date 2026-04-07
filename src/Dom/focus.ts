@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type { DependencyList } from 'react';
 import isVisible from './isVisible';
 import useId from '../hooks/useId';
 
@@ -212,6 +213,41 @@ export function lockFocus(element: HTMLElement, id: string): VoidFunction {
 }
 
 /**
+ * Retry an effect until it reports ready.
+ * When `ready` is `false`, it will schedule one more effect cycle and call `func` again
+ * with the next `retryTimes`.
+ */
+type RetryEffectResult = readonly [
+  clearFunc: VoidFunction | undefined,
+  ready: boolean,
+];
+
+function useRetryEffect(
+  func: (retryTimes: number) => RetryEffectResult,
+  deps: DependencyList,
+): void {
+  /* eslint-disable react-hooks/exhaustive-deps */
+  const retryTimesRef = useRef(0);
+  const [retryMark, setRetryMark] = useState(0);
+
+  useEffect(() => {
+    retryTimesRef.current = 0;
+  }, deps);
+
+  useEffect(() => {
+    const [clearFn, ready] = func(retryTimesRef.current);
+
+    if (!ready) {
+      retryTimesRef.current += 1;
+      setRetryMark(count => count + 1);
+    }
+
+    return clearFn;
+  }, [...deps, retryMark]);
+  /* eslint-enable react-hooks/exhaustive-deps */
+}
+
+/**
  * Lock focus within an element.
  * When locked, focus will be restricted to focusable elements within the specified element.
  * If multiple elements are locked, only the last locked element will be effective.
@@ -222,15 +258,24 @@ export function useLockFocus(
   getElement: () => HTMLElement | null,
 ): [ignoreElement: (ele: HTMLElement) => void] {
   const id = useId();
+  const getElementRef = useRef(getElement);
 
-  useEffect(() => {
-    if (lock) {
-      const element = getElement();
-      if (element) {
-        return lockFocus(element, id);
-      }
+  getElementRef.current = getElement;
+
+  const lockEffect = (retryTimes: number): RetryEffectResult => {
+    if (!lock) {
+      return [undefined, true];
     }
-  }, [lock, id]);
+
+    const element = getElementRef.current();
+    if (element) {
+      return [lockFocus(element, id), true];
+    }
+
+    return [undefined, retryTimes >= 1];
+  };
+
+  useRetryEffect(lockEffect, [id, lock]);
 
   const ignoreElement = (ele: HTMLElement) => {
     if (ele) {
