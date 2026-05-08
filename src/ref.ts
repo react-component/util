@@ -102,7 +102,7 @@ export const getNodeRef: <T = any>(
     // major version to avoid touching `element.ref` on React 19+.
     return ReactMajorVersion >= 19
       ? (ele.props.ref ?? null)
-      : ele.ref;
+      : (ele.ref ?? null);
   }
   return null;
 };
