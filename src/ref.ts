@@ -90,17 +90,19 @@ export const supportNodeRef = <T = any>(
 /**
  * In React 19. `ref` is not a property from node.
  * But a property from `props.ref`.
- * To check if `props.ref` exist or fallback to `ref`.
+ * In < React 19, `ref` lives on the element itself (`element.ref`).
  */
 export const getNodeRef: <T = any>(
   node: React.ReactNode,
 ) => React.Ref<T> | null = node => {
   if (node && isReactElement(node)) {
     const ele = node as any;
-
-    // Source from:
-    // https://github.com/mui/material-ui/blob/master/packages/mui-utils/src/getReactNodeRef/getReactNodeRef.ts
-    return ele.props.propertyIsEnumerable('ref') ? ele.props.ref : ele.ref;
+    // React 19: `ref` is a regular prop and reading `element.ref` triggers a
+    // deprecation warning, even when the prop is absent. Branch on the React
+    // major version to avoid touching `element.ref` on React 19+.
+    return ReactMajorVersion >= 19
+      ? (ele.props.ref ?? null)
+      : ele.ref;
   }
   return null;
 };
