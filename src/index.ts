@@ -1,10 +1,50 @@
 export { default as useEvent } from './hooks/useEvent';
 export { default as useMergedState } from './hooks/useMergedState';
 export { default as useControlledState } from './hooks/useControlledState';
-export { supportNodeRef, supportRef, useComposeRef } from './ref';
-export { default as get } from './utils/get';
-export { default as set, merge, mergeWith } from './utils/set';
-export { default as warning, noteOnce } from './warning';
+export { default as useId, getId } from './hooks/useId';
+export {
+  default as useLayoutEffect,
+  useLayoutUpdateEffect,
+} from './hooks/useLayoutEffect';
+export { default as useMemo } from './hooks/useMemo';
+export { default as useState } from './hooks/useState';
+export { default as useSyncState } from './hooks/useSyncState';
+
+export {
+  composeRef,
+  fillRef,
+  getNodeRef,
+  supportNodeRef,
+  supportRef,
+  useComposeRef,
+} from './ref';
+
+export { default as canUseDom } from './Dom/canUseDom';
+export { default as contains } from './Dom/contains';
+export { removeCSS, updateCSS } from './Dom/dynamicCSS';
+export { getDOM, isDOM } from './Dom/findDOMNode';
+export { getFocusNodeList, triggerFocus, useLockFocus } from './Dom/focus';
+export type { InputFocusOptions } from './Dom/focus';
+export { default as isVisible } from './Dom/isVisible';
+export { getShadowRoot } from './Dom/shadow';
+
+export { default as KeyCode } from './KeyCode';
+export {
+  default as getScrollBarSize,
+  getTargetScrollBarSize,
+} from './getScrollBarSize';
+export { default as isEqual } from './isEqual';
+export { default as isMobile } from './isMobile';
 export { default as omit } from './omit';
+export { default as pickAttrs } from './pickAttrs';
+export { default as proxyObject } from './proxyObject';
+export { default as raf } from './raf';
 export { default as toArray } from './Children/toArray';
 export { default as mergeProps } from './mergeProps';
+
+export { default as get } from './utils/get';
+export { default as set, merge, mergeWith } from './utils/set';
+
+export { default as warning, noteOnce } from './warning';
+
+export type { GetContainer } from './PortalWrapper';
