@@ -21,9 +21,14 @@ export {
 
 export { default as canUseDom } from './Dom/canUseDom';
 export { default as contains } from './Dom/contains';
-export { removeCSS, updateCSS } from './Dom/dynamicCSS';
+export { injectCSS, removeCSS, updateCSS } from './Dom/dynamicCSS';
 export { getDOM, isDOM } from './Dom/findDOMNode';
-export { getFocusNodeList, triggerFocus, useLockFocus } from './Dom/focus';
+export {
+  getFocusNodeList,
+  lockFocus,
+  triggerFocus,
+  useLockFocus,
+} from './Dom/focus';
 export type { InputFocusOptions } from './Dom/focus';
 export { default as isVisible } from './Dom/isVisible';
 export { getShadowRoot } from './Dom/shadow';
