@@ -11,17 +11,17 @@ type ContainerType = (Element | DocumentFragment) & {
   [MARK_ID]?: number;
 };
 
-export function render(node: React.ReactElement, container: ContainerType) {
+export const render = (node: React.ReactElement, container: ContainerType) => {
   const root = container[MARK] || createRoot(container);
 
   root.render(node);
 
   container[MARK] = root;
   container[MARK_ID] = (container[MARK_ID] || 0) + 1;
-}
+};
 
 // ========================= Unmount ==========================
-export async function unmount(container: ContainerType) {
+export const unmount = async (container: ContainerType) => {
   const root = container[MARK];
   const rootId = container[MARK_ID];
   // Delay to unmount to avoid React 18 sync warning
@@ -32,4 +32,4 @@ export async function unmount(container: ContainerType) {
       delete container[MARK_ID];
     }
   });
-}
+};
