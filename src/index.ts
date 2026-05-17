@@ -21,12 +21,7 @@ export {
 
 export { default as canUseDom } from './Dom/canUseDom';
 export { default as contains } from './Dom/contains';
-export {
-  clearContainerCache,
-  injectCSS,
-  removeCSS,
-  updateCSS,
-} from './Dom/dynamicCSS';
+export { injectCSS, removeCSS, updateCSS } from './Dom/dynamicCSS';
 export { getDOM, isDOM } from './Dom/findDOMNode';
 export {
   getFocusNodeList,
@@ -59,6 +54,5 @@ export { default as set, merge, mergeWith } from './utils/set';
 export { default as warning, noteOnce } from './warning';
 
 export { render, unmount } from './React/render';
-export { spyElementPrototype, spyElementPrototypes } from './test/domHook';
 export type { PortalProps, PortalRef } from './Portal';
 export type { GetContainer } from './PortalWrapper';
