@@ -22,6 +22,7 @@ export {
 export { default as canUseDom } from './Dom/canUseDom';
 export { default as contains } from './Dom/contains';
 export { injectCSS, removeCSS, updateCSS } from './Dom/dynamicCSS';
+export type { Prepend } from './Dom/dynamicCSS';
 export { getDOM, isDOM } from './Dom/findDOMNode';
 export {
   getFocusNodeList,
@@ -46,13 +47,17 @@ export { default as pickAttrs } from './pickAttrs';
 export { default as proxyObject } from './proxyObject';
 export { default as raf } from './raf';
 export { default as toArray } from './Children/toArray';
+export type { Option } from './Children/toArray';
 export { default as mergeProps } from './mergeProps';
 
 export { default as get } from './utils/get';
 export { default as set, merge, mergeWith } from './utils/set';
 
-export { default as warning, noteOnce } from './warning';
+export { default as warning, noteOnce, resetWarned } from './warning';
 
 export { render, unmount } from './React/render';
+export { spyElementPrototype, spyElementPrototypes } from './test/domHook';
+export { default as Portal } from './Portal';
 export type { PortalProps, PortalRef } from './Portal';
+export { default as PortalWrapper } from './PortalWrapper';
 export type { GetContainer } from './PortalWrapper';
