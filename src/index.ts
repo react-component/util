@@ -59,5 +59,4 @@ export { render, unmount } from './React/render';
 export { spyElementPrototype, spyElementPrototypes } from './test/domHook';
 export { default as Portal } from './Portal';
 export type { PortalProps, PortalRef } from './Portal';
-export { default as PortalWrapper } from './PortalWrapper';
 export type { GetContainer } from './PortalWrapper';
