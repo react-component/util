@@ -47,7 +47,7 @@ export { default as pickAttrs } from './pickAttrs';
 export { default as proxyObject } from './proxyObject';
 export { default as raf } from './raf';
 export { default as toArray } from './Children/toArray';
-export type { Option } from './Children/toArray';
+export type { Option as ToArrayOptions } from './Children/toArray';
 export { default as mergeProps } from './mergeProps';
 
 export { default as get } from './utils/get';
