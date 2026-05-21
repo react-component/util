@@ -18,6 +18,16 @@ export default function proxyObject<
           ? originProp.bind(target)
           : originProp;
       },
+      set(target, prop, v) {
+        let value = v;
+        if (typeof prop === 'string' && ['value'].includes(prop)) {
+          if (typeof value !== 'string') {
+            value = '' + value;
+          }
+          target[prop] = value;
+          return true;
+        }
+      },
     }) as Obj & ExtendObj;
   }
 
