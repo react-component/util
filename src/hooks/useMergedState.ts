@@ -23,7 +23,7 @@ export default function useMergedState<T, R = T>(
     defaultValue?: T | (() => T);
     value?: T;
     onChange?: (value: T, prevValue: T) => void;
-    postState?: (value: T) => T;
+    postState?: (value: T, prevValue?: T) => T;
   },
 ): [R, Updater<T>] {
   const { defaultValue, value, onChange, postState } = option || {};
@@ -43,13 +43,15 @@ export default function useMergedState<T, R = T>(
     }
   });
 
+  const [prevValue, setPrevValue] = useState<[T]>([mergedValue]);
+  
   const mergedValue = value !== undefined ? value : innerValue;
-  const postMergedValue = postState ? postState(mergedValue) : mergedValue;
+  const postMergedValue = postState ? postState(mergedValue,prevValue[0]) : mergedValue;
 
   // ====================== Change ======================
   const onChangeFn = useEvent(onChange);
 
-  const [prevValue, setPrevValue] = useState<[T]>([mergedValue]);
+ 
 
   useLayoutUpdateEffect(() => {
     const prev = prevValue[0];
