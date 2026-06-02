@@ -1,9 +1,10 @@
-import React from 'react';
+import type React from 'react';
 
 export function isDOM(node: any): node is HTMLElement | SVGElement {
-  // https://developer.mozilla.org/en-US/docs/Web/API/Element
-  // Since XULElement is also subclass of Element, we only need HTMLElement and SVGElement
-  return node instanceof HTMLElement || node instanceof SVGElement;
+  // Cross-frame safe check: `instanceof` fails for elements created in a
+  // different frame (e.g. iframe via createPortal) because each frame has its
+  // own HTMLElement/SVGElement constructors.
+  return typeof node === 'object' && node !== null && node.nodeType === 1;
 }
 
 /**
