@@ -92,7 +92,6 @@ Then open <http://localhost:8000/>.
 | `useState`                                 | State helper that can ignore updates after destroy.                                                    |
 | `useSyncState`                             | Synchronous state getter and updater pair.                                                             |
 | `useId`, `getId`                           | Stable id helpers.                                                                                     |
-| `useMobile`                                | Mobile environment detection hook.                                                                     |
 
 ### Refs
 
