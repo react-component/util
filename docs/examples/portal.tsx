@@ -1,5 +1,5 @@
 import React from 'react';
-import PortalWrapper from 'rc-util/es/PortalWrapper';
+import PortalWrapper from '@rc-component/util/es/PortalWrapper';
 
 const Demo: React.FC = () => {
   const divRef = React.useRef<HTMLDivElement>(null);

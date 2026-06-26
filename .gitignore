@@ -30,13 +30,15 @@ pnpm-lock.yaml
 yarn.lock
 .doc
 bun.lockb
-
 # umi
 .umi
 .umi-production
 .umi-test
 .env.local
-
 .dumi/tmp
 .dumi/tmp-test
 .dumi/tmp-production
+es
+.dumi
+docs-dist
+.vercel
