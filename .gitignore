@@ -39,6 +39,5 @@ bun.lockb
 .dumi/tmp-test
 .dumi/tmp-production
 es
-.dumi
 docs-dist
 .vercel

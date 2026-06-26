@@ -6,12 +6,10 @@ const publicPath = process.env.GH_PAGES ? '/util/' : '/';
 
 export default defineConfig({
   alias: {
-    '@rc-component/util$': path.resolve('src'),
-    '@rc-component/util/es': path.resolve('src'),
-    '@rc-component/util/es/*': path.resolve('src'),
-    'rc-util$': path.resolve('src'),
-    'rc-util/es': path.resolve('src'),
-    'rc-util/es/*': path.resolve('src'),
+    '@rc-component/util$': path.resolve(__dirname, 'src'),
+    '@rc-component/util/es': path.resolve(__dirname, 'src'),
+    'rc-util$': path.resolve(__dirname, 'src'),
+    'rc-util/es': path.resolve(__dirname, 'src'),
   },
   mfsu: false,
   favicons: ['https://avatars0.githubusercontent.com/u/9441414?s=200&v=4'],

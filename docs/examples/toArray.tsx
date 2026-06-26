@@ -55,9 +55,9 @@ const DemoBox = React.memo(
 
 const App = () => (
   <>
-    <p onClick={window.console.clear}>
+    <button type="button" onClick={window.console.clear}>
       Press F12 to open the console (Click Clear Console)
-    </p>
+    </button>
 
     <DemoBox name="no-children">
       <Wrapper />
