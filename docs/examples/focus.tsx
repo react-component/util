@@ -1,5 +1,5 @@
+import { useLockFocus } from '@rc-component/util/es/Dom/focus';
 import React, { useRef } from 'react';
-import { useLockFocus } from '../../src/Dom/focus';
 
 export default function FocusDemo() {
   const containerRef = useRef<HTMLDivElement>(null);

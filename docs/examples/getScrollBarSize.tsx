@@ -1,6 +1,6 @@
 import getScrollBarSize, {
   getTargetScrollBarSize,
-} from 'rc-util/es/getScrollBarSize';
+} from '@rc-component/util/es/getScrollBarSize';
 import React from 'react';
 
 const cssText = `

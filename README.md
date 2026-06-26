@@ -30,7 +30,7 @@
 - React 18+ compatible helpers used by rc-component packages.
 - Ref composition, React 19 ref compatibility checks, and portal helpers.
 - DOM helpers for focus management, dynamic styles, visibility, shadow roots, and scrollbar measurement.
-- Hooks for controlled state, layout effects, stable callbacks, memo comparison, ids, and mobile detection.
+- Hooks for controlled state, layout effects, stable callbacks, memo comparison, and ids.
 - Small data utilities for object paths, shallow props merging, omission, equality checks, and child flattening.
 
 ## Install

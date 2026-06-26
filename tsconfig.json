@@ -11,8 +11,7 @@
       "@/*": ["src/*"],
       "@@/*": [".dumi/tmp/*"],
       "@rc-component/util": ["src/index.ts"],
-      "rc-util": ["src/index.ts"],
-      "rc-util/es/*": ["src/*"]
+      "@rc-component/util/es/*": ["src/*"]
     }
   },
   "include": [".dumirc.ts", ".fatherrc.ts", "docs", "src", "tests"]

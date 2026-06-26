@@ -16,6 +16,6 @@ export default defineConfig({
   base: basePath,
   publicPath,
   alias: {
-    'rc-util/es': path.resolve(__dirname, 'src'),
+    '@rc-component/util/es': path.resolve(__dirname, 'src'),
   },
 });
