@@ -6,10 +6,6 @@ const Demo: React.FC = () => {
   const [container, setContainer] = React.useState<HTMLElement | null>(null);
 
   React.useEffect(() => {
-    console.log('>>>', divRef.current);
-  }, []);
-
-  React.useEffect(() => {
     const element = document.createElement('div');
     element.style.backgroundColor = 'red';
     element.style.height = '20px';

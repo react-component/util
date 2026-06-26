@@ -26,8 +26,8 @@ jobs:
         with:
           build: npm run build
           dist: docs-dist
-          failOnMissingToken: false
+          failOnError: false
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          surge_token: ${{ secrets.SURGE_TOKEN }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_LEGACY_PEER_DEPS: 'true'
-          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
