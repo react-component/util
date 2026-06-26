@@ -25,17 +25,16 @@
     "build": "dumi build",
     "compile": "father build",
     "coverage": "npm test -- --coverage",
-    "lint": "eslint src/ --ext .tsx,.ts & eslint tests/ --ext .tsx,.ts",
+    "lint": "eslint src/ tests/ --ext .tsx,.ts",
     "prepare": "husky install",
     "prepublishOnly": "npm run compile && rc-np",
+    "prettier": "prettier --write --ignore-unknown .",
     "start": "dumi dev",
-    "test": "rc-test"
+    "test": "rc-test",
+    "tsc": "tsc --noEmit"
   },
   "lint-staged": {
-    "**/*.{js,jsx,tsx,ts,md,json}": [
-      "prettier --write",
-      "git add"
-    ]
+    "**/*.{js,jsx,tsx,ts,md,json}": "prettier --write --ignore-unknown"
   },
   "dependencies": {
     "is-mobile": "^5.0.0",
