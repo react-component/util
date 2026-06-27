@@ -1,6 +1,7 @@
 <div align="center">
   <h1>@rc-component/util</h1>
   <p><sub>Ant Design 生态的一部分。</sub></p>
+  <img alt="Ant Design" height="32" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
   <p>🧰 rc-component 共享工具集合，包含 DOM、React 和测试辅助能力。</p>
   <p>
     <a href="https://www.npmjs.com/package/@rc-component/util"><img src="https://img.shields.io/npm/v/@rc-component/util.svg?style=flat-square" alt="npm version" /></a>
