@@ -1,8 +1,7 @@
 <div align="center">
   <h1>@rc-component/util</h1>
-  <p><sub>Ant Design 生态的一部分。</sub></p>
-  <img alt="Ant Design" height="32" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
-  <p>🧰 rc-component 共享工具集合，包含 DOM、React 和测试辅助能力。</p>
+  <p><sub><img alt="Ant Design" height="14" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" style="vertical-align: -0.125em;" /> Ant Design 生态的一部分。</sub></p>
+  <p>🛠️ rc-component 共享工具集合，包含 DOM、React 和测试辅助能力。</p>
   <p>
     <a href="https://www.npmjs.com/package/@rc-component/util"><img src="https://img.shields.io/npm/v/@rc-component/util.svg?style=flat-square" alt="npm version" /></a>
     <a href="https://www.npmjs.com/package/@rc-component/util"><img src="https://img.shields.io/npm/dm/@rc-component/util.svg?style=flat-square" alt="npm downloads" /></a>
@@ -18,12 +17,12 @@
 
 ## 特性
 
-- Built for React and maintained by the rc-component team.
+- 面向 React 构建，并由 rc-component 团队维护。
 - 被 Ant Design 使用和其他 React 组件库使用。
-- 提供 TypeScript declarations with both ES module and CommonJS outputs.
-- 保留 examples, tests, and preview builds aligned with the package source.
+- 提供 TypeScript 类型声明，同时输出 ES module 和 CommonJS 产物。
+- 示例、测试和预览构建与包源码保持一致。
 
-> This package was historically published as `rc-util`. Prefer the scoped package for new code.
+> 该包历史上曾以 `rc-util` 发布。新代码推荐使用带 scope 的包名。
 
 ## 安装
 
@@ -45,7 +44,7 @@ import {
 
 ## 示例
 
-Run the local dumi site to explore the examples:
+运行本地 dumi 站点查看示例：
 
 ```bash
 npm install
@@ -54,7 +53,7 @@ npm start
 
 ## API
 
-The package exposes small, focused helpers used across rc-component and Ant Design packages. Import the public entry when possible, and use subpath imports for specialized DOM, React, or test helpers.
+该包提供在 rc-component 和 Ant Design 包中复用的小型聚焦工具。优先导入公开入口；针对 DOM、React 或测试辅助能力，可使用子路径导入。
 
 | 范围            | Examples                                                                           |
 | --------------- | ---------------------------------------------------------------------------------- |
@@ -65,7 +64,7 @@ The package exposes small, focused helpers used across rc-component and Ant Desi
 | Warnings        | `warning`, `noteOnce`, `resetWarned`                                               |
 | Tests           | `test/domHook` for DOM prototype spies                                             |
 
-Examples in `docs/examples` cover the commonly used subpath helpers.
+`docs/examples` 中的示例覆盖了常用的子路径辅助工具。
 
 ## 本地开发
 
@@ -82,8 +81,8 @@ npm run build
 npm run prepublishOnly
 ```
 
-The release flow is handled by `@rc-component/np` through the `rc-np` command after the package build.
+包构建完成后，发布流程由 `@rc-component/np` 通过 `rc-np` 命令处理。
 
 ## 许可证
 
-@rc-component/util is released under the [MIT](./LICENSE) license.
+@rc-component/util 基于 [MIT](./LICENSE) 许可证发布。
