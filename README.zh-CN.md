@@ -1,7 +1,7 @@
 <div align="center">
   <h1>@rc-component/util</h1>
-  <p><sub>Part of the Ant Design ecosystem.</sub></p>
-  <p>🛠️ Shared React utilities for rc-component packages.</p>
+  <p><sub>Ant Design 生态的一部分。</sub></p>
+  <p>🧰 rc-component 共享工具集合，包含 DOM、React 和测试辅助能力。</p>
   <p>
     <a href="https://www.npmjs.com/package/@rc-component/util"><img src="https://img.shields.io/npm/v/@rc-component/util.svg?style=flat-square" alt="npm version" /></a>
     <a href="https://www.npmjs.com/package/@rc-component/util"><img src="https://img.shields.io/npm/dm/@rc-component/util.svg?style=flat-square" alt="npm downloads" /></a>
@@ -12,25 +12,25 @@
   </p>
 </div>
 
-<p align="center">English | <a href="./README.zh-CN.md">简体中文</a></p>
+<p align="center"><a href="./README.md">English</a> | 简体中文</p>
 
 
-## Highlights
+## 特性
 
 - Built for React and maintained by the rc-component team.
-- Used by Ant Design and other React component libraries.
-- Ships TypeScript declarations with both ES module and CommonJS outputs.
-- Keeps examples, tests, and preview builds aligned with the package source.
+- 被 Ant Design 使用和其他 React 组件库使用。
+- 提供 TypeScript declarations with both ES module and CommonJS outputs.
+- 保留 examples, tests, and preview builds aligned with the package source.
 
 > This package was historically published as `rc-util`. Prefer the scoped package for new code.
 
-## Install
+## 安装
 
 ```bash
 npm install @rc-component/util
 ```
 
-## Usage
+## 使用
 
 ```tsx | pure
 import {
@@ -42,7 +42,7 @@ import {
 } from '@rc-component/util';
 ```
 
-## Examples
+## 示例
 
 Run the local dumi site to explore the examples:
 
@@ -55,7 +55,7 @@ npm start
 
 The package exposes small, focused helpers used across rc-component and Ant Design packages. Import the public entry when possible, and use subpath imports for specialized DOM, React, or test helpers.
 
-| Area            | Examples                                                                           |
+| 范围            | Examples                                                                           |
 | --------------- | ---------------------------------------------------------------------------------- |
 | React hooks     | `useEvent`, `useLayoutEffect`, `useMergedState`, `useState` helpers                |
 | React utilities | `Children/toArray`, `composeRef`, `pickAttrs`, `Portal`                            |
@@ -66,7 +66,7 @@ The package exposes small, focused helpers used across rc-component and Ant Desi
 
 Examples in `docs/examples` cover the commonly used subpath helpers.
 
-## Development
+## 本地开发
 
 ```bash
 npm install
@@ -75,7 +75,7 @@ npm test
 npm run build
 ```
 
-## Release
+## 发布
 
 ```bash
 npm run prepublishOnly
@@ -83,6 +83,6 @@ npm run prepublishOnly
 
 The release flow is handled by `@rc-component/np` through the `rc-np` command after the package build.
 
-## License
+## 许可证
 
 @rc-component/util is released under the [MIT](./LICENSE) license.
