@@ -80,5 +80,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "types": "./es/index.d.ts"
 }
