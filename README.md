@@ -2,13 +2,14 @@
   <h1>@rc-component/util</h1>
   <p><sub><img alt="Ant Design" height="14" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" style="vertical-align: -0.125em;" /> Part of the Ant Design ecosystem.</sub></p>
   <p>🛠️ Shared React utilities for rc-component packages.</p>
+
   <p>
-    <a href="https://www.npmjs.com/package/@rc-component/util"><img src="https://img.shields.io/npm/v/@rc-component/util.svg?style=flat-square" alt="npm version" /></a>
-    <a href="https://www.npmjs.com/package/@rc-component/util"><img src="https://img.shields.io/npm/dm/@rc-component/util.svg?style=flat-square" alt="npm downloads" /></a>
-    <a href="https://github.com/react-component/util/actions/workflows/react-component-ci.yml"><img src="https://github.com/react-component/util/actions/workflows/react-component-ci.yml/badge.svg" alt="CI" /></a>
-    <a href="https://app.codecov.io/gh/react-component/util"><img src="https://img.shields.io/codecov/c/github/react-component/util/master.svg?style=flat-square" alt="Codecov" /></a>
-    <a href="https://bundlephobia.com/package/@rc-component/util"><img src="https://badgen.net/bundlephobia/minzip/@rc-component/util" alt="bundle size" /></a>
-    <a href="https://github.com/umijs/dumi"><img src="https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square" alt="dumi" /></a>
+    <a href="https://npmjs.org/package/@rc-component/util"><img alt="NPM version" src="https://img.shields.io/npm/v/@rc-component/util.svg?style=flat-square"></a>
+    <a href="https://npmjs.org/package/@rc-component/util"><img alt="npm downloads" src="https://img.shields.io/npm/dm/@rc-component/util.svg?style=flat-square"></a>
+    <a href="https://github.com/react-component/util/actions/workflows/react-component-ci.yml"><img alt="build status" src="https://github.com/react-component/util/actions/workflows/react-component-ci.yml/badge.svg"></a>
+    <a href="https://app.codecov.io/gh/react-component/util"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/react-component/util/master.svg?style=flat-square"></a>
+    <a href="https://bundlephobia.com/package/@rc-component/util"><img alt="bundle size" src="https://img.shields.io/bundlephobia/minzip/@rc-component/util?style=flat-square"></a>
+    <a href="https://github.com/umijs/dumi"><img alt="dumi" src="https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square"></a>
   </p>
 </div>
 
