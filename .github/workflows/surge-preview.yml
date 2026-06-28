@@ -39,10 +39,9 @@ jobs:
         if: ${{ steps.surge-token.outputs.enabled == 'true' }}
         env:
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+          NPM_CONFIG_LEGACY_PEER_DEPS: 'true'
         with:
           dist: docs-dist
           failOnError: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
           surge_token: ${{ env.SURGE_TOKEN }}
-        env:
-          NPM_CONFIG_LEGACY_PEER_DEPS: 'true'
