@@ -59,12 +59,12 @@ npm start
 
 | 范围            | 示例                                                                           |
 | --------------- | ---------------------------------------------------------------------------------- |
-| React hooks     | `useEvent`, `useLayoutEffect`, `useMergedState`, `useState` helpers                |
-| React utilities | `Children/toArray`, `composeRef`, `pickAttrs`, `Portal`                            |
-| DOM utilities   | `Dom/canUseDom`, `Dom/contains`, `Dom/dynamicCSS`, `Dom/focus`, `getScrollBarSize` |
-| Async helpers   | `raf`, `raf.cancel`                                                                |
-| Warnings        | `warning`, `noteOnce`, `resetWarned`                                               |
-| Tests           | `test/domHook` 用于 DOM 原型 spy                                             |
+| React hooks     | `useEvent`, `useLayoutEffect`, `useMergedState`, `useState` 辅助方法               |
+| React 工具      | `Children/toArray`, `composeRef`, `pickAttrs`, `Portal`                            |
+| DOM 工具        | `Dom/canUseDom`, `Dom/contains`, `Dom/dynamicCSS`, `Dom/focus`, `getScrollBarSize` |
+| 异步辅助方法    | `raf`, `raf.cancel`                                                                |
+| 警告工具        | `warning`, `noteOnce`, `resetWarned`                                               |
+| 测试工具        | `test/domHook` 用于 DOM 原型 spy                                                   |
 
 `docs/examples` 中的示例覆盖了常用的子路径辅助工具。
 
