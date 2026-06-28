@@ -6,13 +6,13 @@
     "react",
     "util"
   ],
-  "homepage": "http://github.com/react-component/util",
+  "homepage": "https://react-component.github.io/util",
   "bugs": {
-    "url": "http://github.com/react-component/util/issues"
+    "url": "https://github.com/react-component/util/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:react-component/util.git"
+    "url": "https://github.com/react-component/util.git"
   },
   "license": "MIT",
   "main": "./lib/index",
@@ -79,5 +79,8 @@
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
