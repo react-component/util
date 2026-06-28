@@ -64,7 +64,7 @@ npm start
 | DOM utilities   | `Dom/canUseDom`, `Dom/contains`, `Dom/dynamicCSS`, `Dom/focus`, `getScrollBarSize` |
 | Async helpers   | `raf`, `raf.cancel`                                                                |
 | Warnings        | `warning`, `noteOnce`, `resetWarned`                                               |
-| Tests           | `test/domHook` for DOM prototype spies                                             |
+| Tests           | `test/domHook` 用于 DOM 原型 spy                                             |
 
 `docs/examples` 中的示例覆盖了常用的子路径辅助工具。
 
