@@ -57,7 +57,7 @@ npm start
 
 该包提供在 rc-component 和 Ant Design 包中复用的小型聚焦工具。优先导入公开入口；针对 DOM、React 或测试辅助能力，可使用子路径导入。
 
-| 范围            | Examples                                                                           |
+| 范围            | 示例                                                                           |
 | --------------- | ---------------------------------------------------------------------------------- |
 | React hooks     | `useEvent`, `useLayoutEffect`, `useMergedState`, `useState` helpers                |
 | React utilities | `Children/toArray`, `composeRef`, `pickAttrs`, `Portal`                            |
