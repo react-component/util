@@ -44,6 +44,16 @@ describe('ref: React 19', () => {
     expect(errSpy).not.toHaveBeenCalled();
   });
 
+  it('getNodeRef on element without ref does not access element.ref', () => {
+    // Regression: previous propertyIsEnumerable('ref') check fell back to
+    // `element.ref` for elements rendered without an explicit ref prop, which
+    // triggers React 19's "Accessing element.ref was removed" warning.
+    const node = <div className="no-ref" />;
+
+    expect(getNodeRef(node)).toBeNull();
+    expect(errSpy).not.toHaveBeenCalled();
+  });
+
   it('useComposeRef', () => {
     const Demo: React.FC<React.PropsWithChildren> = ({ children }) => {
       const ref = React.useRef<HTMLDivElement>(null);
