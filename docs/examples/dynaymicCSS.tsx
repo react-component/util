@@ -1,5 +1,5 @@
-import type { Prepend } from 'rc-util/es/Dom/dynamicCSS';
-import { removeCSS, updateCSS } from 'rc-util/es/Dom/dynamicCSS';
+import type { Prepend } from '@rc-component/util/es/Dom/dynamicCSS';
+import { removeCSS, updateCSS } from '@rc-component/util/es/Dom/dynamicCSS';
 import React from 'react';
 
 function injectStyle(id: number, prepend?: Prepend, priority?: number) {

@@ -8,10 +8,43 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "paths": {
-      "@/*": ["src/*"],
-      "@@/*": ["src/.dumi/*"],
-      "rc-util": ["src/index.ts"],
-      "rc-util/es/*": ["src/*"]
-    }
-  }
+      "@/*": [
+        "src/*"
+      ],
+      "@@/*": [
+        ".dumi/tmp/*"
+      ],
+      "@rc-component/util": [
+        "src/index.ts"
+      ],
+      "@rc-component/util/es": [
+        "src"
+      ],
+      "@rc-component/util/es/*": [
+        "src/*"
+      ],
+      "rc-util": [
+        "src/index.ts"
+      ],
+      "rc-util/es": [
+        "src"
+      ],
+      "rc-util/es/*": [
+        "src/*"
+      ]
+    },
+    "ignoreDeprecations": "5.0"
+  },
+  "include": [
+    ".fatherrc.ts",
+    ".dumirc.ts",
+    "src",
+    "tests",
+    "docs/examples"
+  ],
+  "exclude": [
+    "docs-dist",
+    "lib",
+    "es"
+  ]
 }
