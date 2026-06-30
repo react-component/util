@@ -220,6 +220,7 @@ describe('ref', () => {
     const node = <div ref={ref} />;
 
     expect(getNodeRef(node)).toBe(ref);
+    expect(getNodeRef(null)).toBeNull();
 
     expect(errSpy).not.toHaveBeenCalled();
   });
