@@ -1,46 +1,45 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "moduleResolution": "node",
-    "baseUrl": "./",
+    "moduleResolution": "bundler",
     "jsx": "preserve",
     "declaration": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ],
       "@@/*": [
-        ".dumi/tmp/*"
+        "./.dumi/tmp/*"
       ],
       "@rc-component/util": [
-        "src/index.ts"
+        "./src/index.ts"
       ],
       "@rc-component/util/es": [
-        "src"
+        "./src"
       ],
       "@rc-component/util/es/*": [
-        "src/*"
+        "./src/*"
       ],
       "rc-util": [
-        "src/index.ts"
+        "./src/index.ts"
       ],
       "rc-util/es": [
-        "src"
+        "./src"
       ],
       "rc-util/es/*": [
-        "src/*"
+        "./src/*"
       ]
     },
-    "ignoreDeprecations": "6.0",
     "noImplicitAny": false,
     "strictNullChecks": false,
     "strictPropertyInitialization": false,
     "strictFunctionTypes": false,
     "strict": false,
     "noImplicitThis": false,
-    "strictBindCallApply": false
+    "strictBindCallApply": false,
+    "module": "ESNext"
   },
   "include": [
     "react-compat.d.ts",
