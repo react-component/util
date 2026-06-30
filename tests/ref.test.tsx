@@ -1,5 +1,6 @@
+import { fireEvent } from '@testing-library/dom';
 /* eslint-disable no-eval */
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import React from 'react';
 import useEvent from '../src/hooks/useEvent';
