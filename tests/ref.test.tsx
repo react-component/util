@@ -1,6 +1,5 @@
-import { fireEvent } from '@testing-library/dom';
 /* eslint-disable no-eval */
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import React from 'react';
 import useEvent from '../src/hooks/useEvent';
@@ -11,6 +10,8 @@ import {
   supportRef,
   useComposeRef,
 } from '../src/ref';
+
+const isReact19 = React.version.startsWith('19');
 
 describe('ref', () => {
   const errSpy = jest.spyOn(console, 'error');
@@ -118,7 +119,7 @@ describe('ref', () => {
         </Holder>,
       );
       expect(supportRef(FC)).toBeFalsy();
-      expect(supportRef(holderRef.current.props.children)).toBeFalsy();
+      expect(supportRef(holderRef.current.props.children)).toBe(isReact19);
     });
 
     it('forwardRef function component', () => {
@@ -164,7 +165,7 @@ describe('ref', () => {
         </Holder>,
       );
       expect(supportRef(MemoFC)).toBeFalsy();
-      expect(supportRef(holderRef.current.props.children)).toBeFalsy();
+      expect(supportRef(holderRef.current.props.children)).toBe(isReact19);
     });
 
     it('memo of forwardRef function component', () => {
@@ -197,7 +198,7 @@ describe('ref', () => {
     it('FC', () => {
       const FC = () => <div />;
       const RefFC = React.forwardRef(FC);
-      expect(supportNodeRef(<FC />)).toBeFalsy();
+      expect(supportNodeRef(<FC />)).toBe(isReact19);
       expect(supportNodeRef(<RefFC />)).toBeTruthy();
     });
 

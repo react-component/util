@@ -1,5 +1,4 @@
-import { fireEvent } from '@testing-library/dom';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 import useId from '../src/hooks/useId';

@@ -1,5 +1,5 @@
-import { createEvent } from '@testing-library/dom';
 import KeyCode from '../src/KeyCode';
+import { createEvent } from '@testing-library/react';
 
 describe('KeyCode.isEditableTarget', () => {
   it('check editable target', () => {
