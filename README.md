@@ -15,7 +15,6 @@
 
 <p align="center">English | <a href="./README.zh-CN.md">简体中文</a></p>
 
-
 ## Highlights
 
 - Built for React and maintained by the rc-component team.
@@ -48,7 +47,7 @@ import {
 Run the local dumi site:
 
 ```bash
-ut install
+npm install
 npm start
 ```
 
@@ -72,7 +71,7 @@ Examples in `docs/examples` cover the commonly used subpath helpers.
 ## Development
 
 ```bash
-ut install
+npm install
 npm start
 npm test
 npm run build

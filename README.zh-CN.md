@@ -15,7 +15,6 @@
 
 <p align="center"><a href="./README.md">English</a> | 简体中文</p>
 
-
 ## 特性
 
 - 面向 React 构建，并由 rc-component 团队维护。
@@ -48,7 +47,7 @@ import {
 运行本地 dumi 站点：
 
 ```bash
-ut install
+npm install
 npm start
 ```
 
@@ -58,21 +57,21 @@ npm start
 
 该包提供在 rc-component 和 Ant Design 包中复用的小型聚焦工具。优先导入公开入口；针对 DOM、React 或测试辅助能力，可使用子路径导入。
 
-| 范围            | 示例                                                                           |
-| --------------- | ---------------------------------------------------------------------------------- |
-| React hooks     | `useEvent`, `useLayoutEffect`, `useMergedState`, `useState` 辅助方法               |
-| React 工具      | `Children/toArray`, `composeRef`, `pickAttrs`, `Portal`                            |
-| DOM 工具        | `Dom/canUseDom`, `Dom/contains`, `Dom/dynamicCSS`, `Dom/focus`, `getScrollBarSize` |
-| 异步辅助方法    | `raf`, `raf.cancel`                                                                |
-| 警告工具        | `warning`, `noteOnce`, `resetWarned`                                               |
-| 测试工具        | `test/domHook` 用于 DOM 原型 spy                                                   |
+| 范围         | 示例                                                                               |
+| ------------ | ---------------------------------------------------------------------------------- |
+| React hooks  | `useEvent`, `useLayoutEffect`, `useMergedState`, `useState` 辅助方法               |
+| React 工具   | `Children/toArray`, `composeRef`, `pickAttrs`, `Portal`                            |
+| DOM 工具     | `Dom/canUseDom`, `Dom/contains`, `Dom/dynamicCSS`, `Dom/focus`, `getScrollBarSize` |
+| 异步辅助方法 | `raf`, `raf.cancel`                                                                |
+| 警告工具     | `warning`, `noteOnce`, `resetWarned`                                               |
+| 测试工具     | `test/domHook` 用于 DOM 原型 spy                                                   |
 
 `docs/examples` 中的示例覆盖了常用的子路径辅助工具。
 
 ## 本地开发
 
 ```bash
-ut install
+npm install
 npm start
 npm test
 npm run build
