@@ -1,6 +1,6 @@
 {
   "framework": "umijs",
-  "installCommand": "npm install --legacy-peer-deps",
+  "installCommand": "ut install",
   "buildCommand": "npm run build",
   "outputDirectory": "docs-dist"
 }

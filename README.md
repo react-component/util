@@ -48,7 +48,7 @@ import {
 Run the local dumi site:
 
 ```bash
-npm install
+ut install
 npm start
 ```
 
@@ -72,7 +72,7 @@ Examples in `docs/examples` cover the commonly used subpath helpers.
 ## Development
 
 ```bash
-npm install
+ut install
 npm start
 npm test
 npm run build
