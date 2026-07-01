@@ -7,38 +7,16 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@@/*": [
-        "./.dumi/tmp/*"
-      ],
-      "@rc-component/util": [
-        "./src/index.ts"
-      ],
-      "@rc-component/util/es": [
-        "./src"
-      ],
-      "@rc-component/util/es/*": [
-        "./src/*"
-      ],
-      "rc-util": [
-        "./src/index.ts"
-      ],
-      "rc-util/es": [
-        "./src"
-      ],
-      "rc-util/es/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"],
+      "@@/*": ["./.dumi/tmp/*"],
+      "@rc-component/util": ["./src/index.ts"],
+      "@rc-component/util/es": ["./src"],
+      "@rc-component/util/es/*": ["./src/*"],
+      "rc-util": ["./src/index.ts"],
+      "rc-util/es": ["./src"],
+      "rc-util/es/*": ["./src/*"]
     },
-    "noImplicitAny": false,
-    "strictNullChecks": false,
-    "strictPropertyInitialization": false,
-    "strictFunctionTypes": false,
     "strict": false,
-    "noImplicitThis": false,
-    "strictBindCallApply": false,
     "module": "ESNext"
   },
   "include": [
@@ -49,9 +27,5 @@
     "tests",
     "docs/examples"
   ],
-  "exclude": [
-    "docs-dist",
-    "lib",
-    "es"
-  ]
+  "exclude": ["docs-dist", "lib", "es"]
 }
