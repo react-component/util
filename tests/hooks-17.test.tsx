@@ -3,6 +3,8 @@ import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 import useId, { resetUuid } from '../src/hooks/useId';
 
+const isReact19 = React.version.startsWith('19');
+
 jest.mock('react', () => {
   const react = jest.requireActual('react');
 
@@ -51,7 +53,7 @@ describe('hooks-17', () => {
         { hydrate: true, container: holder },
       );
 
-      matchId(container, 'rc_unique_1');
+      matchId(container, isReact19 ? 'rc_unique_0' : 'rc_unique_1');
 
       errorSpy.mockRestore();
       process.env.NODE_ENV = originEnv;
