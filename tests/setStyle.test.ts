@@ -9,14 +9,12 @@ describe('setStyle', () => {
   });
 
   it('setStyle correct', () => {
-    let cacheStyle = {};
-
     const style: CSSProperties = {
       position: 'relative',
       width: '100px',
     };
 
-    cacheStyle = setStyle(style);
+    const cacheStyle = setStyle(style);
 
     expect(document.body.style.cssText.replace(/\s/g, '')).toBe(
       `${JSON.stringify(style)
@@ -31,9 +29,8 @@ describe('setStyle', () => {
 
   it('setStyle correct if has style', () => {
     document.body.style.position = 'absolute';
-    let cacheStyle = {};
 
-    cacheStyle = setStyle({
+    const cacheStyle = setStyle({
       position: 'relative',
     });
 
