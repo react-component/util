@@ -19,14 +19,18 @@ export default function useDelayState<T>(
   defaultValue: T | (() => T),
 ): [T, SetDelayState<T>] {
   const [value, setValue] = React.useState(defaultValue);
-  const rafRef = React.useRef<number>(null);
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(null);
+  const rafRef = React.useRef<number | null>(null);
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const cancelPending = useEvent(() => {
-    raf.cancel(rafRef.current!);
-    clearTimeout(timeoutRef.current!);
-    rafRef.current = null;
-    timeoutRef.current = null;
+    if (rafRef.current !== null) {
+      raf.cancel(rafRef.current);
+      rafRef.current = null;
+    }
+    if (timeoutRef.current !== null) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
   });
 
   const setDelayValue = useEvent<SetDelayState<T>>(
