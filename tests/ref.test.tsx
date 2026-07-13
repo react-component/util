@@ -11,6 +11,8 @@ import {
   useComposeRef,
 } from '../src/ref';
 
+const isReact19 = React.version.startsWith('19');
+
 describe('ref', () => {
   const errSpy = jest.spyOn(console, 'error');
 
@@ -117,7 +119,7 @@ describe('ref', () => {
         </Holder>,
       );
       expect(supportRef(FC)).toBeFalsy();
-      expect(supportRef(holderRef.current.props.children)).toBeFalsy();
+      expect(supportRef(holderRef.current.props.children)).toBe(isReact19);
     });
 
     it('forwardRef function component', () => {
@@ -163,7 +165,7 @@ describe('ref', () => {
         </Holder>,
       );
       expect(supportRef(MemoFC)).toBeFalsy();
-      expect(supportRef(holderRef.current.props.children)).toBeFalsy();
+      expect(supportRef(holderRef.current.props.children)).toBe(isReact19);
     });
 
     it('memo of forwardRef function component', () => {
@@ -196,7 +198,7 @@ describe('ref', () => {
     it('FC', () => {
       const FC = () => <div />;
       const RefFC = React.forwardRef(FC);
-      expect(supportNodeRef(<FC />)).toBeFalsy();
+      expect(supportNodeRef(<FC />)).toBe(isReact19);
       expect(supportNodeRef(<RefFC />)).toBeTruthy();
     });
 
@@ -218,6 +220,7 @@ describe('ref', () => {
     const node = <div ref={ref} />;
 
     expect(getNodeRef(node)).toBe(ref);
+    expect(getNodeRef(null)).toBeNull();
 
     expect(errSpy).not.toHaveBeenCalled();
   });

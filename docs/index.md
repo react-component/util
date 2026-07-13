@@ -1,7 +1,5 @@
 ---
-hero:
-  title: rc-util
-  description: Common Utils For React Component
+title: '@rc-component/util'
 ---
 
 <embed src="../README.md"></embed>

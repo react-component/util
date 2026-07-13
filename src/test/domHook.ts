@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable no-param-reassign */
 const NO_EXIST = { __NOT_EXIST: true };
 
