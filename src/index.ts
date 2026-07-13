@@ -1,6 +1,8 @@
 export { default as useEvent } from './hooks/useEvent';
 export { default as useMergedState } from './hooks/useMergedState';
 export { default as useControlledState } from './hooks/useControlledState';
+export { default as useDelayState } from './hooks/useDelayState';
+export type { DelayConfig, SetDelayState } from './hooks/useDelayState';
 export { default as useId, getId } from './hooks/useId';
 export {
   default as useLayoutEffect,
