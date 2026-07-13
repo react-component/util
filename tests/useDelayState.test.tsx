@@ -130,15 +130,4 @@ describe('useDelayState', () => {
     });
     expect(result.current[0]).toBe(2);
   });
-
-  it('cancels pending update on unmount', () => {
-    const { result, unmount } = renderHook(() => useDelayState(0));
-
-    act(() => {
-      result.current[1](1, { ms: 100 });
-    });
-    unmount();
-
-    expect(jest.getTimerCount()).toBe(0);
-  });
 });

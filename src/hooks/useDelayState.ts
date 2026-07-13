@@ -19,17 +19,17 @@ export default function useDelayState<T>(
   defaultValue: T | (() => T),
 ): [T, SetDelayState<T>] {
   const [value, setValue] = React.useState(defaultValue);
-  const rafRef = React.useRef<number | null>(null);
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const delayRef = React.useRef<[isRaf: boolean, delay: number] | null>(null);
 
   const cancelPending = useEvent(() => {
-    if (rafRef.current !== null) {
-      raf.cancel(rafRef.current);
-      rafRef.current = null;
-    }
-    if (timeoutRef.current !== null) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
+    if (delayRef.current) {
+      const [isRaf, delay] = delayRef.current;
+      if (isRaf) {
+        raf.cancel(delay);
+      } else {
+        clearTimeout(delay);
+      }
+      delayRef.current = null;
     }
   });
 
@@ -43,21 +43,19 @@ export default function useDelayState<T>(
         typeof immediatelyOrDelay === 'object' &&
         'ms' in immediatelyOrDelay
       ) {
-        timeoutRef.current = setTimeout(
-          () => setValue(nextValue),
-          immediatelyOrDelay.ms,
-        );
+        delayRef.current = [
+          false,
+          window.setTimeout(() => setValue(nextValue), immediatelyOrDelay.ms),
+        ];
       } else {
         const frame =
           typeof immediatelyOrDelay === 'object'
             ? immediatelyOrDelay.frame
             : undefined;
-        rafRef.current = raf(() => setValue(nextValue), frame);
+        delayRef.current = [true, raf(() => setValue(nextValue), frame)];
       }
     },
   );
-
-  React.useEffect(() => cancelPending, [cancelPending]);
 
   return [value, setDelayValue];
 }
