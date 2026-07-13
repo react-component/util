@@ -35,24 +35,21 @@ export default function useDelayState<T>(
 
   const setDelayValue = useEvent<SetDelayState<T>>(
     (nextValue, immediatelyOrDelay) => {
+      const delayConfig = immediatelyOrDelay || { frame: 1 };
       cancelPending();
 
-      if (immediatelyOrDelay === true) {
+      if (delayConfig === true) {
         setValue(nextValue);
-      } else if (
-        typeof immediatelyOrDelay === 'object' &&
-        'ms' in immediatelyOrDelay
-      ) {
+      } else if ('ms' in delayConfig) {
         delayRef.current = [
           false,
-          window.setTimeout(() => setValue(nextValue), immediatelyOrDelay.ms),
+          window.setTimeout(() => setValue(nextValue), delayConfig.ms),
         ];
       } else {
-        const frame =
-          typeof immediatelyOrDelay === 'object'
-            ? immediatelyOrDelay.frame
-            : undefined;
-        delayRef.current = [true, raf(() => setValue(nextValue), frame)];
+        delayRef.current = [
+          true,
+          raf(() => setValue(nextValue), delayConfig.frame),
+        ];
       }
     },
   );
