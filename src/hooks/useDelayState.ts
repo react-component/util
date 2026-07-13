@@ -11,6 +11,10 @@ export type SetDelayState<T> = (
   immediatelyOrDelay?: boolean | DelayConfig,
 ) => void;
 
+type DelayInfo =
+  | [isRaf: true, delay: number]
+  | [isRaf: false, delay: ReturnType<typeof setTimeout>];
+
 /**
  * Similar to `useState`, but updates on the next frame by default.
  * Pending updates are always replaced by the latest one.
@@ -19,7 +23,7 @@ export default function useDelayState<T>(
   defaultValue: T | (() => T),
 ): [T, SetDelayState<T>] {
   const [value, setValue] = React.useState(defaultValue);
-  const delayRef = React.useRef<[isRaf: boolean, delay: number] | null>(null);
+  const delayRef = React.useRef<DelayInfo | null>(null);
 
   const cancelPending = useEvent(() => {
     if (delayRef.current) {
@@ -43,7 +47,7 @@ export default function useDelayState<T>(
       } else if ('ms' in delayConfig) {
         delayRef.current = [
           false,
-          window.setTimeout(() => setValue(nextValue), delayConfig.ms),
+          setTimeout(() => setValue(nextValue), delayConfig.ms),
         ];
       } else {
         delayRef.current = [
