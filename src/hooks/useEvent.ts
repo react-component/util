@@ -1,21 +1,36 @@
-import * as React from 'react';
+import React from 'react';
+import { useState } from 'react';
 
-const useEvent = <T extends ((...args: any[]) => any) | undefined>(
-  callback: T,
-): undefined extends T
-  ? (
-      ...args: Parameters<NonNullable<T>>
-    ) => ReturnType<NonNullable<T>> | undefined
-  : T => {
-  const fnRef = React.useRef<T | undefined>(callback);
+type StableHandler<This, Args extends unknown[], Result> = (
+  this: This,
+  ...args: Args
+) => Result;
+
+function useEvent<This, Args extends unknown[], Result>(
+  fn: StableHandler<This, Args, Result>,
+): StableHandler<This, Args, Result>;
+
+function useEvent<
+  This = unknown,
+  Args extends unknown[] = [],
+  Result = undefined,
+>(
+  fn?: StableHandler<This, Args, Result>,
+): StableHandler<This, Args, Result | undefined>;
+
+function useEvent<This, Args extends unknown[], Result>(
+  callback?: StableHandler<This, Args, Result>,
+) {
+  const fnRef = React.useRef<StableHandler<This, Args, Result>>(callback);
   fnRef.current = callback;
 
-  const memoFn = React.useCallback(
-    (...args: any[]) => fnRef.current?.(...args),
-    [],
-  );
+  const [stableHandler] = useState(() => {
+    return function (this: This, ...args: Args) {
+      return fnRef.current?.apply(this, args);
+    };
+  });
 
-  return memoFn;
-};
+  return stableHandler;
+}
 
 export default useEvent;
