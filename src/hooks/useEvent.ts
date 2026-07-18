@@ -1,6 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
 
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
+
 type StableHandler<This, Args extends unknown[], Result> = (
   this: This,
   ...args: Args
@@ -22,7 +25,10 @@ function useEvent<This, Args extends unknown[], Result>(
   callback?: StableHandler<This, Args, Result>,
 ) {
   const fnRef = React.useRef<StableHandler<This, Args, Result>>(callback);
-  fnRef.current = callback;
+
+  useIsomorphicLayoutEffect(() => {
+    fnRef.current = callback;
+  }, [callback]);
 
   const [stableHandler] = useState(() => {
     return function (this: This, ...args: Args) {
