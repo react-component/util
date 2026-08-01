@@ -102,9 +102,11 @@ export function injectCSS(css: string, option: Options = {}) {
       );
 
       if (existStyle.length) {
-        container.insertBefore(
+        const lastStyle = existStyle[existStyle.length - 1];
+
+        lastStyle?.parentNode?.insertBefore(
           styleNode,
-          existStyle[existStyle.length - 1].nextSibling,
+          lastStyle.nextSibling,
         );
 
         return styleNode;
