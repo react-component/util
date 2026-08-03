@@ -1,9 +1,11 @@
 import React from 'react';
 
 export function isDOM(node: any): node is HTMLElement | SVGElement {
+  const win = (node?.ownerDocument?.defaultView || window) as typeof win;
+
   // https://developer.mozilla.org/en-US/docs/Web/API/Element
   // Since XULElement is also subclass of Element, we only need HTMLElement and SVGElement
-  return node instanceof HTMLElement || node instanceof SVGElement;
+  return node instanceof win.HTMLElement || node instanceof win.SVGElement;
 }
 
 /**
