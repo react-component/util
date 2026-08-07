@@ -74,7 +74,7 @@ export function injectCSS(css: string, option: Options = {}) {
   }
 
   if (csp?.nonce) {
-    styleNode.nonce = csp?.nonce;
+    styleNode.setAttribute('nonce', csp?.nonce);
   }
   styleNode.innerHTML = css;
 
@@ -173,8 +173,9 @@ export function updateCSS(
   const existNode = findExistNode(key, option);
 
   if (existNode) {
-    if (option.csp?.nonce && existNode.nonce !== option.csp?.nonce) {
-      existNode.nonce = option.csp?.nonce;
+    const existNodeNonce = existNode.getAttribute('nonce');
+    if (option.csp?.nonce && existNodeNonce !== option.csp?.nonce) {
+      existNode.setAttribute('nonce', option.csp?.nonce);
     }
 
     if (existNode.innerHTML !== css) {
