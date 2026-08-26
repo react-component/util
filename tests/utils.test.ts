@@ -59,14 +59,12 @@ describe('utils', () => {
       expect(set({}, ['notExist'], undefined, true)).toEqual({});
 
       // Delete value
-      const target = set(
-        { keep: { light: 2333 } },
-        ['keep', 'light'],
-        undefined,
-        true,
-      );
-      expect(target).toEqual({ keep: {} });
+      const source = { keep: { light: 2333, bamboo: 1 } };
+      const target = set(source, ['keep', 'light'], undefined, true);
+      expect(target).toEqual({ keep: { bamboo: 1 } });
       expect('light' in target.keep).toBeFalsy();
+      expect(source).toEqual({ keep: { light: 2333, bamboo: 1 } });
+      expect(target.keep).not.toBe(source.keep);
 
       // Mid path not exist
       const midTgt = set(
