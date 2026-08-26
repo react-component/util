@@ -37,6 +37,8 @@ export default function useDelayState<T>(
     }
   });
 
+  React.useEffect(() => cancelPending, [cancelPending]);
+
   const setDelayValue = useEvent<SetDelayState<T>>(
     (nextValue, immediatelyOrDelay) => {
       const delayConfig = immediatelyOrDelay || { frame: 1 };
