@@ -51,7 +51,11 @@ function getOrder(prepend?: Prepend): AppendType {
 /**
  * Find style which inject by rc-util
  */
-function findStyles(container: ContainerType) {
+function findStyles(container: ContainerType | null) {
+  if (!container) {
+    return [];
+  }
+
   return Array.from(
     (containerCache.get(container) || container).children,
   ).filter(node => node.tagName === 'STYLE') as HTMLStyleElement[];
@@ -79,6 +83,10 @@ export function injectCSS(css: string, option: Options = {}) {
   styleNode.innerHTML = css;
 
   const container = getContainer(option);
+  if (!container) {
+    return null;
+  }
+
   const { firstChild } = container;
 
   if (prepend) {
@@ -132,7 +140,7 @@ export function removeCSS(key: string, option: Options = {}) {
   const existNode = findExistNode(key, option);
   if (existNode) {
     const container = getContainer(option);
-    container.removeChild(existNode);
+    container?.removeChild(existNode);
   }
 }
 
@@ -145,6 +153,10 @@ function syncRealContainer(container: ContainerType, option: Options) {
   // Find real container when not cached or cached container removed
   if (!cachedRealContainer || !contains(document, cachedRealContainer)) {
     const placeholderStyle = injectCSS('', option);
+    if (!placeholderStyle) {
+      return;
+    }
+
     const { parentNode } = placeholderStyle;
     containerCache.set(container, parentNode);
     container.removeChild(placeholderStyle);
@@ -164,6 +176,10 @@ export function updateCSS(
   originOption: Options = {},
 ) {
   const container = getContainer(originOption);
+  if (!container) {
+    return null;
+  }
+
   const styles = findStyles(container);
   const option = { ...originOption, styles };
 
@@ -185,6 +201,10 @@ export function updateCSS(
   }
 
   const newNode = injectCSS(css, option);
+  if (!newNode) {
+    return null;
+  }
+
   newNode.setAttribute(getMark(option), key);
   return newNode;
 }
