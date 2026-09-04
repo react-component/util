@@ -1,21 +1,42 @@
-import * as React from 'react';
+import React from 'react';
+import { useState } from 'react';
 
-const useEvent = <T extends ((...args: any[]) => any) | undefined>(
-  callback: T,
-): undefined extends T
-  ? (
-      ...args: Parameters<NonNullable<T>>
-    ) => ReturnType<NonNullable<T>> | undefined
-  : T => {
-  const fnRef = React.useRef<T | undefined>(callback);
-  fnRef.current = callback;
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
 
-  const memoFn = React.useCallback(
-    (...args: any[]) => fnRef.current?.(...args),
-    [],
-  );
+type StableHandler<This, Args extends unknown[], Result> = (
+  this: This,
+  ...args: Args
+) => Result;
 
-  return memoFn;
-};
+function useEvent<This, Args extends unknown[], Result>(
+  fn: StableHandler<This, Args, Result>,
+): StableHandler<This, Args, Result>;
+
+function useEvent<
+  This = unknown,
+  Args extends unknown[] = [],
+  Result = undefined,
+>(
+  fn?: StableHandler<This, Args, Result>,
+): StableHandler<This, Args, Result | undefined>;
+
+function useEvent<This, Args extends unknown[], Result>(
+  callback?: StableHandler<This, Args, Result>,
+) {
+  const fnRef = React.useRef<StableHandler<This, Args, Result>>(callback);
+
+  useIsomorphicLayoutEffect(() => {
+    fnRef.current = callback;
+  }, [callback]);
+
+  const [stableHandler] = useState(() => {
+    return function (this: This, ...args: Args) {
+      return fnRef.current?.apply(this, args);
+    };
+  });
+
+  return stableHandler;
+}
 
 export default useEvent;
