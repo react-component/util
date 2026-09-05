@@ -43,7 +43,7 @@ export default function useMergedState<T, R = T>(
     }
   });
 
-  const mergedValue = value !== undefined ? value : innerValue;
+  const mergedValue = hasValue(value) ? value : innerValue;
   const postMergedValue = postState ? postState(mergedValue) : mergedValue;
 
   // ====================== Change ======================
