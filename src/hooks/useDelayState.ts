@@ -3,7 +3,8 @@ import raf from '../raf';
 import useEvent from './useEvent';
 
 export type DelayConfig =
-  { frame: number; ms?: never } | { frame?: never; ms: number };
+  | { frame: number; ms?: never }
+  | { frame?: never; ms: number };
 
 export type SetDelayState<T> = (
   nextValue: React.SetStateAction<T>,
@@ -57,6 +58,10 @@ export default function useDelayState<T>(
       }
     },
   );
+
+  React.useEffect(() => {
+    return cancelPending;
+  }, [cancelPending]);
 
   return [value, setDelayValue];
 }
