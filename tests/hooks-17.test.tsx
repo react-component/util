@@ -22,11 +22,6 @@ describe('hooks-17', () => {
       return <div id={mergedId} className="target" />;
     };
 
-    function matchId(container: HTMLElement, id: string) {
-      const ele = container.querySelector('.target');
-      return expect(ele.id).toEqual(id);
-    }
-
     it('fallback of React 17 or lower', () => {
       const errorSpy = jest.spyOn(console, 'error');
       const originEnv = process.env.NODE_ENV;

@@ -344,7 +344,13 @@ describe('utils', () => {
 
       const isCapturePhase = (n: string) =>
         n.endsWith('Capture') && !/^on(Got|Lost)PointerCapture$/.test(n);
-      const reactEvents = [...dts.matchAll(/\bon[A-Z]\w*(?=\?:)/g)]
+      // Only handlers declared inside `DOMAttributes` are real DOM event
+      // handlers. Scanning the whole dts would also pick up component
+      // callbacks such as `ViewTransitionProps.onEnter`.
+      const domAttrsBlock = dts.match(
+        /interface DOMAttributes<T> \{[^}]*/,
+      )?.[0];
+      const reactEvents = [...domAttrsBlock!.matchAll(/\bon[A-Z]\w*(?=\?:)/g)]
         .map(m => m[0])
         .filter(n => !isCapturePhase(n));
 

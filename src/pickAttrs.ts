@@ -22,8 +22,7 @@ const eventsName = `onCopy onCut onPaste onCompositionEnd onCompositionStart onC
     onAnimationStart onAnimationEnd onAnimationIteration
     onTransitionEnd onTransitionRun onTransitionStart onTransitionCancel
     onBeforeInput onReset onInvalid
-    onAuxClick onToggle onBeforeToggle onCancel onClose onResize onScrollEnd
-    onEnter onExit onShare onUpdate`;
+    onAuxClick onToggle onBeforeToggle onCancel onClose onResize onScrollEnd`;
 
 const propList = `${attributes} ${eventsName}`.split(/[\s\n]+/);
 
