@@ -34,6 +34,18 @@ describe('dynamicCSS', () => {
       expect(document.querySelector('style').nonce).toEqual('light');
     });
 
+    it('does not throw when the document has no style container', () => {
+      const { head, body } = document;
+      head.remove();
+      body.remove();
+
+      try {
+        expect(injectCSS(TEST_STYLE)).toBeNull();
+      } finally {
+        document.documentElement.append(head, body);
+      }
+    });
+
     describe('prepend', () => {
       function testPrepend() {
         const head = document.querySelector('head');
@@ -136,6 +148,18 @@ describe('dynamicCSS', () => {
 
       expect(document.querySelectorAll('style')).toHaveLength(1);
       expect(document.querySelector('style').innerHTML).toEqual(REPLACE_STYLE);
+    });
+
+    it('does not throw when the document has no style container', () => {
+      const { head, body } = document;
+      head.remove();
+      body.remove();
+
+      try {
+        expect(updateCSS(TEST_STYLE, 'missing-container')).toBeNull();
+      } finally {
+        document.documentElement.append(head, body);
+      }
     });
 
     it('replace with CSP', () => {
