@@ -348,11 +348,13 @@ describe('utils', () => {
       // handlers. Scanning the whole dts would also pick up component
       // callbacks such as `ViewTransitionProps.onEnter`.
       const domAttrsBlock = dts.match(
-        /interface DOMAttributes<T> \{[^}]*/,
+        /interface DOMAttributes<T> \{[\s\S]*?^ {4}\}/m,
       )?.[0];
       const reactEvents = [...domAttrsBlock!.matchAll(/\bon[A-Z]\w*(?=\?:)/g)]
         .map(m => m[0])
         .filter(n => !isCapturePhase(n));
+
+      expect(reactEvents.length).toBeGreaterThan(0);
 
       const dropped = reactEvents.filter(
         e => pickAttrs({ [e]: 1 }, { attr: true })[e] === undefined,
