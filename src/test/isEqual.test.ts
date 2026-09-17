@@ -1,11 +1,17 @@
 import isEqual from '../isEqual';
-import warning from '../warning';
+import warning, { resetWarned } from '../warning';
 
 describe('isEqual', () => {
   let errorSpy: jest.SpyInstance;
 
   beforeAll(() => {
     errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  beforeEach(() => {
+    // `warning` is warningOnce: without this, a message emitted by an earlier test is suppressed
+    // here, and asserting that nothing warned would prove nothing.
+    resetWarned();
   });
 
   afterEach(() => {
@@ -102,5 +108,51 @@ describe('isEqual', () => {
 
     const valueIsEqual = isEqual(obj, obj2);
     expect(valueIsEqual).toBe(false);
+  });
+
+  const circularWarnings = () =>
+    errorSpy.mock.calls.filter(([message]) =>
+      String(message).includes('circular references'),
+    );
+
+  it('should equal when one side reuses a reference across keys', () => {
+    const shared: any[] = [];
+
+    const valueIsEqual = isEqual(
+      { errors: shared, warnings: shared },
+      { errors: [], warnings: [] },
+    );
+    expect(valueIsEqual).toBe(true);
+    expect(circularWarnings()).toHaveLength(0);
+  });
+
+  it('should equal when one side reuses an object across keys', () => {
+    const point = { x: 1 };
+
+    const valueIsEqual = isEqual(
+      { a: point, b: point },
+      { a: { x: 1 }, b: { x: 1 } },
+    );
+    expect(valueIsEqual).toBe(true);
+    expect(circularWarnings()).toHaveLength(0);
+  });
+
+  it('should equal when one side reuses a reference inside an array', () => {
+    const point = { x: 1 };
+
+    const valueIsEqual = isEqual([point, point], [{ x: 1 }, { x: 1 }]);
+    expect(valueIsEqual).toBe(true);
+    expect(circularWarnings()).toHaveLength(0);
+  });
+
+  it('should still detect a cycle reached through an array', () => {
+    const a: any = { list: [] };
+    a.list.push(a);
+    const b: any = { list: [] };
+    b.list.push(b);
+
+    const valueIsEqual = isEqual(a, b);
+    expect(valueIsEqual).toBe(false);
+    expect(circularWarnings().length).toBeGreaterThan(0);
   });
 });
