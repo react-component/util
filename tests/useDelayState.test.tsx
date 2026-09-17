@@ -121,6 +121,21 @@ describe('useDelayState', () => {
     expect(result.current[0]).toBe(2);
   });
 
+  it.each([
+    ['frame', { frame: 2 }],
+    ['timeout', { ms: 100 }],
+  ] as const)('cancels a pending %s update on unmount', (_, delay) => {
+    const { result, unmount } = renderHook(() => useDelayState(0));
+
+    act(() => {
+      result.current[1](1, delay);
+    });
+    expect(jest.getTimerCount()).toBe(1);
+
+    unmount();
+    expect(jest.getTimerCount()).toBe(0);
+  });
+
   it('supports updater function', () => {
     const { result } = renderHook(() => useDelayState(1));
 
