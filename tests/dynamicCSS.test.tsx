@@ -34,6 +34,41 @@ describe('dynamicCSS', () => {
       expect(document.querySelector('style').nonce).toEqual('light');
     });
 
+    it('does not assign CSS through the innerHTML sink', () => {
+      const innerHTMLDescriptor = Object.getOwnPropertyDescriptor(
+        HTMLStyleElement.prototype,
+        'innerHTML',
+      );
+
+      Object.defineProperty(HTMLStyleElement.prototype, 'innerHTML', {
+        configurable: true,
+        set() {
+          throw new TypeError(
+            "This document requires 'TrustedHTML' assignment.",
+          );
+        },
+      });
+
+      try {
+        const style = injectCSS(TEST_STYLE);
+        const managedStyle = updateCSS(TEST_STYLE, 'trusted-types');
+
+        expect(style.textContent).toEqual(TEST_STYLE);
+        expect(() => updateCSS('.light {}', 'trusted-types')).not.toThrow();
+        expect(managedStyle.textContent).toEqual('.light {}');
+      } finally {
+        if (innerHTMLDescriptor) {
+          Object.defineProperty(
+            HTMLStyleElement.prototype,
+            'innerHTML',
+            innerHTMLDescriptor,
+          );
+        } else {
+          delete HTMLStyleElement.prototype.innerHTML;
+        }
+      }
+    });
+
     describe('prepend', () => {
       function testPrepend() {
         const head = document.querySelector('head');

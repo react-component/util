@@ -76,7 +76,7 @@ export function injectCSS(css: string, option: Options = {}) {
   if (csp?.nonce) {
     styleNode.nonce = csp?.nonce;
   }
-  styleNode.innerHTML = css;
+  styleNode.textContent = css;
 
   const container = getContainer(option);
   const { firstChild } = container;
@@ -177,8 +177,8 @@ export function updateCSS(
       existNode.nonce = option.csp?.nonce;
     }
 
-    if (existNode.innerHTML !== css) {
-      existNode.innerHTML = css;
+    if (existNode.textContent !== css) {
+      existNode.textContent = css;
     }
 
     return existNode;
