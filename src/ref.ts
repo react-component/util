@@ -4,7 +4,7 @@ import { ForwardRef, isMemo } from 'react-is';
 import useMemo from './hooks/useMemo';
 import isFragment from './React/isFragment';
 
-const ReactMajorVersion = Number(version.split('.')[0]);
+const ReactMajorVersion = Number(version?.split('.')[0]);
 
 export const fillRef = <T>(ref: React.Ref<T>, node: T) => {
   if (typeof ref === 'function') {
