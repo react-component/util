@@ -63,6 +63,27 @@ describe('findDOMNode', () => {
     expect(findDOMNode(svg)).toBe(svg);
   });
 
+  it('supports DOM nodes from iframe', () => {
+    const iframe = document.createElement('iframe');
+    document.body.appendChild(iframe);
+
+    try {
+      const iframeWindow = iframe.contentWindow!;
+      const iframeDocument = iframeWindow.document;
+      const div = iframeDocument.createElement('div');
+      iframeDocument.body.appendChild(div);
+
+      expect(div).toBeInstanceOf(iframeWindow.HTMLElement);
+      expect(div).not.toBeInstanceOf(HTMLElement);
+      expect(isDOM(div)).toBe(true);
+      expect(getDOM(div)).toBe(div);
+      expect(findDOMNode(div)).toBe(div);
+      expect(getDOM({ nativeElement: div })).toBe(div);
+    } finally {
+      document.body.removeChild(iframe);
+    }
+  });
+
   it('isDOM type', () => {
     const svg: any = document.createElementNS(
       'http://www.w3.org/2000/svg',
