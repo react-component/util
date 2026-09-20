@@ -34,6 +34,18 @@ describe('dynamicCSS', () => {
       expect(document.querySelector('style').nonce).toEqual('light');
     });
 
+    it('does not throw when the document has no style container', () => {
+      const { head, body } = document;
+      head.remove();
+      body.remove();
+
+      try {
+        expect(injectCSS(TEST_STYLE)).toBeNull();
+      } finally {
+        document.documentElement.append(head, body);
+      }
+    });
+
     describe('prepend', () => {
       function testPrepend() {
         const head = document.querySelector('head');
@@ -118,6 +130,47 @@ describe('dynamicCSS', () => {
     expect(document.querySelector('style')).toBeFalsy();
   });
 
+  it('can remove styles while the default container is unavailable', () => {
+    const { head, body } = document;
+    const style = updateCSS(TEST_STYLE, 'detached');
+    head.remove();
+    body.remove();
+    try {
+      expect(() => removeCSS('detached')).not.toThrow();
+      expect(() => removeCSS('detached', { styles: [style] })).not.toThrow();
+      expect(style.parentNode).toBe(head);
+    } finally {
+      document.documentElement.append(head, body);
+      removeCSS('detached');
+      clearContainerCache();
+    }
+  });
+
+  it('returns null when the document containers disappear during style creation', () => {
+    clearContainerCache();
+    const { head, body } = document;
+    const createElement = document.createElement.bind(document);
+    const spy = jest
+      .spyOn(document, 'createElement')
+      .mockImplementationOnce(tagName => {
+        head.remove();
+        body.remove();
+        return createElement(tagName);
+      });
+    try {
+      expect(updateCSS(TEST_STYLE, 'transient')).toBeNull();
+      expect(head.querySelector('style')).toBeNull();
+    } finally {
+      spy.mockRestore();
+      document.documentElement.append(head, body);
+      clearContainerCache();
+    }
+    const restored = updateCSS(TEST_STYLE, 'transient');
+    expect(restored.parentNode).toBe(head);
+    removeCSS('transient');
+    clearContainerCache();
+  });
+
   describe('updateCSS', () => {
     beforeEach(() => {
       updateCSS(TEST_STYLE, 'unique');
@@ -136,6 +189,18 @@ describe('dynamicCSS', () => {
 
       expect(document.querySelectorAll('style')).toHaveLength(1);
       expect(document.querySelector('style').innerHTML).toEqual(REPLACE_STYLE);
+    });
+
+    it('does not throw when the document has no style container', () => {
+      const { head, body } = document;
+      head.remove();
+      body.remove();
+
+      try {
+        expect(updateCSS(TEST_STYLE, 'missing-container')).toBeNull();
+      } finally {
+        document.documentElement.append(head, body);
+      }
     });
 
     it('replace with CSP', () => {
