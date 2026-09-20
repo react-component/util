@@ -97,6 +97,16 @@ describe('utils', () => {
       expect('lv4' in longTgt.lv1.lv2.lv3).toBeFalsy();
     });
 
+    it.each(['str', 123, true, Symbol('value'), BigInt(1)])(
+      'preserves a primitive parent when removing a missing property: %s',
+      value => {
+        const source = { keep: value };
+        const target = set(source, ['keep', 'light'], undefined, true);
+        expect(target.keep).toBe(value);
+        expect(source.keep).toBe(value);
+      },
+    );
+
     describe('merge', () => {
       it('basic', () => {
         const merged = merge({}, { a: 1 }, { b: 2 });
