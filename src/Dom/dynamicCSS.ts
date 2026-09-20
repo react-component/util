@@ -5,7 +5,7 @@ const APPEND_ORDER = 'data-rc-order';
 const APPEND_PRIORITY = 'data-rc-priority';
 const MARK_KEY = `rc-util-key`;
 
-const containerCache = new Map<ContainerType, Node & ParentNode>();
+let containerCache = new WeakMap<ContainerType, Node & ParentNode>();
 
 export type ContainerType = Element | ShadowRoot;
 export type Prepend = boolean | 'queue';
@@ -167,7 +167,7 @@ function syncRealContainer(container: ContainerType, option: Options) {
  * manually clear container cache to avoid global cache in unit testes
  */
 export function clearContainerCache() {
-  containerCache.clear();
+  containerCache = new WeakMap<ContainerType, Node & ParentNode>();
 }
 
 export function updateCSS(
