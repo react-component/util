@@ -3,7 +3,7 @@ export default (element: Element): boolean => {
     return false;
   }
 
-  if (element instanceof Element) {
+  if (element.nodeType === 1) {
     if ((element as HTMLElement).offsetParent) {
       return true;
     }
