@@ -1,3 +1,5 @@
+export { default as useAllowClear } from './hooks/useAllowClear';
+export type { AllowClearConfig } from './hooks/useAllowClear';
 export { default as useEvent } from './hooks/useEvent';
 export { default as useMergedState } from './hooks/useMergedState';
 export { default as useControlledState } from './hooks/useControlledState';
