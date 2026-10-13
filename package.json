@@ -1,6 +1,6 @@
 {
   "name": "@rc-component/util",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "description": "Shared React utilities for rc-component packages.",
   "keywords": [
     "react",
