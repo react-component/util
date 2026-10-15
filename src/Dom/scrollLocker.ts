@@ -63,7 +63,9 @@ export default class ScrollLocker {
     // If same container effect, return
     if (
       locks.some(
-        ({ options }) => options?.container === this.options?.container,
+        ({ options }) =>
+          (options?.container || document.body) ===
+          (this.options?.container || document.body),
       )
     ) {
       locks = [...locks, { target: this.lockTarget, options: this.options }];
@@ -87,7 +89,9 @@ export default class ScrollLocker {
 
     if (
       locks.filter(
-        ({ options }) => options?.container === this.options?.container,
+        ({ options }) =>
+          (options?.container || document.body) ===
+          (this.options?.container || document.body),
       ).length === 0
     ) {
       cacheStyle.set(
@@ -124,7 +128,9 @@ export default class ScrollLocker {
     if (
       !findLock ||
       locks.some(
-        ({ options }) => options?.container === findLock.options?.container,
+        ({ options }) =>
+          (options?.container || document.body) ===
+          (findLock.options?.container || document.body),
       )
     ) {
       return;
