@@ -2,6 +2,7 @@
 import { removeCSS, updateCSS } from './Dom/dynamicCSS';
 
 type ScrollBarSize = { width: number; height: number };
+type CSPConfig = { nonce?: string };
 
 type ExtendCSSStyleDeclaration = CSSStyleDeclaration & {
   scrollbarColor?: string;
@@ -10,7 +11,10 @@ type ExtendCSSStyleDeclaration = CSSStyleDeclaration & {
 
 let cached: ScrollBarSize;
 
-function measureScrollbarSize(ele?: HTMLElement): ScrollBarSize {
+function measureScrollbarSize(
+  ele?: HTMLElement,
+  csp?: CSPConfig,
+): ScrollBarSize {
   const randomId = `rc-scrollbar-measure-${Math.random()
     .toString(36)
     .substring(7)}`;
@@ -53,6 +57,7 @@ ${widthStyle}
 ${heightStyle}
 }`,
         randomId,
+        { csp },
       );
     } catch (e) {
       // Can't wrap, just log error
@@ -98,7 +103,8 @@ export default function getScrollBarSize(fresh?: boolean): number {
   return cached.width;
 }
 
-export function getTargetScrollBarSize(target: HTMLElement) {
+/** Pass the application's CSP config when measuring a target's scrollbar. */
+export function getTargetScrollBarSize(target: HTMLElement, csp?: CSPConfig) {
   if (
     typeof document === 'undefined' ||
     !target ||
@@ -107,5 +113,5 @@ export function getTargetScrollBarSize(target: HTMLElement) {
     return { width: 0, height: 0 };
   }
 
-  return measureScrollbarSize(target);
+  return measureScrollbarSize(target, csp);
 }
