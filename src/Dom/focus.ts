@@ -203,7 +203,8 @@ export function lockFocus(element: HTMLElement, id: string): VoidFunction {
 
     // Just add event since it will de-duplicate
     window.addEventListener('focusin', syncFocus);
-    window.addEventListener('keydown', onWindowKeyDown, true);
+    // Let native and React handlers cancel Tab before enforcing the boundary.
+    window.addEventListener('keydown', onWindowKeyDown);
     syncFocus();
   }
 
@@ -215,7 +216,7 @@ export function lockFocus(element: HTMLElement, id: string): VoidFunction {
     ignoredElementMap.delete(id);
     if (focusElements.length === 0) {
       window.removeEventListener('focusin', syncFocus);
-      window.removeEventListener('keydown', onWindowKeyDown, true);
+      window.removeEventListener('keydown', onWindowKeyDown);
     }
   };
 }

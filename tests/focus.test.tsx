@@ -65,12 +65,12 @@ describe('focus', () => {
   });
 
   describe('lockFocus Tab boundaries', () => {
-    const renderLock = (id: string) => {
+    const renderLock = (id: string, onKeyDown?: React.KeyboardEventHandler) => {
       const view = render(
         <div>
-          <button>First</button>
-          <button>Middle</button>
-          <button>Last</button>
+          <button onKeyDown={onKeyDown}>First</button>
+          <button onKeyDown={onKeyDown}>Middle</button>
+          <button onKeyDown={onKeyDown}>Last</button>
         </div>,
       );
       const [first, middle, last] = view.container.querySelectorAll('button');
@@ -104,6 +104,46 @@ describe('focus', () => {
           expect(document.activeElement).toBe(target);
           expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
         } finally {
+          unlock();
+        }
+      },
+    );
+
+    it.each([false, true])(
+      'lets React handlers cancel boundary Tab before focus wraps (shift=%s)',
+      shiftKey => {
+        const onKeyDown = jest.fn((event: React.KeyboardEvent) => {
+          event.preventDefault();
+        });
+        const { first, last, unlock } = renderLock('react-cancel', onKeyDown);
+        const boundary = shiftKey ? first : last;
+        try {
+          boundary.focus();
+          fireEvent.keyDown(boundary, { key: 'Tab', shiftKey });
+          expect(onKeyDown).toHaveBeenCalledTimes(1);
+          expect(document.activeElement).toBe(boundary);
+        } finally {
+          unlock();
+        }
+      },
+    );
+
+    it.each([false, true])(
+      'lets native handlers cancel boundary Tab before focus wraps (shift=%s)',
+      shiftKey => {
+        const { first, last, unlock } = renderLock('native-cancel');
+        const boundary = shiftKey ? first : last;
+        const onKeyDown = jest.fn((event: KeyboardEvent) => {
+          event.preventDefault();
+        });
+        boundary.addEventListener('keydown', onKeyDown);
+        try {
+          boundary.focus();
+          fireEvent.keyDown(boundary, { key: 'Tab', shiftKey });
+          expect(onKeyDown).toHaveBeenCalledTimes(1);
+          expect(document.activeElement).toBe(boundary);
+        } finally {
+          boundary.removeEventListener('keydown', onKeyDown);
           unlock();
         }
       },
