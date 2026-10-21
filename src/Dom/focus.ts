@@ -163,18 +163,26 @@ function syncFocus() {
 }
 
 function onWindowKeyDown(e: KeyboardEvent) {
-  if (e.key === 'Tab') {
+  if (e.key === 'Tab' && !e.isComposing && !e.defaultPrevented) {
     const { activeElement } = document;
     const lastElement = getLastElement();
     const focusableList = getFocusNodeList(lastElement);
     const last = focusableList[focusableList.length - 1];
+    let nextElement: HTMLElement | undefined;
 
     if (e.shiftKey && activeElement === focusableList[0]) {
       // Tab backward on first focusable element
-      lastFocusElement = last;
+      nextElement = last;
     } else if (!e.shiftKey && activeElement === last) {
       // Tab forward on last focusable element
-      lastFocusElement = focusableList[0];
+      nextElement = focusableList[0];
+    }
+
+    // Tabbing into browser chrome does not dispatch focusin in the document.
+    if (nextElement) {
+      e.preventDefault();
+      lastFocusElement = nextElement;
+      nextElement.focus({ preventScroll: true });
     }
   }
 }
