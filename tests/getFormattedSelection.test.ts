@@ -31,6 +31,8 @@ describe('getFormattedSelection', () => {
   it('searches for the character before the caret from its previous position', () => {
     // `$` is at index 0, before the search starts at index 1, so it is not found.
     expect(getFormattedSelection('9$ ', caret(2), '$ 9')).toEqual(caret(3));
+    // `b` is still at index 1, where the search starts, so it is found.
+    expect(getFormattedSelection('abX', caret(2), 'ZbY')).toEqual(caret(2));
   });
 
   it('moves the caret to the end when the character before it is gone', () => {
