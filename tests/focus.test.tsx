@@ -1,8 +1,13 @@
 /* eslint-disable class-methods-use-this */
 import React, { useEffect, useRef, useState } from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { spyElementPrototype } from '../src/test/domHook';
-import { getFocusNodeList, triggerFocus, useLockFocus } from '../src/Dom/focus';
+import {
+  getFocusNodeList,
+  lockFocus,
+  triggerFocus,
+  useLockFocus,
+} from '../src/Dom/focus';
 
 describe('focus', () => {
   beforeAll(() => {
@@ -57,6 +62,173 @@ describe('focus', () => {
 
     focusSpy.mockRestore();
     setSelectionRangeSpy.mockRestore();
+  });
+
+  describe('lockFocus Tab boundaries', () => {
+    const renderLock = (id: string, onKeyDown?: React.KeyboardEventHandler) => {
+      const view = render(
+        <div>
+          <button onKeyDown={onKeyDown}>First</button>
+          <button onKeyDown={onKeyDown}>Middle</button>
+          <button onKeyDown={onKeyDown}>Last</button>
+        </div>,
+      );
+      const [first, middle, last] = view.container.querySelectorAll('button');
+      return {
+        ...view,
+        first,
+        middle,
+        last,
+        unlock: lockFocus(view.container, id),
+      };
+    };
+
+    it.each([false, true])(
+      'wraps immediately without another focusin event (shift=%s)',
+      shiftKey => {
+        const { first, last, unlock } = renderLock('boundary');
+        try {
+          const target = shiftKey ? last : first;
+          (shiftKey ? first : last).focus();
+          const focusSpy = jest.spyOn(target, 'focus');
+          const event = new KeyboardEvent('keydown', {
+            key: 'Tab',
+            shiftKey,
+            bubbles: true,
+            cancelable: true,
+          });
+
+          document.activeElement.dispatchEvent(event);
+
+          expect(event.defaultPrevented).toBe(true);
+          expect(document.activeElement).toBe(target);
+          expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
+        } finally {
+          unlock();
+        }
+      },
+    );
+
+    it.each([false, true])(
+      'lets React handlers cancel boundary Tab before focus wraps (shift=%s)',
+      shiftKey => {
+        const onKeyDown = jest.fn((event: React.KeyboardEvent) => {
+          event.preventDefault();
+        });
+        const { first, last, unlock } = renderLock('react-cancel', onKeyDown);
+        const boundary = shiftKey ? first : last;
+        try {
+          boundary.focus();
+          fireEvent.keyDown(boundary, { key: 'Tab', shiftKey });
+          expect(onKeyDown).toHaveBeenCalledTimes(1);
+          expect(document.activeElement).toBe(boundary);
+        } finally {
+          unlock();
+        }
+      },
+    );
+
+    it.each([false, true])(
+      'lets native handlers cancel boundary Tab before focus wraps (shift=%s)',
+      shiftKey => {
+        const { first, last, unlock } = renderLock('native-cancel');
+        const boundary = shiftKey ? first : last;
+        const onKeyDown = jest.fn((event: KeyboardEvent) => {
+          event.preventDefault();
+        });
+        boundary.addEventListener('keydown', onKeyDown);
+        try {
+          boundary.focus();
+          fireEvent.keyDown(boundary, { key: 'Tab', shiftKey });
+          expect(onKeyDown).toHaveBeenCalledTimes(1);
+          expect(document.activeElement).toBe(boundary);
+        } finally {
+          boundary.removeEventListener('keydown', onKeyDown);
+          unlock();
+        }
+      },
+    );
+
+    it.each([false, true])(
+      'leaves interior Tab navigation to the browser (shift=%s)',
+      shiftKey => {
+        const { middle, unlock } = renderLock('interior');
+        try {
+          middle.focus();
+          expect(fireEvent.keyDown(middle, { key: 'Tab', shiftKey })).toBe(
+            true,
+          );
+          expect(document.activeElement).toBe(middle);
+        } finally {
+          unlock();
+        }
+      },
+    );
+
+    it.each(['composing', 'prevented', 'other key'])(
+      'does not handle %s events',
+      kind => {
+        const { last, unlock } = renderLock('ignored-key');
+        try {
+          last.focus();
+          const event = new KeyboardEvent('keydown', {
+            key: kind === 'other key' ? 'ArrowDown' : 'Tab',
+            isComposing: kind === 'composing',
+            bubbles: true,
+            cancelable: true,
+          });
+          if (kind === 'prevented') event.preventDefault();
+
+          last.dispatchEvent(event);
+
+          expect(event.defaultPrevented).toBe(kind === 'prevented');
+          expect(document.activeElement).toBe(last);
+        } finally {
+          unlock();
+        }
+      },
+    );
+
+    it.each([false, true])(
+      'keeps a single focusable element focused (shift=%s)',
+      shiftKey => {
+        const { container, getByRole } = render(<button>Only</button>);
+        const unlock = lockFocus(container, 'single');
+        try {
+          const button = getByRole('button', { name: 'Only' });
+          expect(fireEvent.keyDown(button, { key: 'Tab', shiftKey })).toBe(
+            false,
+          );
+          expect(document.activeElement).toBe(button);
+        } finally {
+          unlock();
+        }
+      },
+    );
+
+    it('wraps only the latest lock and restores the previous lock after cleanup', () => {
+      const outer = renderLock('outer');
+      const inner = renderLock('inner');
+      try {
+        inner.last.focus();
+        expect(fireEvent.keyDown(inner.last, { key: 'Tab' })).toBe(false);
+        expect(document.activeElement).toBe(inner.first);
+
+        inner.unlock();
+        inner.unmount();
+        outer.last.focus();
+        expect(fireEvent.keyDown(outer.last, { key: 'Tab' })).toBe(false);
+        expect(document.activeElement).toBe(outer.first);
+
+        outer.unlock();
+        expect(
+          fireEvent.keyDown(outer.first, { key: 'Tab', shiftKey: true }),
+        ).toBe(true);
+      } finally {
+        inner.unlock();
+        outer.unlock();
+      }
+    });
   });
 
   describe('useLockFocus', () => {
