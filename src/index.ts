@@ -40,6 +40,8 @@ export { getShadowRoot } from './Dom/shadow';
 export { isStyleSupport } from './Dom/styleChecker';
 
 export { default as KeyCode } from './KeyCode';
+export { default as getFormattedSelection } from './getFormattedSelection';
+export type { SelectionRange } from './getFormattedSelection';
 export {
   default as getScrollBarSize,
   getTargetScrollBarSize,
