@@ -28,6 +28,11 @@ describe('getFormattedSelection', () => {
     expect(getFormattedSelection('9$ ', caret(1), '$ 9')).toEqual(caret(3));
   });
 
+  it('searches for the character before the caret from its previous position', () => {
+    // `$` is at index 0, before the search starts at index 1, so it is not found.
+    expect(getFormattedSelection('9$ ', caret(2), '$ 9')).toEqual(caret(3));
+  });
+
   it('moves the caret to the end when the character before it is gone', () => {
     expect(getFormattedSelection('abc', caret(1), 'xyz')).toEqual(caret(3));
   });
