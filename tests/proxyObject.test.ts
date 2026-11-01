@@ -20,4 +20,15 @@ describe('proxyObject', () => {
 
     expect(proxyA).toBe(null);
   });
+
+  it('change', () => {
+    const div = document.createElement('div');
+    div.innerHTML = '<input/>';
+    const a = div.firstChild as HTMLInputElement;
+
+    const proxyA = proxyObject(a, {});
+    proxyA.value = '321';
+
+    expect(proxyA.value).toBe('321');
+  });
 });
