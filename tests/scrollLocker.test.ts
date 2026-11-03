@@ -165,4 +165,26 @@ describe('ScrollLocker', () => {
 
     domSpy.mockRestore();
   });
+  it.each([false, true])(
+    'shares the default body lock with an explicit body container (explicit first: %s)',
+    explicitFirst => {
+      const defaultLocker = new ScrollLocker();
+      const explicitLocker = new ScrollLocker({ container: document.body });
+      const first = explicitFirst ? explicitLocker : defaultLocker;
+      const second = explicitFirst ? defaultLocker : explicitLocker;
+      document.body.style.overflow = 'auto';
+
+      first.lock();
+      second.lock();
+      first.unLock();
+
+      expect(document.body.style.overflow).toBe('hidden');
+      expect(document.body.classList.contains(effectClassname)).toBe(true);
+
+      second.unLock();
+      expect(document.body.style.overflow).toBe('auto');
+      expect(document.body.classList.contains(effectClassname)).toBe(false);
+      document.body.removeAttribute('style');
+    },
+  );
 });
