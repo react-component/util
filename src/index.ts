@@ -11,6 +11,7 @@ export {
   useLayoutUpdateEffect,
 } from './hooks/useLayoutEffect';
 export { default as useMemo } from './hooks/useMemo';
+export { default as useMobile } from './hooks/useMobile';
 export { default as useState } from './hooks/useState';
 export { default as useSyncState } from './hooks/useSyncState';
 
