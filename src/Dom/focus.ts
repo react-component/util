@@ -22,7 +22,7 @@ function focusable(node: HTMLElement, includePositive = false): boolean {
       // Editable element
       node.isContentEditable ||
       // Anchor with href element
-      (nodeName === 'a' && !!node.getAttribute('href'));
+      (nodeName === 'a' && node.hasAttribute('href'));
 
     // Get tabIndex
     const tabIndexAttr = node.getAttribute('tabindex');

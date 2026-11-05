@@ -59,6 +59,25 @@ describe('focus', () => {
     setSelectionRangeSpy.mockRestore();
   });
 
+  it('includes links with an empty href in the focus list', () => {
+    const container = document.createElement('div');
+    container.innerHTML = '<a href="">current page</a><a>placeholder</a>';
+    document.body.appendChild(container);
+    const link = container.querySelector('a');
+
+    try {
+      link.focus();
+      expect(document.activeElement).toBe(link);
+      expect(getFocusNodeList(container)).toEqual([link]);
+
+      link.tabIndex = -1;
+      expect(getFocusNodeList(container)).toEqual([]);
+      expect(getFocusNodeList(container, true)).toEqual([link]);
+    } finally {
+      container.remove();
+    }
+  });
+
   describe('useLockFocus', () => {
     const TestComponent: React.FC<{ lock: boolean }> = ({ lock }) => {
       const elementRef = useRef<HTMLDivElement>(null);
