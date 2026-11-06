@@ -18,6 +18,9 @@ export default function proxyObject<
           ? originProp.bind(target)
           : originProp;
       },
+      set(target, prop, value) {
+        return Reflect.set(target, prop, value, target);
+      },
     }) as Obj & ExtendObj;
   }
 
