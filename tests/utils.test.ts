@@ -97,6 +97,31 @@ describe('utils', () => {
       expect('lv4' in longTgt.lv1.lv2.lv3).toBeFalsy();
     });
 
+    it.each(['light', Symbol('light')])(
+      'removes a top-level property without changing the source: %s',
+      key => {
+        const source: Record<string | symbol, number> = {
+          [key]: 2333,
+          bamboo: 1,
+        };
+        const target = set(source, [key], undefined, true);
+
+        expect(target).toEqual({ bamboo: 1 });
+        expect(Object.prototype.hasOwnProperty.call(target, key)).toBe(false);
+        expect(source[key]).toBe(2333);
+      },
+    );
+
+    it('removes a top-level array entry without shifting other entries', () => {
+      const source = ['light', 'bamboo'];
+      const target = set(source, [0], undefined, true);
+
+      expect(0 in target).toBe(false);
+      expect(target[1]).toBe('bamboo');
+      expect(target).toHaveLength(2);
+      expect(source).toEqual(['light', 'bamboo']);
+    });
+
     it.each(['str', 123, true, Symbol('value'), BigInt(1)])(
       'preserves a primitive parent when removing a missing property: %s',
       value => {

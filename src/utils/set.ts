@@ -24,7 +24,13 @@ function internalSet<Entity = any, Output = Entity, Value = any>(
   }
 
   // Delete prop if `removeIfUndefined` and value is undefined
-  if (removeIfUndefined && value === undefined && restPath.length === 1) {
+  if (removeIfUndefined && value === undefined && restPath.length === 0) {
+    delete clone[path];
+  } else if (
+    removeIfUndefined &&
+    value === undefined &&
+    restPath.length === 1
+  ) {
     const origin = clone[path];
     if (origin && typeof origin === 'object') {
       const child = Array.isArray(origin) ? [...origin] : { ...origin };
