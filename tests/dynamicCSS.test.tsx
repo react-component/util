@@ -300,4 +300,47 @@ describe('dynamicCSS', () => {
       expect(targetContainer.contains(SecondStyle)).toBeTruthy();
     });
   });
+  describe('ShadowRoot and container cache', () => {
+    afterEach(() => {
+      clearContainerCache();
+      const styles = document.querySelectorAll('style');
+      styles.forEach(style => {
+        style.parentNode?.removeChild(style);
+      });
+    });
+
+    it('injects, updates and clears styles within a ShadowRoot container', () => {
+      const host = document.createElement('div');
+      document.body.appendChild(host);
+      const shadowRoot = host.attachShadow({ mode: 'open' });
+
+      const style = updateCSS('.shadow-rule { color: blue; }', 'shadow-key', {
+        attachTo: shadowRoot,
+      });
+
+      expect(shadowRoot.contains(style)).toBeTruthy();
+      expect(document.head.querySelector('style')).toBeFalsy();
+      expect(style.innerHTML).toEqual('.shadow-rule { color: blue; }');
+
+      // In-place update within shadowRoot
+      updateCSS('.shadow-rule { color: red; }', 'shadow-key', {
+        attachTo: shadowRoot,
+      });
+      expect(shadowRoot.querySelectorAll('style')).toHaveLength(1);
+      expect(style.innerHTML).toEqual('.shadow-rule { color: red; }');
+
+      // clearContainerCache should reset WeakMap cache without breaking subsequent operations
+      clearContainerCache();
+      updateCSS('.shadow-rule { color: green; }', 'shadow-key', {
+        attachTo: shadowRoot,
+      });
+      expect(shadowRoot.querySelectorAll('style')).toHaveLength(1);
+      expect(style.innerHTML).toEqual('.shadow-rule { color: green; }');
+
+      removeCSS('shadow-key', { attachTo: shadowRoot });
+      expect(shadowRoot.querySelector('style')).toBeFalsy();
+
+      document.body.removeChild(host);
+    });
+  });
 });
