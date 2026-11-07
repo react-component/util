@@ -163,18 +163,26 @@ function syncFocus() {
 }
 
 function onWindowKeyDown(e: KeyboardEvent) {
-  if (e.key === 'Tab') {
+  if (e.key === 'Tab' && !e.isComposing && !e.defaultPrevented) {
     const { activeElement } = document;
     const lastElement = getLastElement();
     const focusableList = getFocusNodeList(lastElement);
     const last = focusableList[focusableList.length - 1];
+    let nextElement: HTMLElement | undefined;
 
     if (e.shiftKey && activeElement === focusableList[0]) {
       // Tab backward on first focusable element
-      lastFocusElement = last;
+      nextElement = last;
     } else if (!e.shiftKey && activeElement === last) {
       // Tab forward on last focusable element
-      lastFocusElement = focusableList[0];
+      nextElement = focusableList[0];
+    }
+
+    // Tabbing into browser chrome does not dispatch focusin in the document.
+    if (nextElement) {
+      e.preventDefault();
+      lastFocusElement = nextElement;
+      nextElement.focus({ preventScroll: true });
     }
   }
 }
@@ -195,7 +203,8 @@ export function lockFocus(element: HTMLElement, id: string): VoidFunction {
 
     // Just add event since it will de-duplicate
     window.addEventListener('focusin', syncFocus);
-    window.addEventListener('keydown', onWindowKeyDown, true);
+    // Let native and React handlers cancel Tab before enforcing the boundary.
+    window.addEventListener('keydown', onWindowKeyDown);
     syncFocus();
   }
 
@@ -207,7 +216,7 @@ export function lockFocus(element: HTMLElement, id: string): VoidFunction {
     ignoredElementMap.delete(id);
     if (focusElements.length === 0) {
       window.removeEventListener('focusin', syncFocus);
-      window.removeEventListener('keydown', onWindowKeyDown, true);
+      window.removeEventListener('keydown', onWindowKeyDown);
     }
   };
 }
