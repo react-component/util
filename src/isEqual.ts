@@ -36,11 +36,18 @@ function isEqual(obj1: any, obj2: any, shallow = false): boolean {
       return true;
     }
     if (a && b && typeof a === 'object' && typeof b === 'object') {
+      if (Array.isArray(b)) {
+        return false;
+      }
       const keys = Object.keys(a);
       if (keys.length !== Object.keys(b).length) {
         return false;
       }
-      return keys.every(key => deepEqual(a[key], b[key], newLevel));
+      return keys.every(
+        key =>
+          Object.prototype.hasOwnProperty.call(b, key) &&
+          deepEqual(a[key], b[key], newLevel),
+      );
     }
     // other
     return false;
