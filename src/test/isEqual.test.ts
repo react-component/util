@@ -94,6 +94,24 @@ describe('isEqual', () => {
     expect(valueIsEqual).toBe(false);
   });
 
+  it('should not equal when keys differ but counts match', () => {
+    expect(isEqual({ a: undefined }, { b: 1 })).toBe(false);
+    expect(isEqual({ a: 1, b: undefined }, { a: 1, c: 2 })).toBe(false);
+    expect(isEqual({ a: undefined }, { b: undefined })).toBe(false);
+    expect(isEqual({ a: { b: undefined } }, { a: { c: 1 } })).toBe(false);
+  });
+
+  it('should not equal an object and an array', () => {
+    expect(isEqual({}, [])).toBe(false);
+    expect(isEqual({ 0: 1 }, [1])).toBe(false);
+    expect(isEqual([1], { 0: 1 })).toBe(false);
+    expect(isEqual({ a: {} }, { a: [] })).toBe(false);
+  });
+
+  it('should equal objects with undefined values on the same keys', () => {
+    expect(isEqual({ a: undefined, b: 1 }, { b: 1, a: undefined })).toBe(true);
+  });
+
   it('should not equal 6', () => {
     obj.obj = obj;
     const obj2 = { a: 1, b: 2, c: [1, 2], obj: null };
